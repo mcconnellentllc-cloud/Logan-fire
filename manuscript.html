@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manuscript — The Logan Fire</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Password Gate -->
+    <div id="password-gate" class="password-gate">
+        <div class="password-box">
+            <h1>The Logan Fire</h1>
+            <p>Enter password to access the manuscript</p>
+            <input type="password" id="password-input" placeholder="Password">
+            <button onclick="checkPassword()">Access Manuscript</button>
+            <p id="error-message" class="error-message">Incorrect password. Please try again.</p>
+            <div class="back-link">
+                <a href="index.html">&larr; Back to home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manuscript Content (hidden until authenticated) -->
+    <div id="manuscript-content" class="manuscript">
+        <button class="logout-btn" onclick="logout()">Logout</button>
+
+        <header class="manuscript-header">
+            <h1>THE LOGAN FIRE</h1>
+            <p class="subtitle">When the Plains Burned</p>
+            <p class="byline">By Kyle McConnell (with Matt Allphin)</p>
+            <p class="draft-date">Master Draft — December 14, 2025</p>
+        </header>
+
+        <div class="status-box">
+            <p><strong>Chapters with Draft Content:</strong> 12 of 34</p>
+            <p><strong>Estimated Completion:</strong> ~35%</p>
+        </div>
+
+        <!-- PART ONE -->
+        <div class="part-header">
+            <h2>PART ONE: BEFORE THE FIRE</h2>
+            <p>Chapters 1-5</p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-outline">Outline Only</span>
+            <h3>Chapter 1: Small Town Morning</h3>
+            <p class="chapter-meta">March 6, 2017 — 7:00 AM</p>
+            <p><em>[Needs Kyle's content on morning routine, family, setting the scene]</em></p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-outline">Outline Only</span>
+            <h3>Chapter 2: Nate's Warning</h3>
+            <p class="chapter-meta">~8:30 AM</p>
+            <div class="scene-beats">
+                <h4>Scene Beats:</h4>
+                <ul>
+                    <li>Nate arrives at Kyle's</li>
+                    <li>Wind already picking up — that familiar March howl</li>
+                    <li>"Might want to get that water truck ready with this wind"</li>
+                    <li>Two hours before everything changes</li>
+                    <li>Nate preps water truck: batteries, engine, tires</li>
+                    <li>Customers arriving for Kyle's seed business</li>
+                    <li>Matt Allphin present — Kyle's cousin, closest thing to a brother</li>
+                </ul>
+                <p><strong>Key Detail:</strong> Matt Allphin: Marine. Five tours in Iraq. The one you want beside you when things go bad.</p>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-needed">Needs Content</span>
+            <h3>Chapter 3: Fourth Generation</h3>
+            <p><em>[Needs Kyle's content on McConnell family history, why they stayed]</em></p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-needed">Needs Content</span>
+            <h3>Chapter 4: The Character of Haxtun</h3>
+            <p><em>[Needs Kyle's voice on the town, the people, the code]</em></p>
+            <div class="scene-beats">
+                <h4>Key People to Introduce:</h4>
+                <ul>
+                    <li>Jim and Cindy Vandenbark (neighbors)</li>
+                    <li>Jared and Sara Firme (Kyle's best friends; cattle at their place; they'll lose their home)</li>
+                    <li>Jeff Firme (Fire chief, Jared's cousin, Navy fighter pilot navigator)</li>
+                    <li>Matt Firme (cousin to Jeff and Jared, Navy parachute specialist)</li>
+                    <li>Jason Toyne (Kyle's best friend, Sedgwick County Fire Chief)</li>
+                    <li>Haley Harms (Save the Site founder)</li>
+                    <li>Cash Cochran (young contractor)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-outline">Outline Only</span>
+            <h3>Chapter 5: Drought Country</h3>
+            <div class="scene-beats">
+                <h4>The Setup:</h4>
+                <ul>
+                    <li>Winter 2016-2017: warm, dry, dangerous</li>
+                    <li>Eastern Colorado in moderate drought</li>
+                    <li>Red Flag Warning in effect March 6</li>
+                    <li>All the ingredients assembled. Waiting for a spark.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- PART TWO -->
+        <div class="part-header">
+            <h2>PART TWO: THE DAY THE WORLD BURNED</h2>
+            <p>Chapters 6-14</p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-outline">Research Needed</span>
+            <h3>Chapter 6: Spark</h3>
+            <p class="chapter-meta">11:30 AM</p>
+            <div class="scene-beats">
+                <ul>
+                    <li>Patrick Svoboda welding a metal feed trough in a dry cornfield</li>
+                    <li>Wind gusting to 60 mph. Red Flag Warning in effect.</li>
+                    <li>A spark catches the dry stubble</li>
+                    <li>Fire moves at 70 mph</li>
+                    <li>Arrested April 19, 2017: Fourth-degree arson, reckless endangerment</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-drafted">Drafted</span>
+            <h3>Chapter 7: The Smell of Smoke</h3>
+            <p class="chapter-meta">~10:00-11:30 AM</p>
+            <div class="draft-content">
+                <h4>10:00 AM</h4>
+                <p>I saw the smoke before I heard anything. Posted it to Facebook right there: "All prayers needed for the safety of people and property. Its a bad one."</p>
+                <p>Matt and I were just getting back from town when we saw it rolling over the hill. To Nate: "The party started, we better get rolling."</p>
+
+                <h4>The Evacuation</h4>
+                <p>Brandi called. "Where do I go?"</p>
+                <p>"Get the hell outta here, head as far south as you can. I don't really care how far south you go."</p>
+                <p>Four kids in that car: Tyndle, our oldest, two years old. The twins, two months old. And Kaylene — Nate's daughter, fifth grade. Old enough to understand what was happening.</p>
+                <p>Brandi headed for Lone Star like I told her. And in the rear view mirror — the smoke, the orange glow, the thing she was running from.</p>
+                <p>That little warning etched in the glass: <em>Objects in mirror are closer than they appear.</em></p>
+                <p>Nate sent his daughter with my wife and stayed to fight. That's the kind of men we have out here.</p>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-needed">Needs Detail</span>
+            <h3>Chapter 8: Into the Fire</h3>
+            <p>"It's your friends and neighbors and their families and our values. You don't leave anybody behind. Just because it wasn't our home doesn't mean it won't be our home next time."</p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-outline">Outline Only</span>
+            <h3>Chapter 9: The Firebreak</h3>
+            <div class="scene-beats">
+                <h4>Scene Beats:</h4>
+                <ul>
+                    <li>Dozens of tractors, farmers from miles around, discing the earth raw</li>
+                    <li>Roland Barkey drove 12 miles after smelling smoke: "This is what we do, us farmers."</li>
+                    <li>Working blind — can't see past the hood, feel the heat</li>
+                    <li>The strategy: plow a gap the fire can't jump, strip the fuel</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-drafted">Drafted</span>
+            <h3>Chapter 10: Racing the Flames</h3>
+            <div class="draft-content">
+                <h4>The Voice on the Radio</h4>
+                <p>Jeff Firme was on the Mack 10 channel. Fire chief. Former Navy fighter pilot navigator — like Goose in Top Gun. And there couldn't have been a better man in that position that day.</p>
+                <p>When all these departments show up and all these trucks are running everywhere, they switch to the Mack 10 channel for inter-company communication. As farmers, we were listening only — scanner apps on our phones. We couldn't communicate in, but we could hear when they called for assets. When they needed disks or water, we'd deploy on our own.</p>
+                <p>We have everyone's phone numbers out here. So we were all on text message strings trying to coordinate needs and orders. And Jeff — he was on both. Fire chief on the radio AND farmer on the text threads. Local knowledge plus division reports from surrounding agencies.</p>
+                <p>His calm, concise cadence from years of fighter pilot training carried over as a clear voice of reason and direction. High-tension situations were nothing new to him. That training showed.</p>
+                <p>Jeff knocked down the fire's head that day. Directed the whole battle with that Goose-calm voice.</p>
+                <p>Then at 3 PM, the state took over the Mack 10 channel.</p>
+                <p>And the incompetence began.</p>
+
+                <h4>The Fire's Path</h4>
+                <p>The fire moved 23 miles in 8 hours. Moving at 70 mph in gusts. It jumped I-76 around noon — the interstate was no barrier.</p>
+                <p>Schools evacuated: Caliche, Fleming, Haxtun. Buses full of kids heading away from the smoke.</p>
+                <p>900 homes got pre-evacuation calls. There was a moment when it looked like Haxtun itself would burn.</p>
+                <p>Twenty-plus mutual aid districts. Pure chaos on the roads. So many people not knowing the country roads. So many farmers and tractors who DO know the roads trying to get through the tangle of fire trucks.</p>
+
+                <h4>The Catch-22</h4>
+                <p>Here's what nobody talks about: If a department officially tells a farmer to put his equipment in harm's way, it becomes the department's insurance liability. It's a catch-22.</p>
+                <p>So it stays informal. Text threads. Scanner apps. Self-deployment. The system that works can never be made official.</p>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-drafted">Drafted</span>
+            <h3>Chapter 11: The Cattle</h3>
+            <div class="draft-content">
+                <h4>The Sounds</h4>
+                <p>The sounds you don't forget. The bellowing first. Then the silence after.</p>
+                <p>185 head. That was our kids' college funds.</p>
+
+                <h4>The Decision</h4>
+                <p>There were survivors. Maybe 50 head still standing. Burned. Alive. Some would make it. Some wouldn't.</p>
+                <p>Matt Allphin — my cousin, closest thing to a brother — and Matt Firme. Navy. These two walked through those fields. I asked them: "If they were yours, what would you do?"</p>
+                <p>The Two Matts put down over 100 head that day. Veterans carrying what veterans can carry.</p>
+
+                <h4>What It Means</h4>
+                <p>These weren't just animals. They were genetics we'd built over years. Bloodlines. The foundation of what we were building for the next generation.</p>
+                <p>Gone in hours.</p>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-drafted">Drafted</span>
+            <h3>Chapter 12: The Houses</h3>
+            <div class="draft-content">
+                <h4>Jared and Sara Firme</h4>
+                <p>Jared was just south of his house when it lit on fire. His cousin Jeff was on the radio coordinating the whole battle, knowing his cousin's place was burning.</p>
+                <p>As soon as I knew Jared's house was on fire, I called my best friend Jason Toyne — Sedgwick County fire chief. I knew he was on the four mile curve. I called Jason to haul ass to Jared's house because it was about to go.</p>
+                <p>If they'd been about 5 minutes sooner, they might have saved it. But the winds were whipping flames at that house for 3 hours.</p>
+                <p>I still don't know why there were no assets at Jared's house. The yard had been on fire before. Jared and family had time to get valuables out — Jared grabbed the guns, Sara got files and clothes. One carload total.</p>
+                <p>Everyone knew it was headed right for them.</p>
+
+                <h4>Steve Waller's House</h4>
+                <p>Crook Fire saved Steve Waller's place. Two old guys from Crook — they stood there and said "that house won't burn."</p>
+                <p>And it didn't.</p>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-drafted">Drafted</span>
+            <h3>Chapter 13: The Long Night</h3>
+            <div class="draft-content">
+                <h4>The Glowing Earth</h4>
+                <p>We fought fire every day. When the wind went down at night, the whole countryside was glowing embers. Like a thousand campfires spread across the land.</p>
+                <p>As the winds came up the following days, there were small fire eruptions. With everyone so on edge, so on point, the constant oversight of not allowing it to get out of control again was amazing.</p>
+
+                <h4>Past Midnight</h4>
+                <p>We would pump water and keep filling fire trucks past midnight. It was so cold — hard to keep the trucks from freezing and breaking pumps.</p>
+                <p>There wasn't time to stop. You couldn't stop because of the fire, and you couldn't stop or you would freeze up.</p>
+                <p>The local farmers would leave for a few hours a night. We're all kind of accustomed to long hours. You do what you have to do.</p>
+
+                <h4>Ryder Jenik</h4>
+                <p>Earlier that day, Ryder Jenik was in the Sedgwick County big tanker fighting fire in the sand hills. Got stuck. No escape. Fire bearing down.</p>
+                <p>His only choice was to turn the pumps on. Create a water wall. Pray. And let the flames burn over him.</p>
+                <p>He survived. Kept fighting.</p>
+                <p>That night at Lynn Seager's place, Matt noticed heat coming from a doghouse near the house. Flipped it over. Flames erupted.</p>
+                <p>In an instant — like ninjas appearing out of nowhere — Ryder Jenik and Sedgwick Fire had water spraying on that doghouse. House saved by seconds.</p>
+                <p>Nobody talked about their experiences until way later. Everyone was in shock and reaction mode. Too many moving parts to stop and chat.</p>
+                <p><strong>Still water freezes.</strong></p>
+
+                <h4>The Fire Hall</h4>
+                <p>Days 1, 2, and 3 — there were always volunteers bringing food to the fire hall. Anyone coming in for water or supplies could get fed.</p>
+                <p>A local rancher — well respected in the community — brought in a whole tin of hamburgers he'd grilled at his place.</p>
+                <p>Someone from the state temped the burgers. Made them throw them all away.</p>
+                <p>That didn't sit well in a small town. We don't waste, especially in that kind of situation. We eat and we are grateful. We are raised better.</p>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-drafted">Drafted</span>
+            <h3>Chapter 14: Day Two</h3>
+            <p class="chapter-meta">March 7, 2017</p>
+            <div class="draft-content">
+                <h4>5 AM</h4>
+                <p>Matt called me at 5 AM. Brian Kipp's place was on fire.</p>
+                <p>"Are you still hooked up to the tender? Is it full?"</p>
+                <p>"Yes."</p>
+                <p>He came and got the 1600 gallons of water in the tender and pickup and booked it up to Brian's. I took the truck to town, refilled, and hauled out there.</p>
+
+                <h4>The Safety Briefing</h4>
+                <p>Meanwhile, the state fire chief had all the fire departments in a safety briefing. Day 2 morning. Fires restarting. And the crews were in a meeting.</p>
+                <p>Tracy Oberly from Fleming Fire didn't go to the briefing. She defied orders. Stayed on the line.</p>
+                <p>If Tracy hadn't disobeyed orders, Day 2 could have been way worse than Day 1.</p>
+
+                <h4>The Roadblock</h4>
+                <p>The state had the roads shut down. They were stopping all traffic — including water trucks. Had them lined up in town, useless.</p>
+                <p>I knew what was happening. And my longtime friend, my closest neighbor growing up — he was working for the state, blocking traffic to keep anyone from going north.</p>
+                <p>I pulled my truck out of the line. Started grabbing gears and blowing smoke headed north.</p>
+                <p>Got a wave and a nod from a man who understood what we were up against.</p>
+                <p>Sean Wernsman. No words. Just understanding.</p>
+
+                <h4>Brian Kipp's Yard</h4>
+                <p>We pulled into the yard and started dousing flames in the feed bunks. Looked over at the house — smoke smoldering. Dust and soot had plugged the heater vent. House was igniting from inside.</p>
+                <p>While some remained on the bunks, others took care of the house. Knocked out the smoldering before it became a real issue.</p>
+                <p>Ten people in that yard that morning trying to battle the blaze.</p>
+                <p>The real threat: CRP grass to the north. Unbroken fuel. If that lit before we knocked it down, with 70 mph winds coming back, Day 1 restarts.</p>
+                <p>Fire knocked down. Shortly after, winds kicked back to 70 mph.</p>
+            </div>
+        </div>
+
+        <!-- PART THREE -->
+        <div class="part-header">
+            <h2>PART THREE: THE RECKONING</h2>
+            <p>Chapters 15-20</p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-drafted">Drafted</span>
+            <h3>Chapter 15: Counting the Cost</h3>
+            <div class="draft-content">
+                <h4>The Pit</h4>
+                <p>The state made us dig a pit. 40 feet by 300 feet by 14 feet deep. For the burial.</p>
+                <p>We had to get water quality tests. Ensure we weren't going to contaminate anything. Legal bullshit to ensure I can go bury my family's future.</p>
+                <p>It was horrific. Mortifying. And extremely sad.</p>
+
+                <h4>The Terracotta Army</h4>
+                <p>I sent Nate over early morning to start placing the cows. When I showed up at the pit, he'd been there about an hour. Five to seven in the pit.</p>
+                <p>He was placing them in a perfect line. Perfect, statue-like form. It reminded me of the stone soldiers in China. The Terracotta Army. Perfect. In line. Surreal.</p>
+                <p>The state vet lady said, "He's doing such a good job. They're perfect."</p>
+                <p>I said, "I'm glad. But I'm not interested in this project taking all day."</p>
+
+                <h4>The Bucket</h4>
+                <p>I jumped in our other loader. Picked up a bucket full of cows, took them down to the bottom of the pit. To get them out, I would just tip the bucket and hit the brakes, let the cows roll out.</p>
+                <p>The state vet walked down the slant of the pit waving her arms. Stopping progress.</p>
+                <p>More loaders were showing up to help. She sees the piles of cows and halts everything.</p>
+                <p>"I don't want the dead cows touching each other in the pit."</p>
+                <p>Like it mattered. What in the world does that have to do with anything?</p>
+                <p>I told everyone to sling the cows harder to spread them out. Make her happy.</p>
+
+                <h4>The Tape Measure</h4>
+                <p>After about ten more loads, the state vet came back down the side of the pit as I hit the bottom. Loaders surrounding the pit by this time. Men and machines ready.</p>
+                <p>"We have to stop."</p>
+                <p>"For what?"</p>
+                <p>"I don't want any cow parts in the top six feet of soil."</p>
+                <p>Here we are. At the bottom of the pit. I am burying my livelihood. Trying to keep it together. And the regulation nazi is nitpicking every single action for absolutely no logical reason.</p>
+                <p>I looked her dead in the eye. "The pit is 14 feet deep."</p>
+                <p>Without hesitation, she starts reaching for her tape measure. Wants to measure the height of the cow.</p>
+                <p>And then I lost it.</p>
+                <p>"Ma'am, there isn't a chance in hell those cows are over 8 foot tall. And if you would like to stop the progress of this adventure again, I am not going to have the loaders stop, and you can see if you get out without being buried with them."</p>
+                <p>I flipped around. Waved my arm signaling the loader operators to start rolling.</p>
+                <p>I'm 1000% sure they could all see my frustration from a distance. That was the last time we were going to be stopped.</p>
+                <p>We had the rest of the cows in the hole within the hour.</p>
+
+                <h4>The Carpers</h4>
+                <p>The remaining loaders and the Carpers stayed to fill in the hole. Bury the cows. Replace the earth as it was.</p>
+                <p>Fun fact: to this day, you can't tell where those cows are buried unless you know they're there.</p>
+                <p>The Carpers are the best in the business.</p>
+                <p>I took off to get the other tractor ready to roll so we could start drilling oats.</p>
+                <p><strong>Still water freezes.</strong></p>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-needed">Research Needed</span>
+            <h3>Chapter 16: The Investigation</h3>
+            <p><em>[Research needed on Svoboda case]</em></p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-outline">Ready to Draft</span>
+            <h3>Chapter 17: Meanwhile, Across the Plains</h3>
+            <div class="scene-beats">
+                <h4>Regional Context:</h4>
+                <ul>
+                    <li>March 6, 2017: 2+ million acres burned across Kansas, Oklahoma, Texas, Colorado</li>
+                    <li>7 people killed — at least 5 trying to save cattle</li>
+                    <li>7,000-9,000 cattle killed regionally</li>
+                    <li>Starbuck Fire (Kansas): largest in state history, ~500,000 acres</li>
+                    <li>Gardiner Angus Ranch: 43,000 of 48,000 acres burned</li>
+                    <li>Mark Gardiner: "Hey, I didn't lose anything. All I lost was just stuff. It's the people that matter."</li>
+                    <li>Texas: Cade Koch, 25, killed trying to save cattle — wife pregnant with first child</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-outline">Outline Only</span>
+            <h3>Chapter 18: The Media Arrives</h3>
+            <p class="chapter-meta">March 8, 2017 — Kyle's Birthday</p>
+            <p>Key quotes:</p>
+            <ul>
+                <li>"I've never seen anything of this magnitude ever."</li>
+                <li>"It's your friends and neighbors and their families and our values."</li>
+            </ul>
+            <p>CBS interview aired on Kyle's birthday.</p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-drafted">Drafted</span>
+            <h3>Chapter 19: What the Land Remembers</h3>
+            <div class="draft-content">
+                <h4>The Moonscape</h4>
+                <p>After the fire, there wasn't a stitch of grass or any remnants of a crop. It was like the Sahara Desert. Sand blowing, making sand waves everywhere. The only thing stopping the sand or building up piles were the structures or implements left behind.</p>
+                <p>It was horrible. Like being on the moon.</p>
+
+                <h4>The Oat Mobilization</h4>
+                <p>We knew we had to do something. The best thing anyone could come up with: plant oats. Plant lots and lots of oats.</p>
+                <p>But from where?</p>
+                <p>Dave Gibson secured the oats. And we mobilized the tractors just like we'd mobilized the firefighters. Pulled the equipment out again and rolled side by side, sinking oats in the ground at an exceptional rate.</p>
+                <p>People with seed tenders going around filling drills. And drills — just drilling away.</p>
+                <p>Same mobilization as the fire. Different enemy. The wind was trying to take the topsoil now instead of burning everything.</p>
+
+                <h4>Ireland</h4>
+                <p>About a week after the oats were planted, the area started to green up. It looked as green as Ireland. Everyone felt better.</p>
+                <p>Funny thing — most of the farmers were more concerned about which drills did the best job. Since all makes and models were running side by side, it was the perfect comparison.</p>
+                <p>About 3 weeks after the fire until it greened up. Then it was time to plant corn. So the pretty didn't last long.</p>
+
+                <h4>The Smell</h4>
+                <p>The smell lasted a couple of weeks. But we couldn't really tell — we were immune. We woke up every morning and went to work in the scar. We had to. Too much to rebuild. Too many neighbors to help.</p>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-drafted">Drafted</span>
+            <h3>Chapter 20: Lifted</h3>
+            <p class="chapter-meta">Sunday, March 12, 2017</p>
+            <div class="draft-content">
+                <h4>The Sunday After</h4>
+                <p>Sunday after the fire. Everyone else going to church.</p>
+                <p>I was in the Case tractor drilling oats. Once everyone started going to church, the realization was setting in.</p>
+                <p>I kept getting texts and videos from people in church. Of the prayers. Of the thoughts. Of the concerns.</p>
+                <p>And I am 220 pounds.</p>
+                <p>As the prayers came in, I was physically lifted up in the seat. So much so that I could not keep the autosteer engaged. I was wrapped in the warmest, most calming blanket imaginable — trying to embrace the moment but to keep the tractor on track.</p>
+                <p>It was then my faith was firmly cemented that there is no doubt of God's hand in our lives and there is no doubt that we were all going to be alright after that experience.</p>
+                <p>It was the coolest, kind of frightening thing that left a lot to faith.</p>
+                <p>I understand completely how unreasonable the story is, but it is 100% true and has changed my life for the better ever since.</p>
+                <p>A town prayed. An area prayed. A state prayed that day.</p>
+                <p>And we felt it. Real. Raw. Amazing.</p>
+                <p>And extremely blessed.</p>
+            </div>
+        </div>
+
+        <!-- PART FOUR -->
+        <div class="part-header">
+            <h2>PART FOUR: THE RESPONSE</h2>
+            <p>Chapters 21-26</p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-needed">Needs Expansion</span>
+            <h3>Chapter 21: The Phone Starts Ringing</h3>
+            <ul>
+                <li>Calls from Colorado Springs to Wyoming, every corner of the state</li>
+                <li>Hay from Iowa, South Dakota, Minnesota, Nebraska — semi-loads rolling in</li>
+                <li>"Absolutely amazing the selflessness that has been happening"</li>
+                <li>Bill Bruns: camper burned, new one in his yard within 72 hours</li>
+                <li>"Everybody lost some. Nobody lost everything."</li>
+            </ul>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-needed">Needs Content</span>
+            <h3>Chapter 22: The Disaster Assistance Center</h3>
+            <p><em>[Needs Kyle's experience with agencies]</em></p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-outline">Outline Only</span>
+            <h3>Chapter 23: The Haxtun Community Credit Union</h3>
+            <ul>
+                <li>$400,000+ raised through Haxtun Chamber Fire Relief Fund</li>
+                <li>Colorado Farm Bureau Foundation: $350,000+</li>
+            </ul>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-drafted">Drafted</span>
+            <h3>Chapter 24: Volunteers</h3>
+            <div class="draft-content">
+                <h4>Haley Harms and Save the Site</h4>
+                <p>Haley Harms had bought the old Smith Hardware building a couple of years before the fire. Upstairs was a cell phone store. But in the basement, she was utilizing the space for emergency curation.</p>
+                <p>Two years of stockpiling supplies. Ready before anyone knew they'd need it.</p>
+                <p>When the fire hit, the infrastructure was already there.</p>
+
+                <h4>The Simple Things</h4>
+                <p>Lynda and Amanda — they helped load the twins at my house during the evacuation, then went straight into town to Haley's. They helped distribute all that was needed.</p>
+                <p>It's hard to explain how much a toothbrush or shampoo meant to people who had been in the blaze, wind-blown for hours straight, with no home to go take a shower.</p>
+                <p>Simple? Yes. But man. It was needed.</p>
+
+                <h4>Sara's Earrings</h4>
+                <p>After the fire, Sara Firme asked Haley if she would be interested in doing some archaeology work at the destroyed house. Sara had lost her wedding diamond earrings in the fire.</p>
+                <p>Haley spent over 10 hours sifting through ash and rubble.</p>
+                <p>Found them.</p>
+
+                <h4>The Weekend After</h4>
+                <p>That following weekend, we all got together at my office. Close friends. Finally stopping.</p>
+                <p>We cried. Hugged. Thankful we were all still here.</p>
+                <p>The Firmes were there. Our best friends. Homeless. Wearing what they had. Shocked. Mad. Sad. Still in the grip of what in the sam burritos just happened.</p>
+                <p>But even then — we started making plans. Because that's what you do.</p>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-drafted">Drafted</span>
+            <h3>Chapter 25: The Six-Month Miracle</h3>
+            <div class="draft-content">
+                <h4>Cash Cochran</h4>
+                <p>Cash Cochran had just started his construction business not too long before the fire. He made it his mission to be the fastest and the best house built after the fire.</p>
+                <p>There were those who chose to get prefabs. But Cash worked tirelessly for six months. He would show up at 4 AM and leave at 10 PM.</p>
+                <p>He built that house with fury and intent. Did a fabulous job.</p>
+                <p>For a small-scale crew, he too showed what small-town tenacity is about. Cash is amazing.</p>
+
+                <h4>Not Charity — Partnership</h4>
+                <p>It was all hands on deck. Jared and Sara worked alongside Cash. They weren't just recipients — they were builders.</p>
+                <p>Jared worked with Cash on his own house. Both of them showing up, working like a 10-man crew with just the two of them. The effort those two put in was remarkable.</p>
+
+                <h4>The Firme Family</h4>
+                <p>The Firmes were at the center of everything. Jeff — the fire chief, running comms while his cousin lost everything. Jared and Sara — losing their home, then rebuilding it with their own hands. Matt Firme — Navy, out there putting down cattle with my cousin.</p>
+                <p>One fire. One family. Hit from every angle. And they all kept going.</p>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-needed">Needs Development</span>
+            <h3>Chapter 26: Letters from Strangers</h3>
+            <p><em>[Needs development]</em></p>
+        </div>
+
+        <!-- PART FIVE -->
+        <div class="part-header">
+            <h2>PART FIVE: REBUILDING</h2>
+            <p>Chapters 27-30</p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-outline">Brief</span>
+            <h3>Chapter 27: The First Green</h3>
+            <p><em>[Callback to Ireland/oats]</em></p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-needed">Needs Content</span>
+            <h3>Chapter 28: Replacing the Irreplaceable</h3>
+            <p><em>[Needs Kyle's content on rebuilding herd]</em></p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-needed">Needs Content</span>
+            <h3>Chapter 29: The Kids' Questions</h3>
+            <p><em>[Needs Kyle's family content]</em></p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-needed">Needs Content</span>
+            <h3>Chapter 30: What We Carry</h3>
+            <p><em>[Needs Kyle's content on ongoing effects]</em></p>
+        </div>
+
+        <!-- PART SIX -->
+        <div class="part-header">
+            <h2>PART SIX: THE PRODUCERS</h2>
+            <p>Chapters 31-34</p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-needed">Needs Content</span>
+            <h3>Chapter 31: The Producers</h3>
+            <p><em>[Needs Kyle's manifesto on farming, monopolies, dignity]</em></p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-drafted">Drafted</span>
+            <h3>Chapter 32: The Ones Who Serve</h3>
+            <div class="draft-content">
+                <h4>The Men in This Story</h4>
+                <p>Rural America fills the military's ranks. And when disaster hits home, that training comes back.</p>
+                <p><strong>Matt Allphin:</strong> Marine. Five tours in Iraq. My cousin. The closest thing I have to a brother. He walked through those fields putting down over a hundred burned cattle because he could carry it.</p>
+                <p><strong>Matt Firme:</strong> Navy. Parachute specialist. Walked those same fields alongside Allphin, doing what had to be done.</p>
+                <p><strong>Jeff Firme:</strong> Navy fighter pilot navigator. Fire chief. Goose-calm on the radio while his cousin's house burned down. The discipline to keep calling it, clear and concise, while knowing his family was losing everything.</p>
+                <p><strong>Ryder Jenik:</strong> Let fire burn over his stuck truck, survived, and went back to work that same day. Showed up that night and saved a house from a smoldering doghouse.</p>
+
+                <h4>The Training</h4>
+                <p>Their training transferred. High-tension situations. The discipline to keep functioning when everything's falling apart.</p>
+                <p>The Two Matts did the cattle work because veterans can carry what veterans can carry. Jeff held the radio because fighter pilots don't break under pressure.</p>
+                <p>Farmers' kids become soldiers. And when they come home, they bring something back with them.</p>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-needed">Needs Content</span>
+            <h3>Chapter 33: The Long View</h3>
+            <p><em>[Needs Kyle's content on family history, why McConnells stayed]</em></p>
+        </div>
+
+        <div class="chapter">
+            <span class="chapter-status status-outline">Epilogue</span>
+            <h3>Chapter 34: No Matter What You Throw at Us</h3>
+            <div class="draft-content">
+                <p><em>No matter what you throw at us — fire, drought, markets, politics, monopolies, the whims of people who've never grown a thing in their lives — we will be here. Tilling the land. Raising the cattle. Feeding the nation. Finding a way. Like our grandfathers did. Like our grandchildren will. We didn't cross oceans and break sod in hostile country for comfort. We came to build something that lasts. And we're not finished yet.</em></p>
+            </div>
+        </div>
+
+        <!-- REFERENCE SECTIONS -->
+        <div class="part-header">
+            <h2>REFERENCE</h2>
+            <p>Key People, Lines & Facts</p>
+        </div>
+
+        <h3>The Firme Family</h3>
+        <table class="key-people-table">
+            <tr><th>Name</th><th>Role</th><th>Key Detail</th></tr>
+            <tr><td>Jeff Firme</td><td>Fire Chief</td><td>Navy fighter pilot navigator, Goose-calm on radio, cousin's house burned while he commanded</td></tr>
+            <tr><td>Jared Firme</td><td>Lost house</td><td>Kyle's best friend, grabbed the guns, rebuilt with Cash Cochran</td></tr>
+            <tr><td>Sara Firme</td><td>Jared's wife</td><td>Lost everything, diamond earrings found by Haley</td></tr>
+            <tr><td>Matt Firme</td><td>Cousin</td><td>Navy parachute specialist, put down cattle with Allphin</td></tr>
+        </table>
+
+        <h3>The Two Matts</h3>
+        <table class="key-people-table">
+            <tr><th>Name</th><th>Role</th><th>Key Detail</th></tr>
+            <tr><td>Matt Allphin</td><td>Co-author</td><td>Kyle's cousin/brother. Marine, 5 tours Iraq. Put down 100+ cattle.</td></tr>
+            <tr><td>Matt Firme</td><td>Partner</td><td>Navy. Same work alongside Allphin.</td></tr>
+        </table>
+
+        <h3>Fire Day Heroes</h3>
+        <table class="key-people-table">
+            <tr><th>Name</th><th>Role</th><th>Key Detail</th></tr>
+            <tr><td>Ryder Jenik</td><td>Sedgwick Fire</td><td>Fire burned over stuck truck, survived, doghouse save at Lynn's</td></tr>
+            <tr><td>Tracy Oberly</td><td>Fleming Fire</td><td>Defied orders Day 2, saved Brian Kipp's</td></tr>
+            <tr><td>Sean Wernsman</td><td>State roadblock</td><td>Wave and nod — let Kyle through</td></tr>
+            <tr><td>Jason Toyne</td><td>Sedgwick Co Fire Chief</td><td>Kyle's best friend, 5 min too late to save Firmes' house</td></tr>
+            <tr><td>Roland Barkey</td><td>Farmer</td><td>Drove 12 miles to help</td></tr>
+        </table>
+
+        <h3>Recovery Heroes</h3>
+        <table class="key-people-table">
+            <tr><th>Name</th><th>Role</th><th>Key Detail</th></tr>
+            <tr><td>Cash Cochran</td><td>Contractor</td><td>Built Firmes' house in 6 months, 4 AM-10 PM daily</td></tr>
+            <tr><td>Haley Harms</td><td>Save the Site</td><td>10 hrs finding Sara's earrings, basement ready 2 yrs before fire</td></tr>
+            <tr><td>Tim Carper / The Carpers</td><td>Earth movers</td><td>Burial pit, restored earth — can't tell where cows are</td></tr>
+            <tr><td>Dave Gibson</td><td>Neighbor</td><td>Secured oats for post-fire planting</td></tr>
+            <tr><td>Nate</td><td>Hired hand</td><td>Morning warning, water truck, Terracotta Army placement</td></tr>
+        </table>
+
+        <h3>Kyle's Family</h3>
+        <table class="key-people-table">
+            <tr><th>Name</th><th>Role</th><th>Key Detail</th></tr>
+            <tr><td>Brandi McConnell</td><td>Kyle's wife</td><td>Rearview mirror evacuation, 4 kids in car</td></tr>
+            <tr><td>Tyndle</td><td>Oldest child</td><td>2 years old at time of fire</td></tr>
+            <tr><td>Twin daughters</td><td></td><td>2 months old at time of fire</td></tr>
+            <tr><td>Kaylene</td><td>Nate's daughter</td><td>5th grade, evacuated with Brandi</td></tr>
+        </table>
+
+        <div class="key-lines">
+            <h3>Key Lines</h3>
+
+            <h4>Philosophy:</h4>
+            <p>"Still water freezes."</p>
+            <p>"Everybody lost some. Nobody lost everything."</p>
+            <p>"We eat and we are grateful. We are raised better."</p>
+
+            <h4>Faith:</h4>
+            <p>"A town prayed. An area prayed. A state prayed. And we felt it."</p>
+            <p>"I understand completely how unreasonable the story is, but it is 100% true."</p>
+
+            <h4>Confrontation:</h4>
+            <p>"Ma'am, there isn't a chance in hell those cows are over 8 foot tall…"</p>
+            <p>"Sling them harder to spread them out."</p>
+
+            <h4>Crisis:</h4>
+            <p>"The party started, we better get rolling."</p>
+            <p>"Get the hell outta here, head as far south as you can."</p>
+            <p>"If they were yours, what would you do."</p>
+
+            <h4>Community:</h4>
+            <p>Wave and nod from Sean — no words needed.</p>
+            <p>Objects in mirror are closer than they appear.</p>
+        </div>
+
+        <div class="needs-section">
+            <h3>Still Needed from Kyle</h3>
+            <ol>
+                <li><strong>Part One (Ch 1-5):</strong> Family history, McConnell generations, life before</li>
+                <li><strong>Ch 29-30:</strong> What you told the kids, how you carry it now</li>
+                <li><strong>Ch 31:</strong> The Producers manifesto — your voice on farming, monopolies, dignity</li>
+                <li><strong>Ch 33:</strong> The Long View — why McConnells stayed</li>
+            </ol>
+        </div>
+
+        <div class="verified-facts">
+            <h3>Verified Facts</h3>
+            <ul>
+                <li><strong>Date:</strong> March 6, 2017</li>
+                <li><strong>Acres burned:</strong> 32,546 (50 square miles)</li>
+                <li><strong>Kyle's cattle lost:</strong> 185 (uninsured)</li>
+                <li><strong>Homes destroyed:</strong> 4-5</li>
+                <li><strong>Outbuildings:</strong> 15</li>
+                <li><strong>Fire departments:</strong> 15+</li>
+                <li><strong>Firefighters:</strong> 120+</li>
+                <li><strong>Schools evacuated:</strong> 3 (Caliche, Fleming, Haxtun)</li>
+                <li><strong>Donations raised:</strong> $350,000+ (Farm Bureau) + $400,000+ (Haxtun Chamber)</li>
+                <li><strong>Kyle's birthday:</strong> March 8 — CBS interview aired that day</li>
+                <li><strong>Patrick Svoboda arrested:</strong> April 19, 2017</li>
+            </ul>
+        </div>
+
+        <div class="closing-quote">
+            <blockquote>"We will rebuild, we'll renew, we'll figure out a way to make it work."</blockquote>
+            <cite>— Kyle McConnell, March 2017</cite>
+        </div>
+
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>
