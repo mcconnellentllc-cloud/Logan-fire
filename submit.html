@@ -346,13 +346,19 @@
 
         <form id="story-form">
             <div class="form-group">
-                <label for="name">Your Name <span class="label-note">(or submit anonymously)</span></label>
-                <input type="text" id="name" name="name" placeholder="Your name (optional)">
+                <label for="name">Your Full Name <span class="label-note">(required — kept confidential)</span></label>
+                <input type="text" id="name" name="name" placeholder="Your real name" required>
             </div>
 
             <div class="form-group">
                 <label for="email">Email <span class="label-note">(so we can follow up if needed)</span></label>
                 <input type="email" id="email" name="email" placeholder="your@email.com">
+            </div>
+
+            <div class="form-group">
+                <label for="alias">Preferred Alias for the Book <span class="label-note">(optional)</span></label>
+                <input type="text" id="alias" name="alias" placeholder="e.g., 'John D.' or leave blank and one will be assigned">
+                <p style="font-size: 0.85rem; color: var(--color-smoke); margin-top: 0.5rem;">All names in the book are changed to protect privacy. If you have a preference for how you'd like to be called, enter it here. Otherwise, an alias will be assigned.</p>
             </div>
 
             <div class="form-group">
@@ -417,7 +423,7 @@
         </form>
 
         <div class="privacy-note">
-            <p><strong>Privacy:</strong> Your submission goes directly to the author. We will never share your contact information. If your story is used, we'll reach out to discuss how you'd like to be credited (real name, first name only, or anonymous).</p>
+            <p><strong>Privacy:</strong> Your real name is kept confidential and goes directly to the author. All names in the published book are changed to protect privacy. If you provided a preferred alias, we'll use that. Otherwise, one will be assigned and you'll be contacted before publication.</p>
         </div>
 
         <div class="back-home">
@@ -565,10 +571,12 @@
             submitBtn.innerHTML = '<span class="loading-spinner"></span>Submitting...';
 
             // Gather form data
+            const aliasValue = document.getElementById('alias').value.trim();
             const formData = {
                 fields: {
-                    'Name': document.getElementById('name').value || 'Anonymous',
+                    'Name': document.getElementById('name').value,
                     'Email': document.getElementById('email').value || '',
+                    'Preferred Alias': aliasValue || '(assign one)',
                     'Connection': document.getElementById('connection').value || '',
                     'Story': document.getElementById('story').value || '',
                     'Has Recording': audioBase64 ? 'Yes' : 'No',
