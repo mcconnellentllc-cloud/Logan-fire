@@ -1,24 +1,14 @@
 // Simple password protection for manuscript
-// Password: logan2017 (change this by updating the hash below)
+// Password: logan2017
 
-const PASSWORD_HASH = 'cdf22fb0f3672e931197584d3335c3b87b4bf103a0b8b6d58d31a7174aab6d71'; // SHA-256 of 'logan2017'
+const PASSWORD = 'logan2017';
 
-async function hashPassword(password) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-async function checkPassword() {
+function checkPassword() {
     const input = document.getElementById('password-input');
     const errorMsg = document.getElementById('error-message');
     const password = input.value;
 
-    const hash = await hashPassword(password);
-
-    if (hash === PASSWORD_HASH) {
+    if (password === PASSWORD) {
         // Store session
         sessionStorage.setItem('manuscript_access', 'granted');
         showManuscript();
