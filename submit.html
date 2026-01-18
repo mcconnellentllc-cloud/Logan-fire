@@ -161,6 +161,127 @@
         .success-message h3 {
             margin-bottom: 0.5rem;
         }
+
+        /* Voice Recorder Styles */
+        .recorder-section {
+            background: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .recorder-section h4 {
+            color: var(--color-earth);
+            margin-bottom: 1rem;
+        }
+        .record-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: none;
+            background: #e74c3c;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .record-btn:hover {
+            transform: scale(1.05);
+            background: #c0392b;
+        }
+        .record-btn.recording {
+            animation: pulse 1.5s infinite;
+            background: #c0392b;
+        }
+        .record-btn.disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+        .recorder-timer {
+            font-size: 2rem;
+            font-family: monospace;
+            color: var(--color-earth);
+            margin: 1rem 0;
+        }
+        .recorder-status {
+            color: var(--color-smoke);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        .recorder-status.recording {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .playback-section {
+            display: none;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #ddd;
+        }
+        .playback-section.visible {
+            display: block;
+        }
+        .playback-section audio {
+            width: 100%;
+            margin: 1rem 0;
+        }
+        .playback-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .playback-actions button {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .btn-keep {
+            background: #27ae60;
+            color: white;
+        }
+        .btn-keep:hover {
+            background: #219a52;
+        }
+        .btn-rerecord {
+            background: #95a5a6;
+            color: white;
+        }
+        .btn-rerecord:hover {
+            background: #7f8c8d;
+        }
+        .recording-saved {
+            display: none;
+            background: #d5f5e3;
+            border: 2px solid #27ae60;
+            padding: 1rem;
+            text-align: center;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .recording-saved.visible {
+            display: block;
+        }
+        .or-divider {
+            text-align: center;
+            color: var(--color-smoke);
+            margin: 1rem 0;
+            font-style: italic;
+        }
+        .mic-icon::before {
+            content: "🎙️";
+        }
+        .stop-icon::before {
+            content: "⏹️";
+        }
     </style>
 </head>
 <body>
@@ -217,20 +338,54 @@
             </div>
 
             <div class="form-group">
-                <label for="story">Your Story</label>
+                <label for="story">Your Story <span class="label-note">(write it out, or record below)</span></label>
                 <textarea id="story" name="story" placeholder="Tell us what you experienced, what you saw, what you remember..."></textarea>
             </div>
 
             <div class="form-group">
-                <label>Voice Recording or Photos <span class="label-note">(optional)</span></label>
+                <label>Record Your Story <span class="label-note">(optional — speak directly into your device)</span></label>
+
+                <div id="recording-saved" class="recording-saved">
+                    Recording saved and ready to submit!
+                </div>
+
+                <div id="recorder-section" class="recorder-section">
+                    <h4>Click to Record</h4>
+                    <p class="recorder-status" id="recorder-status">Ready to record</p>
+
+                    <button type="button" id="record-btn" class="record-btn" onclick="toggleRecording()">
+                        <span class="mic-icon"></span>
+                    </button>
+
+                    <div class="recorder-timer" id="recorder-timer">0:00</div>
+
+                    <p style="font-size: 0.85rem; color: var(--color-smoke);">
+                        Click the microphone to start recording. Click again to stop.
+                    </p>
+
+                    <div id="playback-section" class="playback-section">
+                        <p><strong>Review your recording:</strong></p>
+                        <audio id="audio-playback" controls></audio>
+                        <div class="playback-actions">
+                            <button type="button" class="btn-keep" onclick="keepRecording()">Keep This Recording</button>
+                            <button type="button" class="btn-rerecord" onclick="reRecord()">Record Again</button>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="or-divider">— or upload an existing file —</p>
+
                 <div class="file-upload" onclick="document.getElementById('file-input').click()">
                     <input type="file" id="file-input" name="attachment" accept="audio/*,image/*,.mp3,.wav,.m4a,.jpg,.jpeg,.png,.pdf">
                     <div class="file-upload-label">
-                        <strong>Click to upload</strong> or drag and drop
+                        <strong>Click to upload</strong> a file
                     </div>
                     <p class="file-types">Audio files (MP3, WAV, M4A) or images (JPG, PNG)</p>
                     <p id="file-name" style="margin-top: 0.5rem; color: var(--color-fire);"></p>
                 </div>
+
+                <!-- Hidden input for recorded audio -->
+                <input type="file" id="recorded-audio-input" name="voice_recording" style="display: none;">
             </div>
 
             <div class="form-group">
@@ -253,36 +408,126 @@
     </div>
 
     <script>
+        // Voice Recorder
+        let mediaRecorder;
+        let audioChunks = [];
+        let recordingBlob = null;
+        let isRecording = false;
+        let timerInterval;
+        let seconds = 0;
+
+        async function toggleRecording() {
+            if (!isRecording) {
+                await startRecording();
+            } else {
+                stopRecording();
+            }
+        }
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    recordingBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(recordingBlob);
+                    document.getElementById('audio-playback').src = audioUrl;
+                    document.getElementById('playback-section').classList.add('visible');
+
+                    // Stop all tracks
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+
+                // Update UI
+                document.getElementById('record-btn').classList.add('recording');
+                document.getElementById('record-btn').innerHTML = '<span class="stop-icon"></span>';
+                document.getElementById('recorder-status').textContent = 'Recording...';
+                document.getElementById('recorder-status').classList.add('recording');
+                document.getElementById('playback-section').classList.remove('visible');
+                document.getElementById('recording-saved').classList.remove('visible');
+
+                // Start timer
+                seconds = 0;
+                updateTimer();
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    updateTimer();
+                }, 1000);
+
+            } catch (err) {
+                alert('Could not access microphone. Please ensure you have granted permission.');
+                console.error('Error accessing microphone:', err);
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                isRecording = false;
+
+                // Update UI
+                document.getElementById('record-btn').classList.remove('recording');
+                document.getElementById('record-btn').innerHTML = '<span class="mic-icon"></span>';
+                document.getElementById('recorder-status').textContent = 'Recording complete';
+                document.getElementById('recorder-status').classList.remove('recording');
+
+                // Stop timer
+                clearInterval(timerInterval);
+            }
+        }
+
+        function updateTimer() {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            document.getElementById('recorder-timer').textContent =
+                `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function keepRecording() {
+            if (recordingBlob) {
+                // Create a File from the Blob and attach to form
+                const file = new File([recordingBlob], 'voice-recording.webm', { type: 'audio/webm' });
+
+                // Create a DataTransfer to set the file input
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                document.getElementById('recorded-audio-input').files = dataTransfer.files;
+
+                // Update UI
+                document.getElementById('recorder-section').style.display = 'none';
+                document.getElementById('recording-saved').classList.add('visible');
+            }
+        }
+
+        function reRecord() {
+            recordingBlob = null;
+            seconds = 0;
+            updateTimer();
+            document.getElementById('playback-section').classList.remove('visible');
+            document.getElementById('recorder-status').textContent = 'Ready to record';
+            document.getElementById('recorded-audio-input').value = '';
+        }
+
         // Show selected file name
         document.getElementById('file-input').addEventListener('change', function(e) {
             const fileName = e.target.files[0] ? e.target.files[0].name : '';
             document.getElementById('file-name').textContent = fileName;
         });
 
-        // Form submission handling
-        document.getElementById('story-form').addEventListener('submit', function(e) {
-            // If using Formspree, it will handle the redirect
-            // For custom handling, uncomment below:
-            /*
-            e.preventDefault();
-            const form = e.target;
-            const formData = new FormData(form);
-
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            }).then(response => {
-                if (response.ok) {
-                    document.getElementById('success-message').style.display = 'block';
-                    form.reset();
-                    document.getElementById('file-name').textContent = '';
-                }
-            });
-            */
-        });
+        // Check for microphone support
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            document.getElementById('recorder-section').innerHTML =
+                '<p style="color: var(--color-smoke);">Voice recording is not supported in this browser. Please use the file upload option or try a different browser.</p>';
+        }
     </script>
 </body>
 </html>
