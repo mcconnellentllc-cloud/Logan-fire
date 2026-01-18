@@ -60,6 +60,7 @@
             font-size: 1rem;
             border: 2px solid #ddd;
             font-family: inherit;
+            box-sizing: border-box;
         }
         .form-group input:focus,
         .form-group textarea:focus,
@@ -113,6 +114,10 @@
         .submit-btn:hover {
             background: var(--color-ember);
         }
+        .submit-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
         .privacy-note {
             text-align: center;
             font-size: 0.9rem;
@@ -157,9 +162,19 @@
             padding: 2rem;
             text-align: center;
             margin-bottom: 2rem;
+            border-radius: 4px;
         }
         .success-message h3 {
             margin-bottom: 0.5rem;
+        }
+        .error-message {
+            display: none;
+            background: #e74c3c;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            border-radius: 4px;
         }
 
         /* Voice Recorder Styles */
@@ -195,10 +210,6 @@
         .record-btn.recording {
             animation: pulse 1.5s infinite;
             background: #c0392b;
-        }
-        .record-btn.disabled {
-            background: #bdc3c7;
-            cursor: not-allowed;
         }
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
@@ -237,6 +248,7 @@
             display: flex;
             gap: 1rem;
             justify-content: center;
+            flex-wrap: wrap;
         }
         .playback-actions button {
             padding: 0.5rem 1.5rem;
@@ -266,6 +278,7 @@
             text-align: center;
             color: #27ae60;
             font-weight: bold;
+            margin-bottom: 1rem;
         }
         .recording-saved.visible {
             display: block;
@@ -281,6 +294,20 @@
         }
         .stop-icon::before {
             content: "⏹️";
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -310,9 +337,14 @@
         <div id="success-message" class="success-message">
             <h3>Thank You!</h3>
             <p>Your story has been submitted. We'll review it and may reach out if we have questions.</p>
+            <p style="margin-top: 1rem;"><a href="index.html" style="color: white; text-decoration: underline;">Return to home page</a></p>
         </div>
 
-        <form id="story-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" enctype="multipart/form-data">
+        <div id="error-message" class="error-message">
+            Something went wrong. Please try again or email your story directly.
+        </div>
+
+        <form id="story-form">
             <div class="form-group">
                 <label for="name">Your Name <span class="label-note">(or submit anonymously)</span></label>
                 <input type="text" id="name" name="name" placeholder="Your name (optional)">
@@ -327,13 +359,13 @@
                 <label for="connection">Your Connection to the Fire</label>
                 <select id="connection" name="connection">
                     <option value="">Select one...</option>
-                    <option value="resident">Local Resident</option>
-                    <option value="farmer">Farmer/Rancher</option>
-                    <option value="firefighter">Firefighter/First Responder</option>
-                    <option value="volunteer">Volunteer</option>
-                    <option value="family">Family Member of Someone Affected</option>
-                    <option value="evacuee">Evacuee</option>
-                    <option value="other">Other</option>
+                    <option value="Local Resident">Local Resident</option>
+                    <option value="Farmer/Rancher">Farmer/Rancher</option>
+                    <option value="Firefighter/First Responder">Firefighter/First Responder</option>
+                    <option value="Volunteer">Volunteer</option>
+                    <option value="Family Member">Family Member of Someone Affected</option>
+                    <option value="Evacuee">Evacuee</option>
+                    <option value="Other">Other</option>
                 </select>
             </div>
 
@@ -372,30 +404,16 @@
                         </div>
                     </div>
                 </div>
-
-                <p class="or-divider">— or upload an existing file —</p>
-
-                <div class="file-upload" onclick="document.getElementById('file-input').click()">
-                    <input type="file" id="file-input" name="attachment" accept="audio/*,image/*,.mp3,.wav,.m4a,.jpg,.jpeg,.png,.pdf">
-                    <div class="file-upload-label">
-                        <strong>Click to upload</strong> a file
-                    </div>
-                    <p class="file-types">Audio files (MP3, WAV, M4A) or images (JPG, PNG)</p>
-                    <p id="file-name" style="margin-top: 0.5rem; color: var(--color-fire);"></p>
-                </div>
-
-                <!-- Hidden input for recorded audio -->
-                <input type="file" id="recorded-audio-input" name="voice_recording" style="display: none;">
             </div>
 
             <div class="form-group">
                 <label for="permission">
-                    <input type="checkbox" id="permission" name="permission" value="yes" required>
+                    <input type="checkbox" id="permission" name="permission" required>
                     I give permission for my story to be considered for inclusion in "The Logan Fire" book. I understand I may be contacted for clarification or follow-up.
                 </label>
             </div>
 
-            <button type="submit" class="submit-btn">Submit Your Story</button>
+            <button type="submit" id="submit-btn" class="submit-btn">Submit Your Story</button>
         </form>
 
         <div class="privacy-note">
@@ -408,10 +426,21 @@
     </div>
 
     <script>
+        // ===========================================
+        // AIRTABLE CONFIGURATION
+        // Replace these with your Airtable details
+        // ===========================================
+        const AIRTABLE_API_KEY = 'YOUR_AIRTABLE_API_KEY'; // Get from airtable.com/account
+        const AIRTABLE_BASE_ID = 'YOUR_BASE_ID';          // From your base URL: airtable.com/BASE_ID/...
+        const AIRTABLE_TABLE_NAME = 'Stories';            // Name of your table
+
+        // ===========================================
         // Voice Recorder
+        // ===========================================
         let mediaRecorder;
         let audioChunks = [];
         let recordingBlob = null;
+        let audioBase64 = null;
         let isRecording = false;
         let timerInterval;
         let seconds = 0;
@@ -439,15 +468,12 @@
                     const audioUrl = URL.createObjectURL(recordingBlob);
                     document.getElementById('audio-playback').src = audioUrl;
                     document.getElementById('playback-section').classList.add('visible');
-
-                    // Stop all tracks
                     stream.getTracks().forEach(track => track.stop());
                 };
 
                 mediaRecorder.start();
                 isRecording = true;
 
-                // Update UI
                 document.getElementById('record-btn').classList.add('recording');
                 document.getElementById('record-btn').innerHTML = '<span class="stop-icon"></span>';
                 document.getElementById('recorder-status').textContent = 'Recording...';
@@ -455,7 +481,6 @@
                 document.getElementById('playback-section').classList.remove('visible');
                 document.getElementById('recording-saved').classList.remove('visible');
 
-                // Start timer
                 seconds = 0;
                 updateTimer();
                 timerInterval = setInterval(() => {
@@ -474,13 +499,11 @@
                 mediaRecorder.stop();
                 isRecording = false;
 
-                // Update UI
                 document.getElementById('record-btn').classList.remove('recording');
                 document.getElementById('record-btn').innerHTML = '<span class="mic-icon"></span>';
                 document.getElementById('recorder-status').textContent = 'Recording complete';
                 document.getElementById('recorder-status').classList.remove('recording');
 
-                // Stop timer
                 clearInterval(timerInterval);
             }
         }
@@ -494,40 +517,108 @@
 
         function keepRecording() {
             if (recordingBlob) {
-                // Create a File from the Blob and attach to form
-                const file = new File([recordingBlob], 'voice-recording.webm', { type: 'audio/webm' });
-
-                // Create a DataTransfer to set the file input
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                document.getElementById('recorded-audio-input').files = dataTransfer.files;
-
-                // Update UI
-                document.getElementById('recorder-section').style.display = 'none';
-                document.getElementById('recording-saved').classList.add('visible');
+                // Convert to base64 for storage
+                const reader = new FileReader();
+                reader.readAsDataURL(recordingBlob);
+                reader.onloadend = () => {
+                    audioBase64 = reader.result;
+                    document.getElementById('recorder-section').style.display = 'none';
+                    document.getElementById('recording-saved').classList.add('visible');
+                };
             }
         }
 
         function reRecord() {
             recordingBlob = null;
+            audioBase64 = null;
             seconds = 0;
             updateTimer();
             document.getElementById('playback-section').classList.remove('visible');
             document.getElementById('recorder-status').textContent = 'Ready to record';
-            document.getElementById('recorded-audio-input').value = '';
+            document.getElementById('recorder-section').style.display = 'block';
+            document.getElementById('recording-saved').classList.remove('visible');
         }
-
-        // Show selected file name
-        document.getElementById('file-input').addEventListener('change', function(e) {
-            const fileName = e.target.files[0] ? e.target.files[0].name : '';
-            document.getElementById('file-name').textContent = fileName;
-        });
 
         // Check for microphone support
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             document.getElementById('recorder-section').innerHTML =
-                '<p style="color: var(--color-smoke);">Voice recording is not supported in this browser. Please use the file upload option or try a different browser.</p>';
+                '<p style="color: var(--color-smoke);">Voice recording is not supported in this browser. Please use a modern browser like Chrome, Firefox, or Safari.</p>';
         }
+
+        // ===========================================
+        // Form Submission to Airtable
+        // ===========================================
+        document.getElementById('story-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submit-btn');
+            const successMsg = document.getElementById('success-message');
+            const errorMsg = document.getElementById('error-message');
+            const form = document.getElementById('story-form');
+
+            // Hide any previous messages
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading-spinner"></span>Submitting...';
+
+            // Gather form data
+            const formData = {
+                fields: {
+                    'Name': document.getElementById('name').value || 'Anonymous',
+                    'Email': document.getElementById('email').value || '',
+                    'Connection': document.getElementById('connection').value || '',
+                    'Story': document.getElementById('story').value || '',
+                    'Has Recording': audioBase64 ? 'Yes' : 'No',
+                    'Recording Duration': audioBase64 ? `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}` : '',
+                    'Permission Granted': 'Yes',
+                    'Submitted At': new Date().toISOString(),
+                    'Status': 'New'
+                }
+            };
+
+            // If there's a recording, we'll note it (audio stored separately due to size limits)
+            if (audioBase64) {
+                // For short recordings, include a note about duration
+                formData.fields['Notes'] = `Voice recording submitted (${formData.fields['Recording Duration']})`;
+            }
+
+            try {
+                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    // Success!
+                    form.style.display = 'none';
+                    successMsg.style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                    // If there's a recording, offer to download it
+                    if (recordingBlob) {
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = URL.createObjectURL(recordingBlob);
+                        downloadLink.download = `logan-fire-story-${Date.now()}.webm`;
+                        // Auto-download the recording so it's not lost
+                        // downloadLink.click();
+                    }
+                } else {
+                    throw new Error('Submission failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMsg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Submit Your Story';
+            }
+        });
     </script>
 </body>
 </html>
