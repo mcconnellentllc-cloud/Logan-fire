@@ -11,9 +11,12 @@ function checkPassword() {
     if (password === PASSWORD) {
         // Store session
         sessionStorage.setItem('manuscript_access', 'granted');
+        errorMsg.style.display = 'none';
         showManuscript();
     } else {
+        errorMsg.textContent = 'Incorrect password. Please try again.';
         errorMsg.style.display = 'block';
+        errorMsg.style.color = '#e74c3c';
         input.value = '';
         input.focus();
     }
