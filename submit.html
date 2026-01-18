@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Your Story — The Logan Fire</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .submit-hero {
+            background: linear-gradient(135deg, var(--color-earth) 0%, var(--color-dark) 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+        }
+        .submit-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .submit-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .submit-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        .submit-intro {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #ddd;
+        }
+        .submit-intro h2 {
+            color: var(--color-earth);
+            margin-bottom: 1rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--color-earth);
+        }
+        .form-group .label-note {
+            font-weight: normal;
+            font-size: 0.9rem;
+            color: var(--color-smoke);
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            font-family: inherit;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--color-fire);
+        }
+        .form-group textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+        .file-upload {
+            border: 2px dashed #ddd;
+            padding: 2rem;
+            text-align: center;
+            background: #f9f9f9;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .file-upload:hover {
+            border-color: var(--color-fire);
+            background: #fff;
+        }
+        .file-upload input[type="file"] {
+            display: none;
+        }
+        .file-upload-label {
+            cursor: pointer;
+            color: var(--color-earth);
+        }
+        .file-upload-label strong {
+            color: var(--color-fire);
+        }
+        .file-types {
+            font-size: 0.85rem;
+            color: var(--color-smoke);
+            margin-top: 0.5rem;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--color-fire);
+            color: white;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 1rem;
+        }
+        .submit-btn:hover {
+            background: var(--color-ember);
+        }
+        .privacy-note {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--color-smoke);
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ddd;
+        }
+        .back-home {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .back-home a {
+            color: var(--color-fire);
+            text-decoration: none;
+        }
+        .back-home a:hover {
+            text-decoration: underline;
+        }
+        .prompts {
+            background: var(--color-wheat);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .prompts h3 {
+            color: var(--color-earth);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        .prompts ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        .prompts li {
+            margin-bottom: 0.5rem;
+            color: var(--color-dark);
+        }
+        .success-message {
+            display: none;
+            background: #27ae60;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .success-message h3 {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="submit-hero">
+        <h1>Share Your Story</h1>
+        <p>The Logan Fire touched many lives. Your perspective matters. Help us tell the complete story.</p>
+    </div>
+
+    <div class="submit-container">
+        <div class="submit-intro">
+            <h2>We Want to Hear From You</h2>
+            <p>Were you there on March 6, 2017? Did you fight the fire, evacuate your family, lose livestock, or help with recovery? Every story adds another piece to the picture of what our community went through — and how we came together.</p>
+        </div>
+
+        <div class="prompts">
+            <h3>Not sure where to start? Consider these questions:</h3>
+            <ul>
+                <li>Where were you when you first saw the smoke?</li>
+                <li>What do you remember most vividly?</li>
+                <li>Who showed up for you — or who did you show up for?</li>
+                <li>What moment still stays with you?</li>
+                <li>What did you lose? What did you find?</li>
+            </ul>
+        </div>
+
+        <div id="success-message" class="success-message">
+            <h3>Thank You!</h3>
+            <p>Your story has been submitted. We'll review it and may reach out if we have questions.</p>
+        </div>
+
+        <form id="story-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">Your Name <span class="label-note">(or submit anonymously)</span></label>
+                <input type="text" id="name" name="name" placeholder="Your name (optional)">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email <span class="label-note">(so we can follow up if needed)</span></label>
+                <input type="email" id="email" name="email" placeholder="your@email.com">
+            </div>
+
+            <div class="form-group">
+                <label for="connection">Your Connection to the Fire</label>
+                <select id="connection" name="connection">
+                    <option value="">Select one...</option>
+                    <option value="resident">Local Resident</option>
+                    <option value="farmer">Farmer/Rancher</option>
+                    <option value="firefighter">Firefighter/First Responder</option>
+                    <option value="volunteer">Volunteer</option>
+                    <option value="family">Family Member of Someone Affected</option>
+                    <option value="evacuee">Evacuee</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="story">Your Story</label>
+                <textarea id="story" name="story" placeholder="Tell us what you experienced, what you saw, what you remember..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Voice Recording or Photos <span class="label-note">(optional)</span></label>
+                <div class="file-upload" onclick="document.getElementById('file-input').click()">
+                    <input type="file" id="file-input" name="attachment" accept="audio/*,image/*,.mp3,.wav,.m4a,.jpg,.jpeg,.png,.pdf">
+                    <div class="file-upload-label">
+                        <strong>Click to upload</strong> or drag and drop
+                    </div>
+                    <p class="file-types">Audio files (MP3, WAV, M4A) or images (JPG, PNG)</p>
+                    <p id="file-name" style="margin-top: 0.5rem; color: var(--color-fire);"></p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="permission">
+                    <input type="checkbox" id="permission" name="permission" value="yes" required>
+                    I give permission for my story to be considered for inclusion in "The Logan Fire" book. I understand I may be contacted for clarification or follow-up.
+                </label>
+            </div>
+
+            <button type="submit" class="submit-btn">Submit Your Story</button>
+        </form>
+
+        <div class="privacy-note">
+            <p><strong>Privacy:</strong> Your submission goes directly to the author. We will never share your contact information. If your story is used, we'll reach out to discuss how you'd like to be credited (real name, first name only, or anonymous).</p>
+        </div>
+
+        <div class="back-home">
+            <a href="index.html">&larr; Back to The Logan Fire</a>
+        </div>
+    </div>
+
+    <script>
+        // Show selected file name
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : '';
+            document.getElementById('file-name').textContent = fileName;
+        });
+
+        // Form submission handling
+        document.getElementById('story-form').addEventListener('submit', function(e) {
+            // If using Formspree, it will handle the redirect
+            // For custom handling, uncomment below:
+            /*
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    document.getElementById('success-message').style.display = 'block';
+                    form.reset();
+                    document.getElementById('file-name').textContent = '';
+                }
+            });
+            */
+        });
+    </script>
+</body>
+</html>
