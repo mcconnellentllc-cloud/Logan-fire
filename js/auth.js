@@ -1,7 +1,7 @@
 // Simple password protection for manuscript
 // Password: logan2017 (change this by updating the hash below)
 
-const PASSWORD_HASH = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918'; // SHA-256 of 'logan2017'
+const PASSWORD_HASH = 'cdf22fb0f3672e931197584d3335c3b87b4bf103a0b8b6d58d31a7174aab6d71'; // SHA-256 of 'logan2017'
 
 async function hashPassword(password) {
     const encoder = new TextEncoder();
