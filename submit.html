@@ -312,15 +312,24 @@
     </style>
 </head>
 <body>
-    <div class="submit-hero">
-        <h1>Share Your Story</h1>
-        <p>The Logan Fire touched many lives. Your perspective matters. Help us tell the complete story.</p>
+    <nav class="site-nav">
+        <a href="index.html" class="nav-brand">The Logan Fire</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Timeline</a></li>
+            <li><a href="media.html">Media Coverage</a></li>
+            <li><a href="submit.html" class="active">Share Your Story</a></li>
+        </ul>
+    </nav>
+
+    <div class="submit-hero" style="padding-top: 80px;">
+        <h1>Share What You Know</h1>
+        <p>Help us document an accurate historical record of the Logan Fire.</p>
     </div>
 
     <div class="submit-container">
         <div class="submit-intro">
-            <h2>We Want to Hear From You</h2>
-            <p>Were you there on March 6, 2017? Did you fight the fire, evacuate your family, lose livestock, or help with recovery? Every story adds another piece to the picture of what our community went through — and how we came together.</p>
+            <h2>We Need Your Firsthand Account</h2>
+            <p>Were you there on March 6, 2017? Did you fight the fire, evacuate your family, lose livestock, or help with recovery? We're collecting firsthand accounts to build an accurate record of what happened that day and how this community responded.</p>
         </div>
 
         <div class="prompts">
@@ -413,6 +422,24 @@
             </div>
 
             <div class="form-group">
+                <label>Upload Photos <span class="label-note">(optional — share photos from the fire or recovery)</span></label>
+                <div class="photo-upload-section">
+                    <input type="file" id="photo-input" accept="image/*" multiple style="display: none;" onchange="handlePhotoUpload(event)">
+                    <div class="file-upload" onclick="document.getElementById('photo-input').click()">
+                        <span class="file-upload-label">
+                            <strong>Click to upload photos</strong><br>
+                            or drag and drop
+                        </span>
+                        <p class="file-types">JPG, PNG, HEIC — max 5 photos, 5MB each</p>
+                    </div>
+                    <div id="photo-previews" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1rem;"></div>
+                    <p style="font-size: 0.85rem; color: var(--color-smoke); margin-top: 0.5rem;">
+                        Photos of the fire, smoke, damage, recovery, or anything related to that day. These may be included in the digital version.
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label style="font-weight: bold; margin-bottom: 0.75rem; display: block;">May we include your story in the book?</label>
                 <div style="margin-left: 0.5rem;">
                     <label style="display: block; margin-bottom: 0.5rem; cursor: pointer;">
@@ -424,6 +451,15 @@
                         <strong>No</strong> — I prefer my story NOT be included in the book. I'm sharing for the historical record only, and I trust you'll respect my decision.
                     </label>
                 </div>
+            </div>
+
+            <div class="form-group" style="background: #f5f5f5; padding: 1.5rem; border-left: 4px solid var(--color-earth);">
+                <label style="display: flex; align-items: flex-start; cursor: pointer;">
+                    <input type="checkbox" id="rights-release" name="rights-release" required style="margin-right: 12px; margin-top: 4px; min-width: 18px; min-height: 18px;">
+                    <span style="font-size: 0.95rem; line-height: 1.5;">
+                        <strong>Rights Release:</strong> By submitting, I grant permission to use my story, voice recording, and/or photos for this historical documentation project, including any future publications (print or digital). I understand this is a voluntary contribution and I waive any claim to monetary compensation for the use of my submission.
+                    </span>
+                </label>
             </div>
 
             <button type="submit" id="submit-btn" class="submit-btn">Submit Your Story</button>
@@ -559,6 +595,76 @@
         }
 
         // ===========================================
+        // Photo Upload Handler
+        // ===========================================
+        let uploadedPhotos = []; // Array of {name, base64, size}
+        const MAX_PHOTOS = 5;
+        const MAX_SIZE_MB = 5;
+
+        function handlePhotoUpload(event) {
+            const files = Array.from(event.target.files);
+            const previewContainer = document.getElementById('photo-previews');
+
+            files.forEach(file => {
+                if (uploadedPhotos.length >= MAX_PHOTOS) {
+                    alert(`Maximum ${MAX_PHOTOS} photos allowed.`);
+                    return;
+                }
+
+                if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+                    alert(`${file.name} is too large. Maximum size is ${MAX_SIZE_MB}MB.`);
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64 = e.target.result;
+                    uploadedPhotos.push({
+                        name: file.name,
+                        base64: base64,
+                        size: file.size
+                    });
+
+                    // Create preview
+                    const previewDiv = document.createElement('div');
+                    previewDiv.style.cssText = 'position: relative; width: 100px; height: 100px;';
+                    previewDiv.innerHTML = `
+                        <img src="${base64}" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ddd;">
+                        <button type="button" onclick="removePhoto(${uploadedPhotos.length - 1})"
+                            style="position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white;
+                            border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold;">×</button>
+                    `;
+                    previewContainer.appendChild(previewDiv);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // Clear the input so the same file can be selected again
+            event.target.value = '';
+        }
+
+        function removePhoto(index) {
+            uploadedPhotos.splice(index, 1);
+            refreshPhotoPreviews();
+        }
+
+        function refreshPhotoPreviews() {
+            const previewContainer = document.getElementById('photo-previews');
+            previewContainer.innerHTML = '';
+            uploadedPhotos.forEach((photo, index) => {
+                const previewDiv = document.createElement('div');
+                previewDiv.style.cssText = 'position: relative; width: 100px; height: 100px;';
+                previewDiv.innerHTML = `
+                    <img src="${photo.base64}" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ddd;">
+                    <button type="button" onclick="removePhoto(${index})"
+                        style="position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white;
+                        border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold;">×</button>
+                `;
+                previewContainer.appendChild(previewDiv);
+            });
+        }
+
+        // ===========================================
         // Form Submission to Airtable
         // ===========================================
         document.getElementById('story-form').addEventListener('submit', async function(e) {
@@ -592,14 +698,24 @@
                     'Recording Duration': audioBase64 ? `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}` : '',
                     'Include in Book': includeInBook ? 'Yes' : 'DO NOT USE',
                     'Submitted At': new Date().toISOString(),
-                    'Status': includeInBook ? 'New' : 'Do Not Include'
+                    'Status': includeInBook ? 'New' : 'Do Not Include',
+                    'Photo Count': uploadedPhotos.length > 0 ? uploadedPhotos.length.toString() : '0'
                 }
             };
 
-            // If there's a recording, we'll note it (audio stored separately due to size limits)
+            // Build notes with recording and photo info
+            let notesArr = [];
             if (audioBase64) {
-                // For short recordings, include a note about duration
-                formData.fields['Notes'] = `Voice recording submitted (${formData.fields['Recording Duration']})`;
+                notesArr.push(`Voice recording submitted (${formData.fields['Recording Duration']})`);
+            }
+            if (uploadedPhotos.length > 0) {
+                notesArr.push(`${uploadedPhotos.length} photo(s) submitted`);
+                // Store photo data (names for reference)
+                const photoNames = uploadedPhotos.map(p => p.name).join(', ');
+                notesArr.push(`Photo files: ${photoNames}`);
+            }
+            if (notesArr.length > 0) {
+                formData.fields['Notes'] = notesArr.join('\n');
             }
 
             try {

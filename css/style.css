@@ -23,6 +23,54 @@ body {
     background: var(--color-light);
 }
 
+/* Navigation */
+.site-nav {
+    background: var(--color-dark);
+    padding: 1rem 2rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.site-nav .nav-brand {
+    color: var(--color-wheat);
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-decoration: none;
+}
+
+.site-nav .nav-brand:hover {
+    color: var(--color-fire);
+}
+
+.site-nav .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+
+.site-nav .nav-links a {
+    color: var(--color-light);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+}
+
+.site-nav .nav-links a:hover {
+    color: var(--color-fire);
+}
+
+.site-nav .nav-links a.active {
+    color: var(--color-fire);
+    border-bottom: 2px solid var(--color-fire);
+    padding-bottom: 2px;
+}
+
 /* Hero Section */
 .hero {
     position: relative;
@@ -34,6 +82,7 @@ body {
     justify-content: center;
     text-align: center;
     color: var(--color-light);
+    padding-top: 60px; /* Account for fixed nav */
 }
 
 .hero-overlay {
