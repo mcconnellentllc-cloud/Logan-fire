@@ -344,9 +344,10 @@
         </div>
 
         <div id="success-message" class="success-message">
-            <h3>Thank You!</h3>
-            <p>Your story has been submitted. We'll review it and may reach out if we have questions.</p>
-            <p style="margin-top: 1rem;"><a href="index.html" style="color: white; text-decoration: underline;">Return to home page</a></p>
+            <h3>Thank You for Your Contribution!</h3>
+            <p>Your submission has been received and added to the Logan Fire historical database.</p>
+            <p style="margin-top: 0.5rem;">If you provided an email address, you'll receive a confirmation shortly.</p>
+            <p style="margin-top: 1rem;"><a href="index.html" style="color: white; text-decoration: underline;">Return to home page</a> · <a href="submit.html" style="color: white; text-decoration: underline;">Submit another story</a></p>
         </div>
 
         <div id="error-message" class="error-message">
@@ -729,19 +730,26 @@
                 });
 
                 if (response.ok) {
-                    // Success!
+                    // Success! Reset everything
+                    form.reset();
+
+                    // Clear recording data
+                    recordingBlob = null;
+                    audioBase64 = null;
+                    seconds = 0;
+                    document.getElementById('recording-saved').classList.remove('visible');
+                    document.getElementById('playback-section').classList.remove('visible');
+                    document.getElementById('recorder-status').textContent = 'Ready to record';
+                    updateTimer();
+
+                    // Clear photo uploads
+                    uploadedPhotos = [];
+                    document.getElementById('photo-previews').innerHTML = '';
+
+                    // Show success message
                     form.style.display = 'none';
                     successMsg.style.display = 'block';
                     window.scrollTo({ top: 0, behavior: 'smooth' });
-
-                    // If there's a recording, offer to download it
-                    if (recordingBlob) {
-                        const downloadLink = document.createElement('a');
-                        downloadLink.href = URL.createObjectURL(recordingBlob);
-                        downloadLink.download = `logan-fire-story-${Date.now()}.webm`;
-                        // Auto-download the recording so it's not lost
-                        // downloadLink.click();
-                    }
                 } else {
                     throw new Error('Submission failed');
                 }
