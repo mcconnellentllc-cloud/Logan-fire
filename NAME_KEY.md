@@ -12,7 +12,7 @@ This document maps fictional names used in the published book to real names.
 |-----------|-----------|------|
 | Bruce Tucker | Kyle McConnell | Author/Narrator |
 | Kate Tucker | Brandi McConnell | Bruce's wife |
-| Sawyer | Tyndle | Oldest child (2 yrs old) |
+| Jasper | Tyndle | Oldest child, daughter (2 yrs old) |
 | Twin daughters | Twin daughters | (2 months old) |
 
 ---
