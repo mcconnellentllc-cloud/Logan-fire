@@ -323,30 +323,32 @@
 
     <div class="submit-hero" style="padding-top: 80px;">
         <h1>Share What You Know</h1>
-        <p>Help us document an accurate historical record of the Logan Fire.</p>
+        <p>Every contribution matters — whether you were on the fire line or sent support from across the country.</p>
     </div>
 
     <div class="submit-container">
         <div class="submit-intro">
-            <h2>We Need Your Firsthand Account</h2>
-            <p>Were you there on March 6, 2017? Did you fight the fire, evacuate your family, lose livestock, or help with recovery? We're collecting firsthand accounts to build an accurate record of what happened that day and how this community responded.</p>
+            <h2>Your Story Is Part of This Story</h2>
+            <p>The Logan Fire wasn't just about what burned — it was about how people responded. Neighbors helping neighbors. Strangers from cities and small towns sending hay, money, and letters of support. Firefighters, volunteers, families, and people with full hearts who showed up in whatever way they could.</p>
+            <p style="margin-top: 1rem;"><strong>If you were part of this — in any way — we want to hear from you.</strong></p>
         </div>
 
         <div class="prompts">
             <h3>Not sure where to start? Consider these questions:</h3>
             <ul>
-                <li>Where were you when you first saw the smoke?</li>
-                <li>What do you remember most vividly?</li>
+                <li>How did you hear about the fire?</li>
+                <li>What made you want to help?</li>
                 <li>Who showed up for you — or who did you show up for?</li>
                 <li>What moment still stays with you?</li>
-                <li>What did you lose? What did you find?</li>
+                <li>What did this experience teach you about people?</li>
             </ul>
         </div>
 
         <div id="success-message" class="success-message">
-            <h3>Thank You!</h3>
-            <p>Your story has been submitted. We'll review it and may reach out if we have questions.</p>
-            <p style="margin-top: 1rem;"><a href="index.html" style="color: white; text-decoration: underline;">Return to home page</a></p>
+            <h3>Thank You for Your Contribution!</h3>
+            <p>Your submission has been received and added to the Logan Fire historical database.</p>
+            <p style="margin-top: 0.5rem;">If you provided an email address, you'll receive a confirmation shortly.</p>
+            <p style="margin-top: 1rem;"><a href="index.html" style="color: white; text-decoration: underline;">Return to home page</a> · <a href="submit.html" style="color: white; text-decoration: underline;">Submit another story</a></p>
         </div>
 
         <div id="error-message" class="error-message">
@@ -371,15 +373,19 @@
             </div>
 
             <div class="form-group">
-                <label for="connection">Your Connection to the Fire</label>
+                <label for="connection">How Were You Involved?</label>
                 <select id="connection" name="connection">
                     <option value="">Select one...</option>
                     <option value="Local Resident">Local Resident</option>
                     <option value="Farmer/Rancher">Farmer/Rancher</option>
                     <option value="Firefighter/First Responder">Firefighter/First Responder</option>
-                    <option value="Volunteer">Volunteer</option>
+                    <option value="Volunteer - On Site">Volunteer (On Site)</option>
+                    <option value="Volunteer - Remote">Volunteer (Remote Support)</option>
+                    <option value="Donor">Donated Money, Hay, or Supplies</option>
                     <option value="Family Member">Family Member of Someone Affected</option>
                     <option value="Evacuee">Evacuee</option>
+                    <option value="Sent Letter/Support">Sent Letter or Message of Support</option>
+                    <option value="Media/Journalist">Media/Journalist</option>
                     <option value="Other">Other</option>
                 </select>
             </div>
@@ -729,19 +735,26 @@
                 });
 
                 if (response.ok) {
-                    // Success!
+                    // Success! Reset everything
+                    form.reset();
+
+                    // Clear recording data
+                    recordingBlob = null;
+                    audioBase64 = null;
+                    seconds = 0;
+                    document.getElementById('recording-saved').classList.remove('visible');
+                    document.getElementById('playback-section').classList.remove('visible');
+                    document.getElementById('recorder-status').textContent = 'Ready to record';
+                    updateTimer();
+
+                    // Clear photo uploads
+                    uploadedPhotos = [];
+                    document.getElementById('photo-previews').innerHTML = '';
+
+                    // Show success message
                     form.style.display = 'none';
                     successMsg.style.display = 'block';
                     window.scrollTo({ top: 0, behavior: 'smooth' });
-
-                    // If there's a recording, offer to download it
-                    if (recordingBlob) {
-                        const downloadLink = document.createElement('a');
-                        downloadLink.href = URL.createObjectURL(recordingBlob);
-                        downloadLink.download = `logan-fire-story-${Date.now()}.webm`;
-                        // Auto-download the recording so it's not lost
-                        // downloadLink.click();
-                    }
                 } else {
                     throw new Error('Submission failed');
                 }
