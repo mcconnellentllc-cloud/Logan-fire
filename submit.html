@@ -356,9 +356,9 @@
             </div>
 
             <div class="form-group">
-                <label for="alias">Preferred Alias for the Book <span class="label-note">(optional)</span></label>
-                <input type="text" id="alias" name="alias" placeholder="e.g., 'John D.' or leave blank and one will be assigned">
-                <p style="font-size: 0.85rem; color: var(--color-smoke); margin-top: 0.5rem;">All names in the book are changed to protect privacy. If you have a preference for how you'd like to be called, enter it here. Otherwise, an alias will be assigned.</p>
+                <label for="alias">Preferred Alias for the Book <span class="label-note">(optional — first AND last name)</span></label>
+                <input type="text" id="alias" name="alias" placeholder="e.g., 'John Miller' or leave blank and one will be assigned">
+                <p style="font-size: 0.85rem; color: var(--color-smoke); margin-top: 0.5rem;">All names in the book are changed to protect privacy — both first and last. If you have a preference for your fictional name, enter it here. Otherwise, a full alias will be assigned.</p>
             </div>
 
             <div class="form-group">
@@ -413,10 +413,17 @@
             </div>
 
             <div class="form-group">
-                <label for="permission">
-                    <input type="checkbox" id="permission" name="permission" required>
-                    I give permission for my story to be considered for inclusion in "The Logan Fire" book. I understand I may be contacted for clarification or follow-up.
-                </label>
+                <label style="font-weight: bold; margin-bottom: 0.75rem; display: block;">May we include your story in the book?</label>
+                <div style="margin-left: 0.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; cursor: pointer;">
+                        <input type="radio" id="permission-yes" name="book-permission" value="yes" required>
+                        <strong>Yes</strong> — I give permission for my story to be considered for inclusion in "The Logan Fire" book. I understand I may be contacted for clarification or follow-up.
+                    </label>
+                    <label style="display: block; margin-bottom: 0.5rem; cursor: pointer;">
+                        <input type="radio" id="permission-no" name="book-permission" value="no">
+                        <strong>No</strong> — I prefer my story NOT be included in the book. I'm sharing for the historical record only, and I trust you'll respect my decision.
+                    </label>
+                </div>
             </div>
 
             <button type="submit" id="submit-btn" class="submit-btn">Submit Your Story</button>
@@ -572,6 +579,8 @@
 
             // Gather form data
             const aliasValue = document.getElementById('alias').value.trim();
+            const permissionValue = document.querySelector('input[name="book-permission"]:checked').value;
+            const includeInBook = permissionValue === 'yes';
             const formData = {
                 fields: {
                     'Name': document.getElementById('name').value,
@@ -581,9 +590,9 @@
                     'Story': document.getElementById('story').value || '',
                     'Has Recording': audioBase64 ? 'Yes' : 'No',
                     'Recording Duration': audioBase64 ? `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}` : '',
-                    'Permission Granted': 'Yes',
+                    'Include in Book': includeInBook ? 'Yes' : 'DO NOT USE',
                     'Submitted At': new Date().toISOString(),
-                    'Status': 'New'
+                    'Status': includeInBook ? 'New' : 'Do Not Include'
                 }
             };
 

@@ -10,8 +10,8 @@ This document maps fictional names used in the published book to real names.
 
 | Book Name | Real Name | Role |
 |-----------|-----------|------|
-| Jake Sullivan | Kyle McConnell | Author/Narrator |
-| Brynn Sullivan | Brandi McConnell | Jake's wife |
+| Bruce Tucker | Kyle McConnell | Author/Narrator |
+| Kate Tucker | Brandi McConnell | Bruce's wife |
 | Sawyer | Tyndle | Oldest child (2 yrs old) |
 | Twin daughters | Twin daughters | (2 months old) |
 
@@ -21,7 +21,7 @@ This document maps fictional names used in the published book to real names.
 
 | Book Name | Real Name | Role |
 |-----------|-----------|------|
-| Luke Harper | Matt Allphin | Jake's cousin, Marine, 5 tours Iraq |
+| Luke Harper | Matt Allphin | Bruce's cousin, Marine, 5 tours Iraq |
 
 ---
 
@@ -30,7 +30,7 @@ This document maps fictional names used in the published book to real names.
 | Book Name | Real Name | Role |
 |-----------|-----------|------|
 | Jeff Burke | Jeff Firme | Fire Chief, Navy navigator |
-| Jared Burke | Jared Firme | Jake's best friend, lost house |
+| Jared Burke | Jared Firme | Bruce's best friend, lost house |
 | Sara Burke | Sara Firme | Jared's wife |
 | Matt Burke | Matt Firme | Navy parachute specialist |
 
