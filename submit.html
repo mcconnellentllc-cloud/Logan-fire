@@ -734,6 +734,8 @@
                     body: JSON.stringify(formData)
                 });
 
+                const responseData = await response.json();
+
                 if (response.ok) {
                     // Success! Reset everything
                     form.reset();
@@ -756,10 +758,12 @@
                     successMsg.style.display = 'block';
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 } else {
-                    throw new Error('Submission failed');
+                    console.error('Airtable error:', responseData);
+                    throw new Error(responseData.error?.message || 'Submission failed');
                 }
             } catch (error) {
                 console.error('Error:', error);
+                errorMsg.textContent = 'Something went wrong: ' + error.message + '. Check browser console for details.';
                 errorMsg.style.display = 'block';
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Submit Your Story';
