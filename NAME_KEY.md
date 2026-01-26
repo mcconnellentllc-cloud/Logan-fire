@@ -72,6 +72,12 @@ This document maps fictional names used in the published book to real names.
 | Lynn Spencer | Lynn Seager | Doghouse incident |
 | Bill Brooks | Bill Bruns | Camper replaced in 72 hrs |
 | Linda | Lynda | Helped with evacuation |
+| Amy | Amanda | Helped load car during evacuation |
+| Dan | Don | Amy's partner, evacuation refuge |
+| Grandma Doris | Dorothy | Bruce's grandmother |
+| Beth Nelson | Brandi Nichols | Brought the boys during evacuation |
+| Larry | Larry | Told Kate they were fine during evacuation |
+| Adele | Adele | Larry's wife |
 
 ---
 
@@ -84,4 +90,4 @@ This document maps fictional names used in the published book to real names.
 
 ---
 
-*Last updated: January 2026*
+*Last updated: January 26, 2026*
