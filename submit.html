@@ -704,7 +704,6 @@
                     'Recording Duration': audioBase64 ? `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}` : '',
                     'Include in Book': includeInBook ? 'Yes' : 'No',
                     'Submitted At': new Date().toISOString(),
-                    'Status': includeInBook ? 'New' : 'Do Not Include',
                     'Photo Count': uploadedPhotos.length > 0 ? uploadedPhotos.length.toString() : '0'
                 }
             };
