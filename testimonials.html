@@ -542,9 +542,13 @@
                     const fields = record.fields;
                     const story = fields['Story'] || '';
                     const connection = fields['Connection'] || 'Community Member';
-                    const photoPermission = fields['Photo Permission'];
-                    const hasPhotos = fields['Photos'] && Array.isArray(fields['Photos']) && fields['Photos'].length > 0;
-                    const firstPhoto = hasPhotos && photoPermission === 'Yes' ? fields['Photos'][0].url : null;
+                    const notes = fields['Notes'] || '';
+
+                    // Check for photos in Attachments field
+                    const hasPhotos = fields['Attachments'] && Array.isArray(fields['Attachments']) && fields['Attachments'].length > 0;
+                    // Photo permission is granted if they submitted photos (checked in Notes or just assume yes if attachments exist)
+                    const photoPermissionGranted = hasPhotos && (notes.includes('Photo permission: Yes') || !notes.includes('Photo permission: No'));
+                    const firstPhoto = photoPermissionGranted ? fields['Attachments'][0].url : null;
 
                     // Add to contributors if they have a story
                     if (story && story.trim().length > 20) {
@@ -567,9 +571,9 @@
                         }
                     }
 
-                    // Check for photos (if Photos attachment field exists and permission granted)
-                    if (hasPhotos && photoPermission === 'Yes') {
-                        fields['Photos'].forEach(photo => {
+                    // Check for photos (if Attachments field exists and permission granted)
+                    if (photoPermissionGranted) {
+                        fields['Attachments'].forEach(photo => {
                             photos.push({
                                 url: photo.url,
                                 caption: connection
