@@ -967,15 +967,19 @@
                     const updateData = { fields: {} };
 
                     // Merge new photos with existing photos
+                    // Convert existing photos to {url: ...} format (Airtable returns full objects but expects URL-only for updates)
                     if (photoUrls.length > 0) {
                         const existingPhotos = existingRecord.fields['Attachments'] || [];
-                        updateData.fields['Attachments'] = [...existingPhotos, ...photoUrls];
+                        const existingPhotoUrls = existingPhotos.map(photo => ({ url: photo.url }));
+                        updateData.fields['Attachments'] = [...existingPhotoUrls, ...photoUrls];
                     }
 
                     // Merge new recordings with existing recordings
+                    // Convert existing recordings to {url: ...} format
                     if (audioUrl) {
                         const existingRecordings = existingRecord.fields['Attachments 2'] || [];
-                        updateData.fields['Attachments 2'] = [...existingRecordings, { url: audioUrl }];
+                        const existingRecordingUrls = existingRecordings.map(rec => ({ url: rec.url }));
+                        updateData.fields['Attachments 2'] = [...existingRecordingUrls, { url: audioUrl }];
                         updateData.fields['Has Recording'] = true;
                         updateData.fields['Recording Duration'] = `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`;
                     }
@@ -1008,6 +1012,26 @@
 
                     responseData = await response.json();
                     console.log('Airtable update response:', responseData);
+
+                    // If attachment fields cause errors, retry without them (same as CREATE path)
+                    if (!response.ok && responseData.error?.message?.includes('Attachments')) {
+                        console.warn('Attachment field error during update, retrying without attachments...');
+                        delete updateData.fields['Attachments'];
+                        delete updateData.fields['Attachments 2'];
+                        response = await fetch(
+                            `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}/${existingRecord.id}`,
+                            {
+                                method: 'PATCH',
+                                headers: {
+                                    'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(updateData)
+                            }
+                        );
+                        responseData = await response.json();
+                        console.log('Airtable update retry response:', responseData);
+                    }
 
                 } else {
                     // CREATE new record
