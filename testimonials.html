@@ -265,6 +265,98 @@
             font-size: 3rem;
             opacity: 0.7;
         }
+
+        /* Photo Carousel */
+        .photo-carousel {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+        .carousel-slides {
+            display: flex;
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+        }
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease, background 0.2s ease;
+            z-index: 10;
+        }
+        .photo-carousel:hover .carousel-btn {
+            opacity: 1;
+        }
+        .carousel-btn:hover {
+            background: rgba(0,0,0,0.8);
+        }
+        .carousel-btn.prev {
+            left: 8px;
+        }
+        .carousel-btn.next {
+            right: 8px;
+        }
+        .carousel-dots {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+        }
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .carousel-dot.active {
+            background: white;
+        }
+        .carousel-dot:hover {
+            background: rgba(255,255,255,0.8);
+        }
+        .photo-count {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            z-index: 10;
+        }
+        /* Always show carousel buttons in modal */
+        .story-modal .carousel-btn {
+            opacity: 1;
+        }
+
         .contributor-info {
             padding: 1.5rem;
         }
@@ -583,7 +675,8 @@
                     const hasPhotos = fields['Attachments'] && Array.isArray(fields['Attachments']) && fields['Attachments'].length > 0;
                     // Photo permission is granted if they submitted photos (checked in Notes or just assume yes if attachments exist)
                     const photoPermissionGranted = hasPhotos && (notes.includes('Photo permission: Yes') || !notes.includes('Photo permission: No'));
-                    const firstPhoto = photoPermissionGranted ? fields['Attachments'][0].url : null;
+                    const allPhotos = photoPermissionGranted ? fields['Attachments'].map(p => p.url) : [];
+                    const firstPhoto = allPhotos.length > 0 ? allPhotos[0] : null;
 
                     // Check for recordings in Attachments 2 field
                     const hasRecordings = fields['Attachments 2'] && Array.isArray(fields['Attachments 2']) && fields['Attachments 2'].length > 0;
@@ -599,6 +692,7 @@
                             story: story,
                             connection: connection,
                             photo: firstPhoto,
+                            photos: allPhotos,
                             recording: firstRecording,
                             excerpt: shortExcerpt
                         });
@@ -631,9 +725,27 @@
                 if (contributors.length > 0) {
                     contributorsGrid.innerHTML = contributors.map((contributor, idx) => `
                         <div class="contributor-card">
-                            ${contributor.photo
-                                ? `<img class="contributor-photo" src="${contributor.photo}" alt="Photo shared by contributor" loading="lazy">`
-                                : `<div class="contributor-photo-placeholder">&#128100;</div>`
+                            ${contributor.photos && contributor.photos.length > 1
+                                ? `<div class="photo-carousel" data-carousel-id="${contributor.id}">
+                                    <div class="carousel-slides">
+                                        ${contributor.photos.map(photo => `
+                                            <div class="carousel-slide">
+                                                <img src="${photo}" alt="Photo shared by contributor" loading="lazy">
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                    <button class="carousel-btn prev" onclick="event.stopPropagation(); moveCarousel(${contributor.id}, -1)">&#10094;</button>
+                                    <button class="carousel-btn next" onclick="event.stopPropagation(); moveCarousel(${contributor.id}, 1)">&#10095;</button>
+                                    <div class="carousel-dots">
+                                        ${contributor.photos.map((_, i) => `
+                                            <span class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="event.stopPropagation(); goToSlide(${contributor.id}, ${i})"></span>
+                                        `).join('')}
+                                    </div>
+                                    <span class="photo-count">${contributor.photos.length} photos</span>
+                                </div>`
+                                : contributor.photo
+                                    ? `<img class="contributor-photo" src="${contributor.photo}" alt="Photo shared by contributor" loading="lazy">`
+                                    : `<div class="contributor-photo-placeholder">&#128100;</div>`
                             }
                             <div class="contributor-info">
                                 <span class="contributor-role">${escapeHtml(contributor.connection)}</span>
@@ -782,13 +894,77 @@
             document.body.style.overflow = '';
         }
 
+        // Carousel functions
+        const carouselStates = {}; // Track current slide for each carousel
+
+        function moveCarousel(carouselId, direction) {
+            const carousel = document.querySelector(`[data-carousel-id="${carouselId}"]`);
+            if (!carousel) return;
+
+            const slides = carousel.querySelector('.carousel-slides');
+            const totalSlides = slides.children.length;
+
+            // Initialize state if needed
+            if (carouselStates[carouselId] === undefined) {
+                carouselStates[carouselId] = 0;
+            }
+
+            // Calculate new index
+            let newIndex = carouselStates[carouselId] + direction;
+            if (newIndex < 0) newIndex = totalSlides - 1;
+            if (newIndex >= totalSlides) newIndex = 0;
+
+            goToSlide(carouselId, newIndex);
+        }
+
+        function goToSlide(carouselId, index) {
+            const carousel = document.querySelector(`[data-carousel-id="${carouselId}"]`);
+            if (!carousel) return;
+
+            const slides = carousel.querySelector('.carousel-slides');
+            const dots = carousel.querySelectorAll('.carousel-dot');
+
+            // Update state
+            carouselStates[carouselId] = index;
+
+            // Move slides
+            slides.style.transform = `translateX(-${index * 100}%)`;
+
+            // Update dots
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
         // Story Modal functions
         function openStoryModal(contributorId) {
             const contributor = contributorsData[contributorId];
             if (!contributor) return;
 
             const photoContainer = document.getElementById('story-modal-photo-container');
-            if (contributor.photo) {
+            if (contributor.photos && contributor.photos.length > 1) {
+                // Multiple photos - show carousel
+                photoContainer.innerHTML = `
+                    <div class="photo-carousel" data-carousel-id="modal-${contributorId}" style="height: 300px;">
+                        <div class="carousel-slides">
+                            ${contributor.photos.map(photo => `
+                                <div class="carousel-slide">
+                                    <img src="${photo}" alt="Photo shared by contributor" style="width:100%;height:300px;object-fit:cover;">
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button class="carousel-btn prev" onclick="event.stopPropagation(); moveCarousel('modal-${contributorId}', -1)">&#10094;</button>
+                        <button class="carousel-btn next" onclick="event.stopPropagation(); moveCarousel('modal-${contributorId}', 1)">&#10095;</button>
+                        <div class="carousel-dots">
+                            ${contributor.photos.map((_, i) => `
+                                <span class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="event.stopPropagation(); goToSlide('modal-${contributorId}', ${i})"></span>
+                            `).join('')}
+                        </div>
+                        <span class="photo-count">${contributor.photos.length} photos</span>
+                    </div>`;
+                // Reset carousel state for modal
+                carouselStates['modal-' + contributorId] = 0;
+            } else if (contributor.photo) {
                 photoContainer.innerHTML = `<img class="story-modal-photo" src="${contributor.photo}" alt="Photo shared by contributor">`;
             } else {
                 photoContainer.innerHTML = `<div class="story-modal-photo-placeholder">&#128100;</div>`;
