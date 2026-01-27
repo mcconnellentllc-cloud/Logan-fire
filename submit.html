@@ -785,19 +785,34 @@
             try {
                 // Upload photos to Cloudinary first
                 let photoUrls = [];
-                if (uploadedPhotos.length > 0 && CLOUDINARY_CLOUD_NAME !== 'YOUR_CLOUD_NAME') {
+                if (uploadedPhotos.length > 0) {
                     submitBtn.innerHTML = '<span class="loading-spinner"></span>Uploading photos...';
+                    console.log('Uploading', uploadedPhotos.length, 'photos to Cloudinary...');
                     for (const photo of uploadedPhotos) {
-                        const url = await uploadToCloudinary(photo.file, 'image');
-                        photoUrls.push({ url: url });
+                        try {
+                            const url = await uploadToCloudinary(photo.file, 'image');
+                            console.log('Photo uploaded:', url);
+                            photoUrls.push({ url: url });
+                        } catch (photoErr) {
+                            console.error('Failed to upload photo:', photo.name, photoErr);
+                            throw new Error(`Failed to upload photo "${photo.name}": ${photoErr.message}`);
+                        }
                     }
+                    console.log('All photos uploaded successfully:', photoUrls);
                 }
 
                 // Upload audio recording to Cloudinary
                 let audioUrl = null;
-                if (recordingBlob && CLOUDINARY_CLOUD_NAME !== 'YOUR_CLOUD_NAME') {
+                if (recordingBlob) {
                     submitBtn.innerHTML = '<span class="loading-spinner"></span>Uploading recording...';
-                    audioUrl = await uploadToCloudinary(recordingBlob, 'video'); // Cloudinary uses 'video' for audio
+                    console.log('Uploading audio recording to Cloudinary...');
+                    try {
+                        audioUrl = await uploadToCloudinary(recordingBlob, 'video'); // Cloudinary uses 'video' for audio
+                        console.log('Audio uploaded:', audioUrl);
+                    } catch (audioErr) {
+                        console.error('Failed to upload audio:', audioErr);
+                        throw new Error(`Failed to upload recording: ${audioErr.message}`);
+                    }
                 }
 
                 submitBtn.innerHTML = '<span class="loading-spinner"></span>Saving to database...';
@@ -854,18 +869,20 @@
                     formData.fields['Notes'] = notesArr.join('\n');
                 }
 
-                // Add audio attachment if we have a URL
+                // Add audio attachment if we have a URL (using Airtable's "Attachments 2" field)
                 if (audioUrl) {
-                    formData.fields['Recording'] = [{ url: audioUrl }];
+                    formData.fields['Attachments 2'] = [{ url: audioUrl }];
                 }
 
-                // Add photos as attachments if we have URLs
+                // Add photos as attachments if we have URLs (using Airtable's "Attachments" field)
                 if (photoUrls.length > 0) {
-                    formData.fields['Photos'] = photoUrls;
+                    formData.fields['Attachments'] = photoUrls;
                 }
+
+                console.log('Submitting to Airtable:', JSON.stringify(formData, null, 2));
 
                 // Submit to Airtable
-                const response = await fetch(
+                let response = await fetch(
                     `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`,
                     {
                         method: 'POST',
@@ -877,7 +894,28 @@
                     }
                 );
 
-                const responseData = await response.json();
+                let responseData = await response.json();
+                console.log('Airtable response:', responseData);
+
+                // If attachment fields cause errors, retry without them
+                if (!response.ok && responseData.error?.message?.includes('Attachments')) {
+                    console.warn('Attachment field error, retrying without attachments...');
+                    delete formData.fields['Attachments'];
+                    delete formData.fields['Attachments 2'];
+                    response = await fetch(
+                        `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`,
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(formData)
+                        }
+                    );
+                    responseData = await response.json();
+                    console.log('Airtable retry response:', responseData);
+                }
 
                 if (response.ok) {
                     // Success! Reset everything
