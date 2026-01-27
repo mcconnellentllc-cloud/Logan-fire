@@ -426,6 +426,20 @@
                         </div>
                     </div>
                 </div>
+
+                <div id="recording-permission" class="recording-permission" style="display: none; margin-top: 1rem; padding: 1rem; background: #f5f5f5; border-left: 4px solid var(--color-earth);">
+                    <label style="font-weight: bold; margin-bottom: 0.75rem; display: block;">May we use your voice recording?</label>
+                    <div style="margin-left: 0.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; cursor: pointer;">
+                            <input type="radio" id="recording-permission-yes" name="recording-usage" value="yes">
+                            <strong>Yes</strong> — I give permission for my voice recording to be used in the book and/or website.
+                        </label>
+                        <label style="display: block; cursor: pointer;">
+                            <input type="radio" id="recording-permission-no" name="recording-usage" value="no">
+                            <strong>No</strong> — Please do NOT use my recording publicly. It is for reference only.
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -443,6 +457,20 @@
                     <p style="font-size: 0.85rem; color: var(--color-smoke); margin-top: 0.5rem;">
                         Photos of the fire, smoke, damage, recovery, or anything related to that day. These may be included in the digital version.
                     </p>
+
+                    <div id="photo-permission" class="photo-permission" style="display: none; margin-top: 1rem; padding: 1rem; background: #f5f5f5; border-left: 4px solid var(--color-earth);">
+                        <label style="font-weight: bold; margin-bottom: 0.75rem; display: block;">May we use your photos?</label>
+                        <div style="margin-left: 0.5rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; cursor: pointer;">
+                                <input type="radio" id="photo-permission-yes" name="photo-usage" value="yes">
+                                <strong>Yes</strong> — I give permission for my photos to be used in the book and/or website.
+                            </label>
+                            <label style="display: block; cursor: pointer;">
+                                <input type="radio" id="photo-permission-no" name="photo-usage" value="no">
+                                <strong>No</strong> — Please do NOT use my photos publicly. They are for reference only.
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -582,6 +610,7 @@
             if (recordingBlob) {
                 document.getElementById('recorder-section').style.display = 'none';
                 document.getElementById('recording-saved').classList.add('visible');
+                document.getElementById('recording-permission').style.display = 'block';
             }
         }
 
@@ -593,6 +622,10 @@
             document.getElementById('recorder-status').textContent = 'Ready to record';
             document.getElementById('recorder-section').style.display = 'block';
             document.getElementById('recording-saved').classList.remove('visible');
+            document.getElementById('recording-permission').style.display = 'none';
+            // Clear recording permission selection
+            const recordingPermissionRadios = document.querySelectorAll('input[name="recording-usage"]');
+            recordingPermissionRadios.forEach(radio => radio.checked = false);
         }
 
         // Check for microphone support
@@ -642,6 +675,9 @@
                             border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold;">×</button>
                     `;
                     previewContainer.appendChild(previewDiv);
+
+                    // Show photo permission option when photos are added
+                    updatePhotoPermissionVisibility();
                 };
                 reader.readAsDataURL(file);
             });
@@ -652,6 +688,19 @@
         function removePhoto(index) {
             uploadedPhotos.splice(index, 1);
             refreshPhotoPreviews();
+            updatePhotoPermissionVisibility();
+        }
+
+        function updatePhotoPermissionVisibility() {
+            const photoPermission = document.getElementById('photo-permission');
+            if (uploadedPhotos.length > 0) {
+                photoPermission.style.display = 'block';
+            } else {
+                photoPermission.style.display = 'none';
+                // Clear photo permission selection when no photos
+                const photoPermissionRadios = document.querySelectorAll('input[name="photo-usage"]');
+                photoPermissionRadios.forEach(radio => radio.checked = false);
+            }
         }
 
         function refreshPhotoPreviews() {
@@ -706,6 +755,28 @@
             successMsg.style.display = 'none';
             errorMsg.style.display = 'none';
 
+            // Validate recording permission if recording exists
+            if (recordingBlob) {
+                const recordingPermissionSelected = document.querySelector('input[name="recording-usage"]:checked');
+                if (!recordingPermissionSelected) {
+                    errorMsg.textContent = 'Please indicate whether we may use your voice recording.';
+                    errorMsg.style.display = 'block';
+                    document.getElementById('recording-permission').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+            }
+
+            // Validate photo permission if photos exist
+            if (uploadedPhotos.length > 0) {
+                const photoPermissionSelected = document.querySelector('input[name="photo-usage"]:checked');
+                if (!photoPermissionSelected) {
+                    errorMsg.textContent = 'Please indicate whether we may use your photos.';
+                    errorMsg.style.display = 'block';
+                    document.getElementById('photo-permission').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+            }
+
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="loading-spinner"></span>Uploading...';
 
@@ -734,6 +805,20 @@
                 const permissionValue = document.querySelector('input[name="book-permission"]:checked').value;
                 const includeInBook = permissionValue === 'yes';
 
+                // Get recording permission if recording exists
+                let recordingPermission = '';
+                if (recordingBlob) {
+                    const recordingPermissionRadio = document.querySelector('input[name="recording-usage"]:checked');
+                    recordingPermission = recordingPermissionRadio ? (recordingPermissionRadio.value === 'yes' ? 'Yes' : 'No') : '';
+                }
+
+                // Get photo permission if photos exist
+                let photoPermission = '';
+                if (uploadedPhotos.length > 0) {
+                    const photoPermissionRadio = document.querySelector('input[name="photo-usage"]:checked');
+                    photoPermission = photoPermissionRadio ? (photoPermissionRadio.value === 'yes' ? 'Yes' : 'No') : '';
+                }
+
                 const formData = {
                     fields: {
                         'Name': document.getElementById('name').value,
@@ -743,6 +828,8 @@
                         'Story': document.getElementById('story').value || '',
                         'Has Recording': recordingBlob ? true : false,
                         'Recording Duration': recordingBlob ? `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}` : '',
+                        'Recording Permission': recordingPermission,
+                        'Photo Permission': photoPermission,
                         'Include in Book': includeInBook ? 'Yes' : 'No',
                         'Submitted At': new Date().toISOString(),
                         'Photo Count': uploadedPhotos.length.toString()
@@ -798,6 +885,8 @@
                     document.getElementById('recorder-status').textContent = 'Ready to record';
                     document.getElementById('recorder-section').style.display = 'block';
                     document.getElementById('photo-previews').innerHTML = '';
+                    document.getElementById('recording-permission').style.display = 'none';
+                    document.getElementById('photo-permission').style.display = 'none';
                     updateTimer();
 
                     form.style.display = 'none';
