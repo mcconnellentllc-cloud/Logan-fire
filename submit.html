@@ -990,10 +990,18 @@
                         updateData.fields['Notes'] = existingNotes ? existingNotes + '\n\n' + notesArr.join('\n') : notesArr.join('\n');
                     }
 
-                    // Update story if provided (allows users to add/edit their story)
+                    // Append new story content if provided (preserves existing story, adds new content with timestamp)
                     const newStory = document.getElementById('story').value || '';
                     if (newStory && newStory.trim()) {
-                        updateData.fields['Story'] = newStory;
+                        const existingStory = existingRecord.fields['Story'] || '';
+                        const timestamp = new Date().toLocaleString();
+                        if (existingStory && existingStory.trim()) {
+                            // Append new content with timestamp separator
+                            updateData.fields['Story'] = existingStory + '\n\n---\n[' + timestamp + ']\n' + newStory.trim();
+                        } else {
+                            // No existing story, just use the new one
+                            updateData.fields['Story'] = newStory.trim();
+                        }
                     }
 
                     console.log('Update data:', JSON.stringify(updateData, null, 2));
