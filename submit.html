@@ -992,9 +992,6 @@
                         updateData.fields['Story'] = newStory;
                     }
 
-                    // Update last submission time
-                    updateData.fields['Last Updated'] = new Date().toISOString();
-
                     console.log('Update data:', JSON.stringify(updateData, null, 2));
 
                     response = await fetch(
