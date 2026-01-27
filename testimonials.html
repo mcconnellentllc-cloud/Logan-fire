@@ -217,6 +217,173 @@
             color: var(--color-fire);
         }
 
+        /* Contributor Cards */
+        .contributors-section {
+            margin-bottom: 4rem;
+        }
+        .contributors-section h2 {
+            text-align: center;
+            color: var(--color-earth);
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+        .contributors-section .subtitle {
+            text-align: center;
+            color: var(--color-smoke);
+            margin-bottom: 2rem;
+        }
+        .contributors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        .contributor-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .contributor-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        .contributor-photo {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: var(--color-wheat);
+        }
+        .contributor-photo-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--color-wheat) 0%, var(--color-earth) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            opacity: 0.7;
+        }
+        .contributor-info {
+            padding: 1.5rem;
+        }
+        .contributor-role {
+            display: inline-block;
+            background: var(--color-fire);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        .contributor-excerpt {
+            color: var(--color-dark);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+        .contributor-read-more {
+            display: inline-block;
+            color: var(--color-fire);
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .contributor-read-more:hover {
+            color: var(--color-earth);
+            text-decoration: underline;
+        }
+
+        /* Story Modal */
+        .story-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 1001;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+        .story-modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .story-modal-content {
+            background: white;
+            max-width: 700px;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 2rem auto;
+            position: relative;
+        }
+        .story-modal-header {
+            position: relative;
+        }
+        .story-modal-photo {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        .story-modal-photo-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--color-wheat) 0%, var(--color-earth) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+            opacity: 0.7;
+        }
+        .story-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+        .story-modal-close:hover {
+            background: rgba(0,0,0,0.8);
+        }
+        .story-modal-body {
+            padding: 2rem;
+        }
+        .story-modal-role {
+            display: inline-block;
+            background: var(--color-fire);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .story-modal-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--color-dark);
+            white-space: pre-wrap;
+        }
+
         /* CTA Section */
         .cta-section {
             background: var(--color-wheat);
@@ -269,6 +436,14 @@
             <p>These are the words of farmers, neighbors, volunteers, and strangers who came together during and after the Logan Fire. Names have been changed to protect privacy, but the stories are real.</p>
         </div>
 
+        <section class="contributors-section">
+            <h2>Community Contributors</h2>
+            <p class="subtitle">Meet the people sharing their stories</p>
+            <div id="contributors-grid" class="contributors-grid">
+                <div class="loading">Loading contributors...</div>
+            </div>
+        </section>
+
         <section class="quotes-section">
             <h2>In Their Own Words</h2>
             <div id="quotes-grid" class="quotes-grid">
@@ -302,6 +477,20 @@
         <div id="lightbox-caption" class="lightbox-caption"></div>
     </div>
 
+    <!-- Story Modal -->
+    <div id="story-modal" class="story-modal" onclick="closeStoryModal(event)">
+        <div class="story-modal-content" onclick="event.stopPropagation()">
+            <div class="story-modal-header">
+                <div id="story-modal-photo-container"></div>
+                <button class="story-modal-close" onclick="closeStoryModal()">&times;</button>
+            </div>
+            <div class="story-modal-body">
+                <span id="story-modal-role" class="story-modal-role"></span>
+                <div id="story-modal-text" class="story-modal-text"></div>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <p class="footer-quote">"People with full hearts showed up from everywhere — small towns, big cities, near and far. That's the story worth telling."</p>
         <p class="copyright">&copy; 2025 The Logan Fire</p>
@@ -315,10 +504,14 @@
         const AIRTABLE_BASE_ID = 'appN4OIz2fbVguxSV';
         const AIRTABLE_TABLE_NAME = 'Stories';
 
+        // Store contributors data for modal access
+        let contributorsData = [];
+
         // ===========================================
         // Fetch and Display Testimonials
         // ===========================================
         async function loadTestimonials() {
+            const contributorsGrid = document.getElementById('contributors-grid');
             const quotesGrid = document.getElementById('quotes-grid');
             const photoGallery = document.getElementById('photo-gallery');
 
@@ -340,18 +533,31 @@
                 const data = await response.json();
                 const records = data.records || [];
 
-                // Process quotes
+                // Process data
+                const contributors = [];
                 const quotes = [];
                 const photos = [];
 
-                records.forEach(record => {
+                records.forEach((record, index) => {
                     const fields = record.fields;
                     const story = fields['Story'] || '';
                     const connection = fields['Connection'] || 'Community Member';
+                    const photoPermission = fields['Photo Permission'];
+                    const hasPhotos = fields['Photos'] && Array.isArray(fields['Photos']) && fields['Photos'].length > 0;
+                    const firstPhoto = hasPhotos && photoPermission === 'Yes' ? fields['Photos'][0].url : null;
 
-                    // Extract impactful quote (first meaningful sentence or paragraph)
+                    // Add to contributors if they have a story
                     if (story && story.trim().length > 20) {
-                        // Get a good excerpt - look for complete sentences
+                        const shortExcerpt = extractShortExcerpt(story);
+                        contributors.push({
+                            id: index,
+                            story: story,
+                            connection: connection,
+                            photo: firstPhoto,
+                            excerpt: shortExcerpt
+                        });
+
+                        // Also add to quotes
                         let excerpt = extractQuote(story);
                         if (excerpt) {
                             quotes.push({
@@ -361,8 +567,8 @@
                         }
                     }
 
-                    // Check for photos (if Photos attachment field exists)
-                    if (fields['Photos'] && Array.isArray(fields['Photos'])) {
+                    // Check for photos (if Photos attachment field exists and permission granted)
+                    if (hasPhotos && photoPermission === 'Yes') {
                         fields['Photos'].forEach(photo => {
                             photos.push({
                                 url: photo.url,
@@ -371,6 +577,32 @@
                         });
                     }
                 });
+
+                // Store for modal access
+                contributorsData = contributors;
+
+                // Display contributor cards
+                if (contributors.length > 0) {
+                    contributorsGrid.innerHTML = contributors.map((contributor, idx) => `
+                        <div class="contributor-card">
+                            ${contributor.photo
+                                ? `<img class="contributor-photo" src="${contributor.photo}" alt="Photo shared by contributor" loading="lazy">`
+                                : `<div class="contributor-photo-placeholder">&#128100;</div>`
+                            }
+                            <div class="contributor-info">
+                                <span class="contributor-role">${escapeHtml(contributor.connection)}</span>
+                                <p class="contributor-excerpt">"${escapeHtml(contributor.excerpt)}"</p>
+                                <span class="contributor-read-more" onclick="openStoryModal(${contributor.id})">Read their story &rarr;</span>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    contributorsGrid.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1 / -1;">
+                            <p>Contributors are being added. <a href="submit.html">Share your story to be featured.</a></p>
+                        </div>
+                    `;
+                }
 
                 // Display quotes
                 if (quotes.length > 0) {
@@ -406,6 +638,11 @@
 
             } catch (error) {
                 console.error('Error loading testimonials:', error);
+                contributorsGrid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <p>Unable to load contributors at this time. Please try again later.</p>
+                    </div>
+                `;
                 quotesGrid.innerHTML = `
                     <div class="empty-state" style="grid-column: 1 / -1;">
                         <p>Unable to load stories at this time. Please try again later.</p>
@@ -417,6 +654,35 @@
                     </div>
                 `;
             }
+        }
+
+        // Extract a short excerpt for contributor cards (2-3 sentences, ~100-150 chars)
+        function extractShortExcerpt(story) {
+            let text = story.trim();
+
+            // If very short, use it all
+            if (text.length <= 120) {
+                return text;
+            }
+
+            // Try to find sentence breaks
+            const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+
+            // Take first 1-2 sentences, aiming for ~100-150 characters
+            let excerpt = '';
+            for (let sentence of sentences) {
+                if (excerpt.length + sentence.length <= 150) {
+                    excerpt += sentence;
+                } else if (excerpt.length === 0) {
+                    // First sentence is too long, truncate it
+                    excerpt = sentence.substring(0, 120) + '...';
+                    break;
+                } else {
+                    break;
+                }
+            }
+
+            return excerpt.trim();
         }
 
         // Extract a compelling quote from a story
@@ -469,9 +735,39 @@
             document.body.style.overflow = '';
         }
 
-        // Close lightbox on escape key
+        // Story Modal functions
+        function openStoryModal(contributorId) {
+            const contributor = contributorsData[contributorId];
+            if (!contributor) return;
+
+            const photoContainer = document.getElementById('story-modal-photo-container');
+            if (contributor.photo) {
+                photoContainer.innerHTML = `<img class="story-modal-photo" src="${contributor.photo}" alt="Photo shared by contributor">`;
+            } else {
+                photoContainer.innerHTML = `<div class="story-modal-photo-placeholder">&#128100;</div>`;
+            }
+
+            document.getElementById('story-modal-role').textContent = contributor.connection;
+            document.getElementById('story-modal-text').textContent = contributor.story;
+            document.getElementById('story-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeStoryModal(event) {
+            // If called from backdrop click, only close if clicking the modal background
+            if (event && event.target && event.target.id !== 'story-modal') {
+                return;
+            }
+            document.getElementById('story-modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modals on escape key
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'Escape') {
+                closeLightbox();
+                closeStoryModal();
+            }
         });
 
         // Load testimonials on page load
