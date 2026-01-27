@@ -821,6 +821,20 @@
                     photoPermission = photoPermissionRadio ? (photoPermissionRadio.value === 'yes' ? 'Yes' : 'No') : '';
                 }
 
+                // Build notes with all permission and media info
+                let notesArr = [];
+                if (recordingBlob) {
+                    const duration = `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`;
+                    notesArr.push(`Voice recording: ${duration}`);
+                    notesArr.push(`Recording permission: ${recordingPermission}`);
+                    if (audioUrl) notesArr.push(`Audio URL: ${audioUrl}`);
+                }
+                if (uploadedPhotos.length > 0) {
+                    notesArr.push(`${uploadedPhotos.length} photo(s) uploaded`);
+                    notesArr.push(`Photo permission: ${photoPermission}`);
+                    photoUrls.forEach((p, i) => notesArr.push(`Photo ${i + 1}: ${p.url}`));
+                }
+
                 const formData = {
                     fields: {
                         'Name': document.getElementById('name').value,
@@ -830,35 +844,19 @@
                         'Story': document.getElementById('story').value || '',
                         'Has Recording': recordingBlob ? true : false,
                         'Recording Duration': recordingBlob ? `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}` : '',
-                        'Recording Permission': recordingPermission,
-                        'Photo Permission': photoPermission,
                         'Include in Book': includeInBook ? 'Yes' : 'No',
-                        'Submitted At': new Date().toISOString(),
-                        'Photo Count': uploadedPhotos.length.toString()
+                        'Submitted At': new Date().toISOString()
                     }
                 };
 
-                // Add photo attachments if we have URLs
-                if (photoUrls.length > 0) {
-                    formData.fields['Photos'] = photoUrls;
+                // Add notes if we have any
+                if (notesArr.length > 0) {
+                    formData.fields['Notes'] = notesArr.join('\n');
                 }
 
                 // Add audio attachment if we have a URL
                 if (audioUrl) {
                     formData.fields['Recording'] = [{ url: audioUrl }];
-                }
-
-                // Build notes
-                let notesArr = [];
-                if (recordingBlob) {
-                    notesArr.push(`Voice recording: ${formData.fields['Recording Duration']}`);
-                    if (audioUrl) notesArr.push(`Audio URL: ${audioUrl}`);
-                }
-                if (uploadedPhotos.length > 0) {
-                    notesArr.push(`${uploadedPhotos.length} photo(s) uploaded`);
-                }
-                if (notesArr.length > 0) {
-                    formData.fields['Notes'] = notesArr.join('\n');
                 }
 
                 // Submit to Airtable
