@@ -483,12 +483,20 @@
 
     <script>
         // ===========================================
-        // AIRTABLE CONFIGURATION
-        // Replace these with your Airtable details
+        // CONFIGURATION
         // ===========================================
+        // Airtable
         const AIRTABLE_API_KEY = 'patKGUjeYyVpYYggA.dd7ca2336fa80ff5014b16a0ea199322dada35e7c1b7ee8db7e7c03508e68c44';
         const AIRTABLE_BASE_ID = 'appN4OIz2fbVguxSV';
         const AIRTABLE_TABLE_NAME = 'Stories';
+
+        // Cloudinary - UPDATE THESE WITH YOUR CLOUDINARY DETAILS
+        // 1. Create free account at cloudinary.com
+        // 2. Go to Settings > Upload > Upload presets > Add upload preset
+        // 3. Set "Signing Mode" to "Unsigned"
+        // 4. Copy your cloud name from the Dashboard
+        const CLOUDINARY_CLOUD_NAME = 'YOUR_CLOUD_NAME';  // e.g., 'dxyz123abc'
+        const CLOUDINARY_UPLOAD_PRESET = 'logan_fire';    // Create this preset in Cloudinary
 
         // ===========================================
         // Voice Recorder
@@ -496,7 +504,6 @@
         let mediaRecorder;
         let audioChunks = [];
         let recordingBlob = null;
-        let audioBase64 = null;
         let isRecording = false;
         let timerInterval;
         let seconds = 0;
@@ -573,20 +580,13 @@
 
         function keepRecording() {
             if (recordingBlob) {
-                // Convert to base64 for storage
-                const reader = new FileReader();
-                reader.readAsDataURL(recordingBlob);
-                reader.onloadend = () => {
-                    audioBase64 = reader.result;
-                    document.getElementById('recorder-section').style.display = 'none';
-                    document.getElementById('recording-saved').classList.add('visible');
-                };
+                document.getElementById('recorder-section').style.display = 'none';
+                document.getElementById('recording-saved').classList.add('visible');
             }
         }
 
         function reRecord() {
             recordingBlob = null;
-            audioBase64 = null;
             seconds = 0;
             updateTimer();
             document.getElementById('playback-section').classList.remove('visible');
@@ -604,7 +604,7 @@
         // ===========================================
         // Photo Upload Handler
         // ===========================================
-        let uploadedPhotos = []; // Array of {name, base64, size}
+        let uploadedPhotos = []; // Array of {name, file, preview}
         const MAX_PHOTOS = 5;
         const MAX_SIZE_MB = 5;
 
@@ -625,18 +625,18 @@
 
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const base64 = e.target.result;
+                    const preview = e.target.result;
                     uploadedPhotos.push({
                         name: file.name,
-                        base64: base64,
-                        size: file.size
+                        file: file,
+                        preview: preview
                     });
 
                     // Create preview
                     const previewDiv = document.createElement('div');
                     previewDiv.style.cssText = 'position: relative; width: 100px; height: 100px;';
                     previewDiv.innerHTML = `
-                        <img src="${base64}" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ddd;">
+                        <img src="${preview}" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ddd;">
                         <button type="button" onclick="removePhoto(${uploadedPhotos.length - 1})"
                             style="position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white;
                             border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold;">×</button>
@@ -646,7 +646,6 @@
                 reader.readAsDataURL(file);
             });
 
-            // Clear the input so the same file can be selected again
             event.target.value = '';
         }
 
@@ -662,7 +661,7 @@
                 const previewDiv = document.createElement('div');
                 previewDiv.style.cssText = 'position: relative; width: 100px; height: 100px;';
                 previewDiv.innerHTML = `
-                    <img src="${photo.base64}" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ddd;">
+                    <img src="${photo.preview}" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ddd;">
                     <button type="button" onclick="removePhoto(${index})"
                         style="position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white;
                         border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold;">×</button>
@@ -672,7 +671,29 @@
         }
 
         // ===========================================
-        // Form Submission to Airtable
+        // Cloudinary Upload Helper
+        // ===========================================
+        async function uploadToCloudinary(file, resourceType = 'image') {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+            formData.append('folder', 'logan-fire');
+
+            const response = await fetch(
+                `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,
+                { method: 'POST', body: formData }
+            );
+
+            if (!response.ok) {
+                throw new Error('Failed to upload to Cloudinary');
+            }
+
+            const data = await response.json();
+            return data.secure_url;
+        }
+
+        // ===========================================
+        // Form Submission
         // ===========================================
         document.getElementById('story-form').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -682,78 +703,103 @@
             const errorMsg = document.getElementById('error-message');
             const form = document.getElementById('story-form');
 
-            // Hide any previous messages
             successMsg.style.display = 'none';
             errorMsg.style.display = 'none';
 
-            // Show loading state
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="loading-spinner"></span>Submitting...';
-
-            // Gather form data
-            const aliasValue = document.getElementById('alias').value.trim();
-            const permissionValue = document.querySelector('input[name="book-permission"]:checked').value;
-            const includeInBook = permissionValue === 'yes';
-            const formData = {
-                fields: {
-                    'Name': document.getElementById('name').value,
-                    'Email': document.getElementById('email').value || '',
-                    'Preferred Alias': aliasValue || '(assign one)',
-                    'Connection': document.getElementById('connection').value || '',
-                    'Story': document.getElementById('story').value || '',
-                    'Has Recording': audioBase64 ? true : false,
-                    'Recording Duration': audioBase64 ? `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}` : '',
-                    'Include in Book': includeInBook ? 'Yes' : 'No',
-                    'Submitted At': new Date().toISOString(),
-                    'Photo Count': uploadedPhotos.length > 0 ? uploadedPhotos.length.toString() : '0'
-                }
-            };
-
-            // Build notes with recording and photo info
-            let notesArr = [];
-            if (audioBase64) {
-                notesArr.push(`Voice recording submitted (${formData.fields['Recording Duration']})`);
-            }
-            if (uploadedPhotos.length > 0) {
-                notesArr.push(`${uploadedPhotos.length} photo(s) submitted`);
-                // Store photo data (names for reference)
-                const photoNames = uploadedPhotos.map(p => p.name).join(', ');
-                notesArr.push(`Photo files: ${photoNames}`);
-            }
-            if (notesArr.length > 0) {
-                formData.fields['Notes'] = notesArr.join('\n');
-            }
+            submitBtn.innerHTML = '<span class="loading-spinner"></span>Uploading...';
 
             try {
-                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
+                // Upload photos to Cloudinary first
+                let photoUrls = [];
+                if (uploadedPhotos.length > 0 && CLOUDINARY_CLOUD_NAME !== 'YOUR_CLOUD_NAME') {
+                    submitBtn.innerHTML = '<span class="loading-spinner"></span>Uploading photos...';
+                    for (const photo of uploadedPhotos) {
+                        const url = await uploadToCloudinary(photo.file, 'image');
+                        photoUrls.push({ url: url });
+                    }
+                }
+
+                // Upload audio recording to Cloudinary
+                let audioUrl = null;
+                if (recordingBlob && CLOUDINARY_CLOUD_NAME !== 'YOUR_CLOUD_NAME') {
+                    submitBtn.innerHTML = '<span class="loading-spinner"></span>Uploading recording...';
+                    audioUrl = await uploadToCloudinary(recordingBlob, 'video'); // Cloudinary uses 'video' for audio
+                }
+
+                submitBtn.innerHTML = '<span class="loading-spinner"></span>Saving to database...';
+
+                // Prepare Airtable data
+                const aliasValue = document.getElementById('alias').value.trim();
+                const permissionValue = document.querySelector('input[name="book-permission"]:checked').value;
+                const includeInBook = permissionValue === 'yes';
+
+                const formData = {
+                    fields: {
+                        'Name': document.getElementById('name').value,
+                        'Email': document.getElementById('email').value || '',
+                        'Preferred Alias': aliasValue || '(assign one)',
+                        'Connection': document.getElementById('connection').value || '',
+                        'Story': document.getElementById('story').value || '',
+                        'Has Recording': recordingBlob ? true : false,
+                        'Recording Duration': recordingBlob ? `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}` : '',
+                        'Include in Book': includeInBook ? 'Yes' : 'No',
+                        'Submitted At': new Date().toISOString(),
+                        'Photo Count': uploadedPhotos.length.toString()
+                    }
+                };
+
+                // Add photo attachments if we have URLs
+                if (photoUrls.length > 0) {
+                    formData.fields['Photos'] = photoUrls;
+                }
+
+                // Add audio attachment if we have a URL
+                if (audioUrl) {
+                    formData.fields['Recording'] = [{ url: audioUrl }];
+                }
+
+                // Build notes
+                let notesArr = [];
+                if (recordingBlob) {
+                    notesArr.push(`Voice recording: ${formData.fields['Recording Duration']}`);
+                    if (audioUrl) notesArr.push(`Audio URL: ${audioUrl}`);
+                }
+                if (uploadedPhotos.length > 0) {
+                    notesArr.push(`${uploadedPhotos.length} photo(s) uploaded`);
+                }
+                if (notesArr.length > 0) {
+                    formData.fields['Notes'] = notesArr.join('\n');
+                }
+
+                // Submit to Airtable
+                const response = await fetch(
+                    `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    }
+                );
 
                 const responseData = await response.json();
 
                 if (response.ok) {
                     // Success! Reset everything
                     form.reset();
-
-                    // Clear recording data
                     recordingBlob = null;
-                    audioBase64 = null;
                     seconds = 0;
+                    uploadedPhotos = [];
                     document.getElementById('recording-saved').classList.remove('visible');
                     document.getElementById('playback-section').classList.remove('visible');
                     document.getElementById('recorder-status').textContent = 'Ready to record';
+                    document.getElementById('recorder-section').style.display = 'block';
+                    document.getElementById('photo-previews').innerHTML = '';
                     updateTimer();
 
-                    // Clear photo uploads
-                    uploadedPhotos = [];
-                    document.getElementById('photo-previews').innerHTML = '';
-
-                    // Show success message
                     form.style.display = 'none';
                     successMsg.style.display = 'block';
                     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -763,7 +809,7 @@
                 }
             } catch (error) {
                 console.error('Error:', error);
-                errorMsg.textContent = 'Something went wrong: ' + error.message + '. Check browser console for details.';
+                errorMsg.textContent = 'Something went wrong: ' + error.message;
                 errorMsg.style.display = 'block';
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Submit Your Story';
