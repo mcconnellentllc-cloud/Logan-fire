@@ -869,14 +869,14 @@
                     formData.fields['Notes'] = notesArr.join('\n');
                 }
 
-                // Add audio attachment if we have a URL
+                // Add audio attachment if we have a URL (using Airtable's "Attachments 2" field)
                 if (audioUrl) {
-                    formData.fields['Recording'] = [{ url: audioUrl }];
+                    formData.fields['Attachments 2'] = [{ url: audioUrl }];
                 }
 
-                // Add photos as attachments if we have URLs
+                // Add photos as attachments if we have URLs (using Airtable's "Attachments" field)
                 if (photoUrls.length > 0) {
-                    formData.fields['Photos'] = photoUrls;
+                    formData.fields['Attachments'] = photoUrls;
                 }
 
                 console.log('Submitting to Airtable:', JSON.stringify(formData, null, 2));
@@ -897,10 +897,11 @@
                 let responseData = await response.json();
                 console.log('Airtable response:', responseData);
 
-                // If Photos field doesn't exist, retry without it
-                if (!response.ok && responseData.error?.message?.includes('Photos')) {
-                    console.warn('Photos field not found in Airtable, retrying without it...');
-                    delete formData.fields['Photos'];
+                // If attachment fields cause errors, retry without them
+                if (!response.ok && responseData.error?.message?.includes('Attachments')) {
+                    console.warn('Attachment field error, retrying without attachments...');
+                    delete formData.fields['Attachments'];
+                    delete formData.fields['Attachments 2'];
                     response = await fetch(
                         `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`,
                         {
