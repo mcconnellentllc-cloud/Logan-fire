@@ -384,6 +384,37 @@
             white-space: pre-wrap;
         }
 
+        /* Audio Player Styles */
+        .story-audio-section {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--color-wheat);
+            border-radius: 8px;
+        }
+        .story-audio-section h4 {
+            color: var(--color-earth);
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .story-audio-section audio {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        .contributor-has-audio {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            color: var(--color-smoke);
+            margin-left: 0.5rem;
+        }
+        .contributor-has-audio::before {
+            content: "🎙️";
+        }
+
         /* CTA Section */
         .cta-section {
             background: var(--color-wheat);
@@ -487,6 +518,10 @@
             <div class="story-modal-body">
                 <span id="story-modal-role" class="story-modal-role"></span>
                 <div id="story-modal-text" class="story-modal-text"></div>
+                <div id="story-modal-audio" class="story-audio-section" style="display: none;">
+                    <h4>Listen to Their Story</h4>
+                    <audio id="story-audio-player" controls></audio>
+                </div>
             </div>
         </div>
     </div>
@@ -550,6 +585,12 @@
                     const photoPermissionGranted = hasPhotos && (notes.includes('Photo permission: Yes') || !notes.includes('Photo permission: No'));
                     const firstPhoto = photoPermissionGranted ? fields['Attachments'][0].url : null;
 
+                    // Check for recordings in Attachments 2 field
+                    const hasRecordings = fields['Attachments 2'] && Array.isArray(fields['Attachments 2']) && fields['Attachments 2'].length > 0;
+                    // Recording permission is granted if checked in Notes or assume yes if attachments exist without explicit No
+                    const recordingPermissionGranted = hasRecordings && (notes.includes('Recording permission: Yes') || !notes.includes('Recording permission: No'));
+                    const firstRecording = recordingPermissionGranted ? fields['Attachments 2'][0].url : null;
+
                     // Add to contributors if they have a story
                     if (story && story.trim().length > 20) {
                         const shortExcerpt = extractShortExcerpt(story);
@@ -558,6 +599,7 @@
                             story: story,
                             connection: connection,
                             photo: firstPhoto,
+                            recording: firstRecording,
                             excerpt: shortExcerpt
                         });
 
@@ -595,6 +637,7 @@
                             }
                             <div class="contributor-info">
                                 <span class="contributor-role">${escapeHtml(contributor.connection)}</span>
+                                ${contributor.recording ? `<span class="contributor-has-audio">Has audio</span>` : ''}
                                 <p class="contributor-excerpt">"${escapeHtml(contributor.excerpt)}"</p>
                                 <span class="contributor-read-more" onclick="openStoryModal(${contributor.id})">Read their story &rarr;</span>
                             </div>
@@ -753,6 +796,18 @@
 
             document.getElementById('story-modal-role').textContent = contributor.connection;
             document.getElementById('story-modal-text').textContent = contributor.story;
+
+            // Handle audio recording
+            const audioSection = document.getElementById('story-modal-audio');
+            const audioPlayer = document.getElementById('story-audio-player');
+            if (contributor.recording) {
+                audioPlayer.src = contributor.recording;
+                audioSection.style.display = 'block';
+            } else {
+                audioPlayer.src = '';
+                audioSection.style.display = 'none';
+            }
+
             document.getElementById('story-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -761,6 +816,11 @@
             // If called from backdrop click, only close if clicking the modal background
             if (event && event.target && event.target.id !== 'story-modal') {
                 return;
+            }
+            // Pause audio when closing modal
+            const audioPlayer = document.getElementById('story-audio-player');
+            if (audioPlayer) {
+                audioPlayer.pause();
             }
             document.getElementById('story-modal').classList.remove('active');
             document.body.style.overflow = '';
