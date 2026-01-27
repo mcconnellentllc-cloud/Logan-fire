@@ -445,8 +445,8 @@
             <div class="form-group">
                 <label>Upload Photos <span class="label-note">(optional — share photos from the fire or recovery)</span></label>
                 <div class="photo-upload-section">
-                    <input type="file" id="photo-input" accept="image/*" multiple style="display: none;" onchange="handlePhotoUpload(event)">
-                    <div class="file-upload" onclick="document.getElementById('photo-input').click()">
+                    <input type="file" id="photo-input" accept="image/*,.heic,.heif" multiple style="display: none;" onchange="handlePhotoUpload(event)">
+                    <div class="file-upload" id="photo-drop-zone" onclick="document.getElementById('photo-input').click()">
                         <span class="file-upload-label">
                             <strong>Click to upload photos</strong><br>
                             or drag and drop
@@ -642,10 +642,21 @@
         const MAX_SIZE_MB = 5;
 
         function handlePhotoUpload(event) {
-            const files = Array.from(event.target.files);
+            const files = event.target?.files || event.dataTransfer?.files || [];
+            processPhotoFiles(Array.from(files));
+            if (event.target) event.target.value = '';
+        }
+
+        function processPhotoFiles(files) {
             const previewContainer = document.getElementById('photo-previews');
 
             files.forEach(file => {
+                // Check if file is an image
+                if (!file.type.startsWith('image/') && !file.name.toLowerCase().match(/\.(heic|heif)$/)) {
+                    alert(`${file.name} is not an image file.`);
+                    return;
+                }
+
                 if (uploadedPhotos.length >= MAX_PHOTOS) {
                     alert(`Maximum ${MAX_PHOTOS} photos allowed.`);
                     return;
@@ -656,33 +667,87 @@
                     return;
                 }
 
+                // Check if it's a HEIC/HEIF file (common on iPhone)
+                const isHeic = file.name.toLowerCase().match(/\.(heic|heif)$/) || file.type === 'image/heic' || file.type === 'image/heif';
+
                 const reader = new FileReader();
+
                 reader.onload = function(e) {
-                    const preview = e.target.result;
-                    uploadedPhotos.push({
-                        name: file.name,
-                        file: file,
-                        preview: preview
-                    });
-
-                    // Create preview
-                    const previewDiv = document.createElement('div');
-                    previewDiv.style.cssText = 'position: relative; width: 100px; height: 100px;';
-                    previewDiv.innerHTML = `
-                        <img src="${preview}" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ddd;">
-                        <button type="button" onclick="removePhoto(${uploadedPhotos.length - 1})"
-                            style="position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white;
-                            border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold;">×</button>
-                    `;
-                    previewContainer.appendChild(previewDiv);
-
-                    // Show photo permission option when photos are added
-                    updatePhotoPermissionVisibility();
+                    addPhotoToList(file, e.target.result);
                 };
+
+                reader.onerror = function(e) {
+                    console.warn('FileReader error for', file.name, '- adding with placeholder');
+                    // Still add the file even if we can't preview it (common with HEIC on non-Safari)
+                    addPhotoToList(file, null);
+                };
+
+                // For HEIC files, try to read but also set a timeout in case it hangs
+                if (isHeic) {
+                    // Set a timeout - if preview doesn't load in 3 seconds, add with placeholder
+                    const timeout = setTimeout(() => {
+                        if (!uploadedPhotos.find(p => p.file === file)) {
+                            console.warn('HEIC preview timeout for', file.name, '- adding with placeholder');
+                            reader.abort();
+                            addPhotoToList(file, null);
+                        }
+                    }, 3000);
+
+                    reader.onload = function(e) {
+                        clearTimeout(timeout);
+                        addPhotoToList(file, e.target.result);
+                    };
+
+                    reader.onerror = function(e) {
+                        clearTimeout(timeout);
+                        console.warn('HEIC FileReader error for', file.name);
+                        addPhotoToList(file, null);
+                    };
+                }
+
                 reader.readAsDataURL(file);
             });
+        }
 
-            event.target.value = '';
+        function addPhotoToList(file, preview) {
+            const previewContainer = document.getElementById('photo-previews');
+
+            // Avoid duplicates
+            if (uploadedPhotos.find(p => p.file === file)) return;
+
+            uploadedPhotos.push({
+                name: file.name,
+                file: file,
+                preview: preview
+            });
+
+            // Create preview element
+            const previewDiv = document.createElement('div');
+            previewDiv.style.cssText = 'position: relative; width: 100px; height: 100px;';
+
+            if (preview) {
+                previewDiv.innerHTML = `
+                    <img src="${preview}" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ddd;">
+                    <button type="button" onclick="removePhoto(${uploadedPhotos.length - 1})"
+                        style="position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white;
+                        border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold;">×</button>
+                `;
+            } else {
+                // Placeholder for HEIC or unreadable images
+                previewDiv.innerHTML = `
+                    <div style="width: 100px; height: 100px; border: 2px solid #ddd; background: #f0f0f0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.7rem; color: #666; text-align: center; padding: 5px; box-sizing: border-box;">
+                        <span style="font-size: 1.5rem;">📷</span>
+                        <span style="word-break: break-all; max-width: 90px; overflow: hidden; text-overflow: ellipsis;">${file.name.substring(0, 15)}${file.name.length > 15 ? '...' : ''}</span>
+                    </div>
+                    <button type="button" onclick="removePhoto(${uploadedPhotos.length - 1})"
+                        style="position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white;
+                        border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold;">×</button>
+                `;
+            }
+            previewContainer.appendChild(previewDiv);
+
+            // Show photo permission option when photos are added
+            updatePhotoPermissionVisibility();
         }
 
         function removePhoto(index) {
@@ -709,12 +774,26 @@
             uploadedPhotos.forEach((photo, index) => {
                 const previewDiv = document.createElement('div');
                 previewDiv.style.cssText = 'position: relative; width: 100px; height: 100px;';
-                previewDiv.innerHTML = `
-                    <img src="${photo.preview}" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ddd;">
-                    <button type="button" onclick="removePhoto(${index})"
-                        style="position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white;
-                        border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold;">×</button>
-                `;
+
+                if (photo.preview) {
+                    previewDiv.innerHTML = `
+                        <img src="${photo.preview}" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ddd;">
+                        <button type="button" onclick="removePhoto(${index})"
+                            style="position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white;
+                            border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold;">×</button>
+                    `;
+                } else {
+                    // Placeholder for HEIC or unreadable images
+                    previewDiv.innerHTML = `
+                        <div style="width: 100px; height: 100px; border: 2px solid #ddd; background: #f0f0f0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.7rem; color: #666; text-align: center; padding: 5px; box-sizing: border-box;">
+                            <span style="font-size: 1.5rem;">📷</span>
+                            <span style="word-break: break-all; max-width: 90px; overflow: hidden; text-overflow: ellipsis;">${photo.name.substring(0, 15)}${photo.name.length > 15 ? '...' : ''}</span>
+                        </div>
+                        <button type="button" onclick="removePhoto(${index})"
+                            style="position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white;
+                            border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold;">×</button>
+                    `;
+                }
                 previewContainer.appendChild(previewDiv);
             });
         }
@@ -1031,6 +1110,45 @@
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Submit Your Story';
             }
+        });
+
+        // ===========================================
+        // Drag and Drop Support for Photos
+        // ===========================================
+        const dropZone = document.getElementById('photo-drop-zone');
+
+        dropZone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.style.borderColor = '#4CAF50';
+            this.style.backgroundColor = '#e8f5e9';
+        });
+
+        dropZone.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.style.borderColor = '';
+            this.style.backgroundColor = '';
+        });
+
+        dropZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.style.borderColor = '';
+            this.style.backgroundColor = '';
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                processPhotoFiles(Array.from(files));
+            }
+        });
+
+        // Prevent default drag behaviors on document to avoid browser opening the file
+        document.addEventListener('dragover', function(e) {
+            e.preventDefault();
+        });
+        document.addEventListener('drop', function(e) {
+            e.preventDefault();
         });
     </script>
 </body>
