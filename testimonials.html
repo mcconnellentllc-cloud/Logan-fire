@@ -690,9 +690,7 @@
         <div id="lightbox-caption" class="lightbox-caption"></div>
         <div id="lightbox-music" class="lightbox-music" style="display: none;">
             <span class="lightbox-music-label">Flames of Fury</span>
-            <audio id="gallery-music" controls loop>
-                <source src="" type="audio/mpeg">
-            </audio>
+            <audio id="gallery-music" controls loop preload="auto"></audio>
         </div>
     </div>
 
@@ -834,8 +832,10 @@
                     }
                 });
 
-                // Store for modal access
-                contributorsData = contributors;
+                // Store for modal access (shuffle for variety)
+                contributorsData = shuffleArray(contributors);
+                // Re-assign IDs after shuffle for modal access
+                contributorsData.forEach((c, idx) => c.id = idx);
 
                 // Display contributor cards
                 if (contributors.length > 0) {
@@ -879,9 +879,10 @@
                     `;
                 }
 
-                // Display quotes
-                if (quotes.length > 0) {
-                    quotesGrid.innerHTML = quotes.map(quote => `
+                // Display quotes (shuffled for variety)
+                const shuffledQuotes = shuffleArray(quotes);
+                if (shuffledQuotes.length > 0) {
+                    quotesGrid.innerHTML = shuffledQuotes.map(quote => `
                         <div class="quote-card">
                             <p>${escapeHtml(quote.text)}</p>
                             <div class="quote-source">— ${escapeHtml(quote.connection)}</div>
@@ -895,14 +896,14 @@
                     `;
                 }
 
-                // Store photos for gallery slideshow and display them
-                galleryPhotos = photos;
+                // Store photos for gallery slideshow and display them (shuffled for variety)
+                galleryPhotos = shuffleArray(photos);
 
-                if (photos.length > 0) {
+                if (galleryPhotos.length > 0) {
                     // Show the Play Gallery button
                     document.getElementById('play-gallery-btn').style.display = 'inline-flex';
 
-                    photoGallery.innerHTML = photos.map((photo, index) => `
+                    photoGallery.innerHTML = galleryPhotos.map((photo, index) => `
                         <div class="gallery-item" onclick="openLightbox('${photo.url}', '${escapeHtml(photo.caption)}')">
                             <img src="${photo.url}" alt="Photo from the Logan Fire" loading="lazy">
                             <div class="photo-caption">${escapeHtml(photo.caption)}</div>
@@ -1011,8 +1012,109 @@
         let slideshowMode = false;
         let slideshowInterval = null;
 
-        // Theme music URL (Suno - Flames of Fury)
-        const THEME_MUSIC_URL = 'https://cdn1.suno.ai/OkEec5JO2hq514vw.mp3';
+        // Theme music playlist (add more song IDs here)
+        const MUSIC_PLAYLIST = [
+            { id: 'OkEec5JO2hq514vw', title: 'Flames of Fury' }
+            // Add more songs here: { id: 'SUNO_CLIP_ID', title: 'Song Title' }
+        ];
+
+        // CDN fallback options for Suno
+        const SUNO_CDN_HOSTS = ['cdn1.suno.ai', 'cdn2.suno.ai', 'cdn.suno.ai'];
+
+        // Build full URL for a song
+        const getSongUrl = (clipId, cdnIndex = 0) => {
+            return `https://${SUNO_CDN_HOSTS[cdnIndex]}/${clipId}.mp3`;
+        };
+
+        let currentSongIndex = 0;
+        let currentCdnIndex = 0;
+        let THEME_MUSIC_URL = getSongUrl(MUSIC_PLAYLIST[0].id, 0);
+
+        // Shuffle array helper function
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        // Preload the music when page loads - try multiple CDN hosts
+        let musicLoaded = false;
+
+        const tryLoadMusic = (musicPlayer) => {
+            if (currentCdnIndex >= SUNO_CDN_HOSTS.length) {
+                // Try next song if all CDNs failed for this song
+                if (currentSongIndex < MUSIC_PLAYLIST.length - 1) {
+                    currentSongIndex++;
+                    currentCdnIndex = 0;
+                    tryLoadMusic(musicPlayer);
+                } else {
+                    console.error('All music URLs failed to load');
+                }
+                return;
+            }
+
+            const song = MUSIC_PLAYLIST[currentSongIndex];
+            THEME_MUSIC_URL = getSongUrl(song.id, currentCdnIndex);
+            console.log('Trying music URL:', THEME_MUSIC_URL, '- Song:', song.title);
+            musicPlayer.src = THEME_MUSIC_URL;
+            musicPlayer.load();
+
+            // Update music label
+            const label = document.querySelector('.lightbox-music-label');
+            if (label) label.textContent = song.title;
+        };
+
+        const playNextSong = () => {
+            const musicPlayer = document.getElementById('gallery-music');
+            if (!musicPlayer || MUSIC_PLAYLIST.length <= 1) return;
+
+            currentSongIndex = (currentSongIndex + 1) % MUSIC_PLAYLIST.length;
+            currentCdnIndex = 0;
+            musicLoaded = false;
+            tryLoadMusic(musicPlayer);
+            musicPlayer.play().catch(e => console.log('Autoplay next song blocked'));
+        };
+
+        const preloadMusic = () => {
+            const musicPlayer = document.getElementById('gallery-music');
+            if (musicPlayer) {
+                // Add error listener - try next CDN on failure
+                musicPlayer.onerror = (e) => {
+                    console.error('Music load error for URL:', THEME_MUSIC_URL);
+                    console.error('Error code:', musicPlayer.error?.code);
+                    if (!musicLoaded) {
+                        currentCdnIndex++;
+                        tryLoadMusic(musicPlayer);
+                    }
+                };
+
+                musicPlayer.oncanplay = () => {
+                    console.log('Music ready to play from:', THEME_MUSIC_URL);
+                    musicLoaded = true;
+                };
+
+                musicPlayer.onloadeddata = () => {
+                    console.log('Music data loaded');
+                    musicLoaded = true;
+                };
+
+                // When song ends, play next in playlist
+                musicPlayer.onended = () => {
+                    if (MUSIC_PLAYLIST.length > 1) {
+                        playNextSong();
+                    }
+                };
+
+                // Start trying to load from first URL
+                tryLoadMusic(musicPlayer);
+            }
+        };
+
+        // Preload music after page loads
+        document.addEventListener('DOMContentLoaded', preloadMusic);
 
         // Lightbox functions
         function openLightbox(url, caption, startSlideshow = false) {
@@ -1073,11 +1175,24 @@
             // Set up and show music player
             const musicSection = document.getElementById('lightbox-music');
             const musicPlayer = document.getElementById('gallery-music');
-            musicPlayer.src = THEME_MUSIC_URL;
             musicSection.style.display = 'flex';
 
-            // Start playing music
-            musicPlayer.play().catch(e => console.log('Music autoplay blocked, user can click play'));
+            // Ensure music is loaded and play
+            if (!musicPlayer.src || musicPlayer.src === window.location.href) {
+                musicPlayer.src = THEME_MUSIC_URL;
+                musicPlayer.load();
+            }
+
+            // Start playing music with user interaction (this is triggered by button click)
+            const playPromise = musicPlayer.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    console.log('Music playing successfully');
+                }).catch(e => {
+                    console.log('Music autoplay issue:', e.message);
+                    // Music controls are visible, user can click play manually
+                });
+            }
 
             updateLightboxDisplay();
             startSlideshowAuto();
