@@ -149,7 +149,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -160,7 +160,7 @@
         }
         .lightbox img {
             max-width: 90%;
-            max-height: 90%;
+            max-height: 80%;
             object-fit: contain;
         }
         .lightbox-close {
@@ -173,6 +173,7 @@
             background: none;
             border: none;
             padding: 0.5rem 1rem;
+            z-index: 1010;
         }
         .lightbox-caption {
             position: absolute;
@@ -182,6 +183,86 @@
             text-align: center;
             color: white;
             font-size: 1rem;
+        }
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: background 0.3s ease;
+            z-index: 1010;
+        }
+        .lightbox-nav:hover {
+            background: rgba(255,255,255,0.4);
+        }
+        .lightbox-nav.prev {
+            left: 1rem;
+        }
+        .lightbox-nav.next {
+            right: 1rem;
+        }
+        .lightbox-counter {
+            position: absolute;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 0.9rem;
+            background: rgba(0,0,0,0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+        .lightbox-music {
+            position: absolute;
+            bottom: 5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(0,0,0,0.7);
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+        }
+        .lightbox-music audio {
+            height: 32px;
+        }
+        .lightbox-music-label {
+            color: white;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        /* Play Gallery Button */
+        .play-gallery-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--color-fire), var(--color-earth));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-bottom: 1.5rem;
+        }
+        .play-gallery-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .play-gallery-btn svg {
+            width: 20px;
+            height: 20px;
         }
 
         /* Loading State */
@@ -577,6 +658,12 @@
         <section class="gallery-section">
             <h2>Photos from the Community</h2>
             <p class="subtitle">Images shared by those who were there</p>
+            <div style="text-align: center;">
+                <button id="play-gallery-btn" class="play-gallery-btn" style="display: none;" onclick="startGallerySlideshow()">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                    Play Gallery with Music
+                </button>
+            </div>
             <div id="photo-gallery" class="photo-gallery">
                 <div class="loading">Loading photos...</div>
             </div>
@@ -594,10 +681,19 @@
     </div>
 
     <!-- Lightbox for photos -->
-    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
         <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
-        <img id="lightbox-img" src="" alt="">
+        <div id="lightbox-counter" class="lightbox-counter" style="display: none;"></div>
+        <button class="lightbox-nav prev" onclick="event.stopPropagation(); navigateLightbox(-1)">&#10094;</button>
+        <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
+        <button class="lightbox-nav next" onclick="event.stopPropagation(); navigateLightbox(1)">&#10095;</button>
         <div id="lightbox-caption" class="lightbox-caption"></div>
+        <div id="lightbox-music" class="lightbox-music" style="display: none;">
+            <span class="lightbox-music-label">Flames of Fury</span>
+            <audio id="gallery-music" controls loop>
+                <source src="" type="audio/mpeg">
+            </audio>
+        </div>
     </div>
 
     <!-- Story Modal -->
@@ -675,7 +771,27 @@
                     const hasPhotos = fields['Attachments'] && Array.isArray(fields['Attachments']) && fields['Attachments'].length > 0;
                     // Photo permission is granted if they submitted photos (checked in Notes or just assume yes if attachments exist)
                     const photoPermissionGranted = hasPhotos && (notes.includes('Photo permission: Yes') || !notes.includes('Photo permission: No'));
-                    const allPhotos = photoPermissionGranted ? fields['Attachments'].map(p => p.url) : [];
+
+                    // Try multiple ways to get photo URLs (Airtable signed URLs can expire)
+                    let allPhotos = [];
+                    if (photoPermissionGranted && hasPhotos) {
+                        // First try: Get URLs from Attachments field
+                        allPhotos = fields['Attachments'].map(p => {
+                            // Try different URL properties Airtable might provide
+                            if (p.url) return p.url;
+                            if (p.thumbnails?.full?.url) return p.thumbnails.full.url;
+                            if (p.thumbnails?.large?.url) return p.thumbnails.large.url;
+                            return null;
+                        }).filter(url => url !== null);
+
+                        // Fallback: Parse Cloudinary URLs from Notes if Attachments URLs are empty/invalid
+                        if (allPhotos.length === 0 || allPhotos.every(url => !url)) {
+                            const cloudinaryMatches = notes.match(/Photo \d+: (https:\/\/res\.cloudinary\.com\/[^\s]+)/g);
+                            if (cloudinaryMatches) {
+                                allPhotos = cloudinaryMatches.map(match => match.replace(/Photo \d+: /, ''));
+                            }
+                        }
+                    }
                     const firstPhoto = allPhotos.length > 0 ? allPhotos[0] : null;
 
                     // Check for recordings in Attachments 2 field
@@ -708,10 +824,10 @@
                     }
 
                     // Check for photos (if Attachments field exists and permission granted)
-                    if (photoPermissionGranted) {
-                        fields['Attachments'].forEach(photo => {
+                    if (photoPermissionGranted && allPhotos.length > 0) {
+                        allPhotos.forEach(photoUrl => {
                             photos.push({
-                                url: photo.url,
+                                url: photoUrl,
                                 caption: connection
                             });
                         });
@@ -779,8 +895,13 @@
                     `;
                 }
 
-                // Display photos
+                // Store photos for gallery slideshow and display them
+                galleryPhotos = photos;
+
                 if (photos.length > 0) {
+                    // Show the Play Gallery button
+                    document.getElementById('play-gallery-btn').style.display = 'inline-flex';
+
                     photoGallery.innerHTML = photos.map((photo, index) => `
                         <div class="gallery-item" onclick="openLightbox('${photo.url}', '${escapeHtml(photo.caption)}')">
                             <img src="${photo.url}" alt="Photo from the Logan Fire" loading="lazy">
@@ -788,6 +909,9 @@
                         </div>
                     `).join('');
                 } else {
+                    // Hide the Play Gallery button
+                    document.getElementById('play-gallery-btn').style.display = 'none';
+
                     photoGallery.innerHTML = `
                         <div class="empty-state" style="grid-column: 1 / -1;">
                             <p>Photos are being collected. <a href="submit.html">Share yours with your story.</a></p>
@@ -881,15 +1005,113 @@
             return div.innerHTML;
         }
 
+        // Gallery data for slideshow
+        let galleryPhotos = [];
+        let currentLightboxIndex = 0;
+        let slideshowMode = false;
+        let slideshowInterval = null;
+
+        // Theme music URL (Suno - Flames of Fury)
+        const THEME_MUSIC_URL = 'https://cdn1.suno.ai/OkEec5JO2hq514vw.mp3';
+
         // Lightbox functions
-        function openLightbox(url, caption) {
-            document.getElementById('lightbox-img').src = url;
-            document.getElementById('lightbox-caption').textContent = caption;
+        function openLightbox(url, caption, startSlideshow = false) {
+            // Find this photo in the gallery array
+            const photoIndex = galleryPhotos.findIndex(p => p.url === url);
+            if (photoIndex !== -1) {
+                currentLightboxIndex = photoIndex;
+            }
+
+            updateLightboxDisplay();
             document.getElementById('lightbox').classList.add('active');
             document.body.style.overflow = 'hidden';
+
+            // Show navigation if we have multiple photos
+            const hasMultiple = galleryPhotos.length > 1;
+            document.querySelectorAll('.lightbox-nav').forEach(btn => {
+                btn.style.display = hasMultiple ? 'block' : 'none';
+            });
+            document.getElementById('lightbox-counter').style.display = hasMultiple ? 'block' : 'none';
+
+            if (startSlideshow) {
+                startSlideshowAuto();
+            }
         }
 
-        function closeLightbox() {
+        function updateLightboxDisplay() {
+            const photo = galleryPhotos[currentLightboxIndex];
+            if (!photo) return;
+
+            document.getElementById('lightbox-img').src = photo.url;
+            document.getElementById('lightbox-caption').textContent = photo.caption;
+            document.getElementById('lightbox-counter').textContent = `${currentLightboxIndex + 1} / ${galleryPhotos.length}`;
+        }
+
+        function navigateLightbox(direction) {
+            currentLightboxIndex += direction;
+            if (currentLightboxIndex < 0) currentLightboxIndex = galleryPhotos.length - 1;
+            if (currentLightboxIndex >= galleryPhotos.length) currentLightboxIndex = 0;
+            updateLightboxDisplay();
+        }
+
+        function startGallerySlideshow() {
+            if (galleryPhotos.length === 0) return;
+
+            currentLightboxIndex = 0;
+            slideshowMode = true;
+
+            // Show lightbox with music
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Show navigation
+            document.querySelectorAll('.lightbox-nav').forEach(btn => {
+                btn.style.display = 'block';
+            });
+            document.getElementById('lightbox-counter').style.display = 'block';
+
+            // Set up and show music player
+            const musicSection = document.getElementById('lightbox-music');
+            const musicPlayer = document.getElementById('gallery-music');
+            musicPlayer.src = THEME_MUSIC_URL;
+            musicSection.style.display = 'flex';
+
+            // Start playing music
+            musicPlayer.play().catch(e => console.log('Music autoplay blocked, user can click play'));
+
+            updateLightboxDisplay();
+            startSlideshowAuto();
+        }
+
+        function startSlideshowAuto() {
+            // Auto-advance every 5 seconds
+            if (slideshowInterval) clearInterval(slideshowInterval);
+            slideshowInterval = setInterval(() => {
+                navigateLightbox(1);
+            }, 5000);
+        }
+
+        function closeLightbox(event) {
+            // If called with event, only close if clicking backdrop
+            if (event && event.target && event.target.id !== 'lightbox') {
+                return;
+            }
+
+            // Stop slideshow
+            if (slideshowInterval) {
+                clearInterval(slideshowInterval);
+                slideshowInterval = null;
+            }
+
+            // Stop music
+            const musicPlayer = document.getElementById('gallery-music');
+            if (musicPlayer) {
+                musicPlayer.pause();
+                musicPlayer.currentTime = 0;
+            }
+
+            slideshowMode = false;
+            document.getElementById('lightbox-music').style.display = 'none';
             document.getElementById('lightbox').classList.remove('active');
             document.body.style.overflow = '';
         }
@@ -1002,11 +1224,19 @@
             document.body.style.overflow = '';
         }
 
-        // Close modals on escape key
+        // Keyboard navigation for modals
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeLightbox();
                 closeStoryModal();
+            }
+            // Arrow key navigation for lightbox
+            if (document.getElementById('lightbox').classList.contains('active')) {
+                if (e.key === 'ArrowLeft') {
+                    navigateLightbox(-1);
+                } else if (e.key === 'ArrowRight') {
+                    navigateLightbox(1);
+                }
             }
         });
 
