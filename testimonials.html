@@ -689,8 +689,9 @@
         <button class="lightbox-nav next" onclick="event.stopPropagation(); navigateLightbox(1)">&#10095;</button>
         <div id="lightbox-caption" class="lightbox-caption"></div>
         <div id="lightbox-music" class="lightbox-music" style="display: none;">
-            <span class="lightbox-music-label">Flames of Fury</span>
-            <audio id="gallery-music" controls loop preload="auto"></audio>
+            <span class="lightbox-music-label">Gallery Music</span>
+            <span class="lightbox-music-status" id="music-status" style="display: none; font-size: 0.8em; color: #ffa500;"></span>
+            <audio id="gallery-music" controls loop preload="auto" crossorigin="anonymous"></audio>
         </div>
     </div>
 
@@ -1012,23 +1013,24 @@
         let slideshowMode = false;
         let slideshowInterval = null;
 
-        // Theme music playlist (add more song IDs here)
+        // Theme music playlist - using reliable audio sources
+        // These are placeholder URLs - replace with your own hosted audio files for production
         const MUSIC_PLAYLIST = [
-            { id: 'OkEec5JO2hq514vw', title: 'Flames of Fury' }
-            // Add more songs here: { id: 'SUNO_CLIP_ID', title: 'Song Title' }
+            {
+                title: 'Gallery Music',
+                urls: [
+                    // Suno AI generated music (if available)
+                    'https://cdn1.suno.ai/OkEec5JO2hq514vw.mp3',
+                    'https://cdn2.suno.ai/OkEec5JO2hq514vw.mp3',
+                    // SampleLib.com free music samples (royalty-free)
+                    'https://samplelib.com/lib/preview/mp3/sample-15s.mp3'
+                ]
+            }
         ];
 
-        // CDN fallback options for Suno
-        const SUNO_CDN_HOSTS = ['cdn1.suno.ai', 'cdn2.suno.ai', 'cdn.suno.ai'];
-
-        // Build full URL for a song
-        const getSongUrl = (clipId, cdnIndex = 0) => {
-            return `https://${SUNO_CDN_HOSTS[cdnIndex]}/${clipId}.mp3`;
-        };
-
         let currentSongIndex = 0;
-        let currentCdnIndex = 0;
-        let THEME_MUSIC_URL = getSongUrl(MUSIC_PLAYLIST[0].id, 0);
+        let currentUrlIndex = 0;
+        let THEME_MUSIC_URL = MUSIC_PLAYLIST[0].urls[0];
 
         // Shuffle array helper function
         function shuffleArray(array) {
@@ -1043,22 +1045,38 @@
         // Preload the music when page loads - try multiple CDN hosts
         let musicLoaded = false;
 
+        const updateMusicStatus = (message, isError = false) => {
+            const status = document.getElementById('music-status');
+            if (status) {
+                status.textContent = message;
+                status.style.display = message ? 'inline' : 'none';
+                status.style.color = isError ? '#ff6b6b' : '#ffa500';
+            }
+        };
+
         const tryLoadMusic = (musicPlayer) => {
-            if (currentCdnIndex >= SUNO_CDN_HOSTS.length) {
-                // Try next song if all CDNs failed for this song
+            const song = MUSIC_PLAYLIST[currentSongIndex];
+
+            // Check if we've exhausted all URLs for current song
+            if (currentUrlIndex >= song.urls.length) {
+                // Try next song if available
                 if (currentSongIndex < MUSIC_PLAYLIST.length - 1) {
                     currentSongIndex++;
-                    currentCdnIndex = 0;
+                    currentUrlIndex = 0;
                     tryLoadMusic(musicPlayer);
                 } else {
                     console.error('All music URLs failed to load');
+                    // Show user-friendly message
+                    const label = document.querySelector('.lightbox-music-label');
+                    if (label) label.textContent = 'Music unavailable';
+                    updateMusicStatus('(could not load)', true);
                 }
                 return;
             }
 
-            const song = MUSIC_PLAYLIST[currentSongIndex];
-            THEME_MUSIC_URL = getSongUrl(song.id, currentCdnIndex);
+            THEME_MUSIC_URL = song.urls[currentUrlIndex];
             console.log('Trying music URL:', THEME_MUSIC_URL, '- Song:', song.title);
+            updateMusicStatus('(loading...)');
             musicPlayer.src = THEME_MUSIC_URL;
             musicPlayer.load();
 
@@ -1072,7 +1090,7 @@
             if (!musicPlayer || MUSIC_PLAYLIST.length <= 1) return;
 
             currentSongIndex = (currentSongIndex + 1) % MUSIC_PLAYLIST.length;
-            currentCdnIndex = 0;
+            currentUrlIndex = 0;
             musicLoaded = false;
             tryLoadMusic(musicPlayer);
             musicPlayer.play().catch(e => console.log('Autoplay next song blocked'));
@@ -1086,7 +1104,7 @@
                     console.error('Music load error for URL:', THEME_MUSIC_URL);
                     console.error('Error code:', musicPlayer.error?.code);
                     if (!musicLoaded) {
-                        currentCdnIndex++;
+                        currentUrlIndex++;
                         tryLoadMusic(musicPlayer);
                     }
                 };
@@ -1094,11 +1112,13 @@
                 musicPlayer.oncanplay = () => {
                     console.log('Music ready to play from:', THEME_MUSIC_URL);
                     musicLoaded = true;
+                    updateMusicStatus(''); // Clear loading message
                 };
 
                 musicPlayer.onloadeddata = () => {
                     console.log('Music data loaded');
                     musicLoaded = true;
+                    updateMusicStatus(''); // Clear loading message
                 };
 
                 // When song ends, play next in playlist
