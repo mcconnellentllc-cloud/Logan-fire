@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preorder the Book — The Logan Fire</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .preorder-hero {
+            background: linear-gradient(135deg, var(--color-earth) 0%, var(--color-dark) 100%);
+            padding: 6rem 2rem 4rem;
+            text-align: center;
+            color: white;
+            margin-top: 60px;
+        }
+        .preorder-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .preorder-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .preorder-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        .preorder-intro {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .preorder-intro h2 {
+            color: var(--color-earth);
+            margin-bottom: 1rem;
+        }
+        .book-details {
+            background: var(--color-wheat);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .book-details h3 {
+            color: var(--color-earth);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .price-tag {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--color-fire);
+            margin: 1rem 0;
+        }
+        .price-tag span {
+            font-size: 1rem;
+            color: var(--color-smoke);
+            display: block;
+            font-weight: normal;
+        }
+        .release-date {
+            background: var(--color-earth);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            display: inline-block;
+            margin: 1rem 0;
+            font-weight: bold;
+        }
+        .digital-notice {
+            background: #f0f0f0;
+            border-left: 4px solid var(--color-fire);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+        .payment-section {
+            margin-top: 2rem;
+        }
+        .payment-section h3 {
+            color: var(--color-earth);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .payment-card {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .payment-card:hover {
+            border-color: var(--color-fire);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .payment-card h4 {
+            color: var(--color-earth);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        .payment-card .account-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--color-fire);
+            background: var(--color-wheat);
+            padding: 0.5rem 1rem;
+            margin: 1rem 0;
+            display: inline-block;
+        }
+        .payment-card p {
+            font-size: 0.9rem;
+            color: var(--color-smoke);
+            margin-top: 0.5rem;
+        }
+        .payment-card .payment-link {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--color-fire);
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        .payment-card .payment-link:hover {
+            background: var(--color-ember);
+        }
+        .venmo-logo {
+            color: #3D95CE;
+        }
+        .paypal-logo {
+            color: #003087;
+        }
+        .instructions {
+            background: #f9f9f9;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--color-earth);
+        }
+        .instructions h4 {
+            color: var(--color-earth);
+            margin-bottom: 1rem;
+        }
+        .instructions ol {
+            margin-left: 1.5rem;
+        }
+        .instructions li {
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+        .what-you-get {
+            background: white;
+            border: 2px solid var(--color-wheat);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        .what-you-get h4 {
+            color: var(--color-earth);
+            margin-bottom: 1rem;
+        }
+        .what-you-get ul {
+            list-style: none;
+            padding: 0;
+        }
+        .what-you-get li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+        .what-you-get li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--color-fire);
+            font-weight: bold;
+        }
+        .back-home {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .back-home a {
+            color: var(--color-fire);
+            text-decoration: none;
+        }
+        .back-home a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <a href="index.html" class="nav-brand">The Logan Fire</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Timeline</a></li>
+            <li><a href="testimonials.html">Voices</a></li>
+            <li><a href="media.html">Media Coverage</a></li>
+            <li><a href="submit.html">Share Your Story</a></li>
+            <li><a href="preorder.html" class="active" style="background: var(--color-fire); color: white; padding: 0.5rem 1rem;">Preorder Book</a></li>
+        </ul>
+    </nav>
+
+    <div class="preorder-hero">
+        <h1>Preorder the Book</h1>
+        <p>Be among the first to read the full story of the Logan Fire and the community that refused to back down.</p>
+    </div>
+
+    <div class="preorder-container">
+        <div class="preorder-intro">
+            <h2>The Logan Fire: When the Plains Burned</h2>
+            <p>The complete story of March 6, 2017 — the fire that swept across 32,546 acres, the fear it brought, and the extraordinary response from farmers, firefighters, and neighbors who stood their ground.</p>
+        </div>
+
+        <div class="book-details">
+            <h3>Digital Edition Preorder</h3>
+            <div class="price-tag">
+                $3
+                <span>Preorder Special</span>
+            </div>
+            <div class="release-date">Estimated Release: July 1, 2026</div>
+            <div class="digital-notice">
+                <strong>Digital Edition Only</strong> — The digital version will be available for download on release day. Preorder pricing available until publication.
+            </div>
+        </div>
+
+        <div class="what-you-get">
+            <h4>What You'll Get</h4>
+            <ul>
+                <li>Full digital book delivered on release day</li>
+                <li>The complete story with firsthand accounts from those who were there</li>
+                <li>Photos and documentation from the fire and recovery</li>
+                <li>Early access before general availability</li>
+            </ul>
+        </div>
+
+        <div class="payment-section">
+            <h3>How to Preorder</h3>
+            <p style="text-align: center; margin-bottom: 1.5rem;">Send $3 via Venmo or PayPal to reserve your copy.</p>
+
+            <div class="payment-options">
+                <div class="payment-card">
+                    <h4 class="venmo-logo">Venmo</h4>
+                    <div class="account-name">@togoag</div>
+                    <p>Include "Logan Fire Preorder" and your email in the note</p>
+                </div>
+
+                <div class="payment-card">
+                    <h4 class="paypal-logo">PayPal</h4>
+                    <div class="account-name">togoag.com</div>
+                    <p>Include "Logan Fire Preorder" and your email in the note</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h4>Preorder Instructions</h4>
+            <ol>
+                <li><strong>Send $3</strong> via Venmo (@togoag) or PayPal (togoag.com)</li>
+                <li><strong>Include in the payment note:</strong>
+                    <ul style="margin-top: 0.5rem; margin-left: 1rem;">
+                        <li>"Logan Fire Preorder"</li>
+                        <li>Your email address (for delivery)</li>
+                    </ul>
+                </li>
+                <li><strong>Receive confirmation</strong> that your preorder has been recorded</li>
+                <li><strong>Get your digital copy</strong> delivered to your email on release day (est. July 1, 2026)</li>
+            </ol>
+        </div>
+
+        <div style="background: var(--color-wheat); padding: 1.5rem; text-align: center; margin-top: 2rem;">
+            <p style="margin-bottom: 1rem;"><strong>Questions about your preorder?</strong></p>
+            <p style="font-size: 0.9rem; color: var(--color-smoke);">Contact us through the payment platforms or check back here for updates on the book's progress.</p>
+        </div>
+
+        <div class="back-home">
+            <a href="index.html">&larr; Back to Home</a>
+        </div>
+    </div>
+
+    <footer>
+        <p class="footer-quote">"The fire came for everything. We came right back at it. That's who we are out here."</p>
+        <p class="copyright">&copy; 2025 The Logan Fire · <a href="attribution.html" style="color: inherit; text-decoration: none; opacity: 0.7;">Attribution</a> · <a href="manuscript.html" style="color: inherit; text-decoration: none; opacity: 0.7;">Author Access</a></p>
+    </footer>
+</body>
+</html>
