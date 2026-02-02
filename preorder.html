@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preorder the Book — The Logan Fire</title>
+    <title>Reserve Your Copy — The Logan Fire</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
         .preorder-hero {
@@ -74,85 +74,80 @@
             margin: 1.5rem 0;
             font-size: 0.95rem;
         }
-        .payment-section {
+        .signup-section {
             margin-top: 2rem;
         }
-        .payment-section h3 {
-            color: var(--color-earth);
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        .payment-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .payment-card {
-            background: white;
-            border: 2px solid #ddd;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        .payment-card:hover {
-            border-color: var(--color-fire);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .payment-card h4 {
+        .signup-section h3 {
             color: var(--color-earth);
             margin-bottom: 1rem;
-            font-size: 1.3rem;
+            text-align: center;
         }
-        .payment-card .account-name {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--color-fire);
-            background: var(--color-wheat);
-            padding: 0.5rem 1rem;
-            margin: 1rem 0;
-            display: inline-block;
-        }
-        .payment-card p {
-            font-size: 0.9rem;
-            color: var(--color-smoke);
-            margin-top: 0.5rem;
-        }
-        .payment-card .payment-link {
-            display: inline-block;
+        .signup-form {
+            background: white;
+            border: 2px solid var(--color-wheat);
+            padding: 2rem;
             margin-top: 1rem;
-            padding: 0.75rem 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--color-earth);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            box-sizing: border-box;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--color-fire);
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
             background: var(--color-fire);
             color: white;
-            text-decoration: none;
+            border: none;
+            font-size: 1.1rem;
             font-weight: bold;
-            transition: background 0.3s ease;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
-        .payment-card .payment-link:hover {
+        .submit-btn:hover {
             background: var(--color-ember);
         }
-        .venmo-logo {
-            color: #3D95CE;
+        .submit-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
         }
-        .paypal-logo {
-            color: #003087;
-        }
-        .instructions {
-            background: #f9f9f9;
+        .success-message {
+            display: none;
+            background: #27ae60;
+            color: white;
             padding: 2rem;
-            margin: 2rem 0;
-            border-left: 4px solid var(--color-earth);
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: 4px;
         }
-        .instructions h4 {
-            color: var(--color-earth);
+        .success-message h3 {
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        .error-message {
+            display: none;
+            background: #e74c3c;
+            color: white;
+            padding: 1rem;
+            text-align: center;
             margin-bottom: 1rem;
-        }
-        .instructions ol {
-            margin-left: 1.5rem;
-        }
-        .instructions li {
-            margin-bottom: 0.75rem;
-            line-height: 1.6;
+            border-radius: 4px;
         }
         .what-you-get {
             background: white;
@@ -180,6 +175,23 @@
             color: var(--color-fire);
             font-weight: bold;
         }
+        .how-it-works {
+            background: #f9f9f9;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--color-earth);
+        }
+        .how-it-works h4 {
+            color: var(--color-earth);
+            margin-bottom: 1rem;
+        }
+        .how-it-works ol {
+            margin-left: 1.5rem;
+        }
+        .how-it-works li {
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
         .back-home {
             text-align: center;
             margin-top: 2rem;
@@ -190,6 +202,20 @@
         }
         .back-home a:hover {
             text-decoration: underline;
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -206,7 +232,7 @@
     </nav>
 
     <div class="preorder-hero">
-        <h1>Preorder the Book</h1>
+        <h1>Reserve Your Copy</h1>
         <p>Be among the first to read the full story of the Logan Fire and the community that refused to back down.</p>
     </div>
 
@@ -217,64 +243,71 @@
         </div>
 
         <div class="book-details">
-            <h3>Digital Edition Preorder</h3>
+            <h3>Digital Edition</h3>
             <div class="price-tag">
                 $3
-                <span>Preorder Special</span>
+                <span>Pay when the book is ready</span>
             </div>
             <div class="release-date">Estimated Release: July 1, 2026</div>
             <div class="digital-notice">
-                <strong>Digital Edition Only</strong> — The digital version will be available for download on release day. Preorder pricing available until publication.
+                <strong>Sign up now, pay later</strong> — Reserve your spot on the list. When the book is complete, we'll email you with payment instructions to get your digital copy.
             </div>
         </div>
 
         <div class="what-you-get">
             <h4>What You'll Get</h4>
             <ul>
-                <li>Full digital book delivered on release day</li>
+                <li>Full digital book delivered to your email</li>
                 <li>The complete story with firsthand accounts from those who were there</li>
                 <li>Photos and documentation from the fire and recovery</li>
-                <li>Early access before general availability</li>
+                <li>Early notification when the book is ready</li>
             </ul>
         </div>
 
-        <div class="payment-section">
-            <h3>How to Preorder</h3>
-            <p style="text-align: center; margin-bottom: 1.5rem;">Send $3 via Venmo or PayPal to reserve your copy.</p>
+        <div class="signup-section">
+            <h3>Sign Up for Your Copy</h3>
+            <p style="text-align: center; margin-bottom: 1rem; color: var(--color-smoke);">No payment required now. We'll notify you when the book is ready.</p>
 
-            <div class="payment-options">
-                <div class="payment-card">
-                    <h4 class="venmo-logo">Venmo</h4>
-                    <div class="account-name">@togoag</div>
-                    <p>Include "Logan Fire Preorder" and your email in the note</p>
-                </div>
-
-                <div class="payment-card">
-                    <h4 class="paypal-logo">PayPal</h4>
-                    <div class="account-name">togoag.com</div>
-                    <p>Include "Logan Fire Preorder" and your email in the note</p>
-                </div>
+            <div id="success-message" class="success-message">
+                <h3>You're on the List!</h3>
+                <p>We'll email you when the book is ready with instructions to get your copy.</p>
+                <p style="margin-top: 1rem;"><a href="index.html" style="color: white; text-decoration: underline;">Return to home page</a></p>
             </div>
+
+            <div id="error-message" class="error-message">
+                Something went wrong. Please try again.
+            </div>
+
+            <form id="signup-form" class="signup-form">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="name" placeholder="Your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                    <p style="font-size: 0.85rem; color: var(--color-smoke); margin-top: 0.5rem;">We'll only use this to notify you when the book is ready.</p>
+                </div>
+
+                <button type="submit" id="submit-btn" class="submit-btn">Reserve My Copy</button>
+            </form>
         </div>
 
-        <div class="instructions">
-            <h4>Preorder Instructions</h4>
+        <div class="how-it-works">
+            <h4>How It Works</h4>
             <ol>
-                <li><strong>Send $3</strong> via Venmo (@togoag) or PayPal (togoag.com)</li>
-                <li><strong>Include in the payment note:</strong>
-                    <ul style="margin-top: 0.5rem; margin-left: 1rem;">
-                        <li>"Logan Fire Preorder"</li>
-                        <li>Your email address (for delivery)</li>
-                    </ul>
-                </li>
-                <li><strong>Receive confirmation</strong> that your preorder has been recorded</li>
-                <li><strong>Get your digital copy</strong> delivered to your email on release day (est. July 1, 2026)</li>
+                <li><strong>Sign up now</strong> — Enter your name and email above (no payment required)</li>
+                <li><strong>We finish the book</strong> — Estimated completion: July 1, 2026</li>
+                <li><strong>Get notified</strong> — We'll email you when it's ready</li>
+                <li><strong>Pay $3 & download</strong> — Simple payment via Venmo or PayPal, then get your digital copy</li>
             </ol>
         </div>
 
         <div style="background: var(--color-wheat); padding: 1.5rem; text-align: center; margin-top: 2rem;">
-            <p style="margin-bottom: 1rem;"><strong>Questions about your preorder?</strong></p>
-            <p style="font-size: 0.9rem; color: var(--color-smoke);">Contact us through the payment platforms or check back here for updates on the book's progress.</p>
+            <p style="margin-bottom: 0.5rem;"><strong>Have a story to share?</strong></p>
+            <p style="font-size: 0.9rem; color: var(--color-smoke); margin-bottom: 1rem;">Submissions for the book are open until March 10, 2026.</p>
+            <a href="submit.html" style="color: var(--color-fire); font-weight: bold;">Share Your Story &rarr;</a>
         </div>
 
         <div class="back-home">
@@ -286,5 +319,73 @@
         <p class="footer-quote">"The fire came for everything. We came right back at it. That's who we are out here."</p>
         <p class="copyright">&copy; 2025 The Logan Fire · <a href="attribution.html" style="color: inherit; text-decoration: none; opacity: 0.7;">Attribution</a> · <a href="manuscript.html" style="color: inherit; text-decoration: none; opacity: 0.7;">Author Access</a></p>
     </footer>
+
+    <script>
+        // ===========================================
+        // AIRTABLE CONFIGURATION
+        // ===========================================
+        const AIRTABLE_API_KEY = 'patCAEiRtNeklkxZg.f78be1a8f71e7b310cadbe27a7d1b94bde5677af845e6a1352d756a81f5ab729';
+        const AIRTABLE_BASE_ID = 'appN4OIz2fbVguxSV';
+        const AIRTABLE_TABLE_NAME = 'Preorders';
+
+        // ===========================================
+        // Form Submission
+        // ===========================================
+        document.getElementById('signup-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submit-btn');
+            const successMsg = document.getElementById('success-message');
+            const errorMsg = document.getElementById('error-message');
+            const form = document.getElementById('signup-form');
+
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading-spinner"></span>Signing up...';
+
+            try {
+                const formData = {
+                    fields: {
+                        'Name': document.getElementById('name').value,
+                        'Email': document.getElementById('email').value,
+                        'Signed Up': new Date().toISOString(),
+                        'Status': 'Waiting',
+                        'Paid': false
+                    }
+                };
+
+                const response = await fetch(
+                    `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    }
+                );
+
+                const responseData = await response.json();
+
+                if (response.ok) {
+                    form.style.display = 'none';
+                    successMsg.style.display = 'block';
+                    window.scrollTo({ top: successMsg.offsetTop - 100, behavior: 'smooth' });
+                } else {
+                    console.error('Airtable error:', responseData);
+                    throw new Error(responseData.error?.message || 'Signup failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMsg.textContent = 'Something went wrong: ' + error.message;
+                errorMsg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Reserve My Copy';
+            }
+        });
+    </script>
 </body>
 </html>
