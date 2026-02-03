@@ -890,3 +890,222 @@ footer {
         padding: 2rem 1rem;
     }
 }
+
+/* Share Section Styles */
+.share-section {
+    background: var(--color-dark);
+    color: var(--color-light);
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.share-section h2 {
+    color: var(--color-wheat);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.share-section .share-subtitle {
+    color: var(--color-smoke);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+.share-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 3rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* QR Code Section */
+.qr-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.qr-section h3 {
+    color: var(--color-wheat);
+    font-size: 1rem;
+    font-weight: normal;
+    margin: 0;
+}
+
+#qrcode {
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+#qrcode img,
+#qrcode canvas {
+    display: block;
+}
+
+.download-qr-btn {
+    background: transparent;
+    border: 1px solid var(--color-smoke);
+    color: var(--color-smoke);
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+}
+
+.download-qr-btn:hover {
+    border-color: var(--color-wheat);
+    color: var(--color-wheat);
+}
+
+/* Share Buttons Section */
+.share-buttons-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.share-buttons-section h3 {
+    color: var(--color-wheat);
+    font-size: 1rem;
+    font-weight: normal;
+    margin: 0;
+}
+
+.share-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-family: inherit;
+}
+
+.share-btn svg {
+    flex-shrink: 0;
+}
+
+/* Copy Link Button */
+.share-btn.copy-link {
+    background: var(--color-fire);
+    color: white;
+}
+
+.share-btn.copy-link:hover {
+    background: var(--color-ember);
+}
+
+.share-btn.copy-link.copied {
+    background: #27ae60;
+}
+
+/* Native Share Button */
+.share-btn.native-share {
+    background: var(--color-wheat);
+    color: var(--color-earth);
+    display: none;
+}
+
+.share-btn.native-share:hover {
+    background: #e5d5a5;
+}
+
+/* Facebook Button */
+.share-btn.facebook {
+    background: #1877f2;
+    color: white;
+}
+
+.share-btn.facebook:hover {
+    background: #166fe5;
+}
+
+/* Twitter/X Button */
+.share-btn.twitter {
+    background: #000000;
+    color: white;
+}
+
+.share-btn.twitter:hover {
+    background: #333333;
+}
+
+/* Email Button */
+.share-btn.email {
+    background: var(--color-smoke);
+    color: white;
+}
+
+.share-btn.email:hover {
+    background: #6c7a7d;
+}
+
+/* WhatsApp Button */
+.share-btn.whatsapp {
+    background: #25d366;
+    color: white;
+}
+
+.share-btn.whatsapp:hover {
+    background: #20bd5a;
+}
+
+/* URL Display */
+.share-url {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.share-url code {
+    background: rgba(255,255,255,0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: var(--color-wheat);
+    user-select: all;
+}
+
+/* Responsive Share Section */
+@media (max-width: 600px) {
+    .share-section {
+        padding: 2rem 1rem;
+    }
+
+    .share-container {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .share-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .share-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
