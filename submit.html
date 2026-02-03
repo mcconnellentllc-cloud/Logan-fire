@@ -532,13 +532,9 @@
         const AIRTABLE_BASE_ID = 'appN4OIz2fbVguxSV';
         const AIRTABLE_TABLE_NAME = 'Stories';
 
-        // Cloudinary - UPDATE THESE WITH YOUR CLOUDINARY DETAILS
-        // 1. Create free account at cloudinary.com
-        // 2. Go to Settings > Upload > Upload presets > Add upload preset
-        // 3. Set "Signing Mode" to "Unsigned"
-        // 4. Copy your cloud name from the Dashboard
+        // Cloudinary
         const CLOUDINARY_CLOUD_NAME = 'dt4rk6rpg';
-        const CLOUDINARY_UPLOAD_PRESET = 'logan_fire';    // Create this preset in Cloudinary
+        const CLOUDINARY_UPLOAD_PRESET = 'logan_fire';
 
         // ===========================================
         // Voice Recorder
@@ -1050,7 +1046,7 @@
                     responseData = await response.json();
                     console.log('Airtable update response:', responseData);
 
-                    // If attachment fields cause errors, retry without them (same as CREATE path)
+                    // If attachment fields cause errors, retry without them
                     if (!response.ok && responseData.error?.message?.includes('Attachments')) {
                         console.warn('Attachment field error during update, retrying without attachments...');
                         delete updateData.fields['Attachments'];

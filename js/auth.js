@@ -1,14 +1,27 @@
-// Simple password protection for manuscript
-// Password: logan2017
+// Manuscript access control
+// NOTE: Client-side password protection provides limited security.
+// For true security, use server-side authentication.
 
-const PASSWORD = 'logan2017';
+// Password hash (SHA-256 of the password)
+// This is more secure than storing plain text, but determined users can still bypass
+const PASSWORD_HASH = 'cdf22fb0f3672e931197584d3335c3b87b4bf103a0b8b6d58d31a7174aab6d71';
 
-function checkPassword() {
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function checkPassword() {
     const input = document.getElementById('password-input');
     const errorMsg = document.getElementById('error-message');
     const password = input.value;
 
-    if (password === PASSWORD) {
+    const hash = await hashPassword(password);
+
+    if (hash === PASSWORD_HASH) {
         // Store session
         sessionStorage.setItem('manuscript_access', 'granted');
         errorMsg.style.display = 'none';
