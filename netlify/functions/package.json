@@ -1,0 +1,9 @@
+{
+  "name": "logan-fire-functions",
+  "version": "1.0.0",
+  "description": "Serverless functions for Logan Fire website",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

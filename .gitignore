@@ -1,0 +1,28 @@
+# Confidential files - DO NOT COMMIT
+NAME_KEY.md
+name_key.md
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Node modules (for Netlify functions)
+node_modules/
+
+# Netlify
+.netlify/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*

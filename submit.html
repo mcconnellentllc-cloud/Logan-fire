@@ -527,18 +527,14 @@
         // ===========================================
         // CONFIGURATION
         // ===========================================
-        // Airtable
-        const AIRTABLE_API_KEY = 'patCAEiRtNeklkxZg.f78be1a8f71e7b310cadbe27a7d1b94bde5677af845e6a1352d756a81f5ab729';
-        const AIRTABLE_BASE_ID = 'appN4OIz2fbVguxSV';
-        const AIRTABLE_TABLE_NAME = 'Stories';
+        // API credentials are now securely stored on the server
+        // Calls go through Netlify serverless functions
+        const API_BASE = window.location.hostname === 'localhost'
+            ? ''
+            : '';  // Functions available at /.netlify/functions/
 
-        // Cloudinary - UPDATE THESE WITH YOUR CLOUDINARY DETAILS
-        // 1. Create free account at cloudinary.com
-        // 2. Go to Settings > Upload > Upload presets > Add upload preset
-        // 3. Set "Signing Mode" to "Unsigned"
-        // 4. Copy your cloud name from the Dashboard
-        const CLOUDINARY_CLOUD_NAME = 'dt4rk6rpg';
-        const CLOUDINARY_UPLOAD_PRESET = 'logan_fire';    // Create this preset in Cloudinary
+        // Cloudinary config fetched from server
+        let cloudinaryConfig = null;
 
         // ===========================================
         // Voice Recorder
@@ -818,20 +814,20 @@
         async function findExistingRecord(email) {
             if (!email) return null;
 
-            const filterFormula = encodeURIComponent(`{Email}="${email}"`);
-            const response = await fetch(
-                `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?filterByFormula=${filterFormula}`,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${AIRTABLE_API_KEY}`
-                    }
-                }
-            );
+            try {
+                const response = await fetch('/.netlify/functions/submit-story', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'find', email: email })
+                });
 
-            const data = await response.json();
-            if (data.records && data.records.length > 0) {
-                console.log('Found existing record:', data.records[0].id);
-                return data.records[0];
+                const data = await response.json();
+                if (data.record) {
+                    console.log('Found existing record:', data.record.id);
+                    return data.record;
+                }
+            } catch (err) {
+                console.error('Error finding record:', err);
             }
             return null;
         }
@@ -839,14 +835,39 @@
         // ===========================================
         // Cloudinary Upload Helper
         // ===========================================
+        async function getCloudinaryConfig() {
+            if (cloudinaryConfig) return cloudinaryConfig;
+
+            try {
+                const response = await fetch('/.netlify/functions/upload-media', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+
+                if (response.ok) {
+                    cloudinaryConfig = await response.json();
+                    return cloudinaryConfig;
+                }
+            } catch (err) {
+                console.error('Error getting upload config:', err);
+            }
+            return null;
+        }
+
         async function uploadToCloudinary(file, resourceType = 'image') {
+            const config = await getCloudinaryConfig();
+            if (!config) {
+                throw new Error('Upload service not configured');
+            }
+
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-            formData.append('folder', 'logan-fire');
+            formData.append('upload_preset', config.uploadPreset);
+            formData.append('folder', config.folder);
 
             const response = await fetch(
-                `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,
+                `https://api.cloudinary.com/v1_1/${config.cloudName}/${resourceType}/upload`,
                 { method: 'POST', body: formData }
             );
 
@@ -1035,40 +1056,18 @@
 
                     console.log('Update data:', JSON.stringify(updateData, null, 2));
 
-                    response = await fetch(
-                        `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}/${existingRecord.id}`,
-                        {
-                            method: 'PATCH',
-                            headers: {
-                                'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(updateData)
-                        }
-                    );
+                    response = await fetch('/.netlify/functions/submit-story', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'update',
+                            recordId: existingRecord.id,
+                            data: updateData.fields
+                        })
+                    });
 
                     responseData = await response.json();
                     console.log('Airtable update response:', responseData);
-
-                    // If attachment fields cause errors, retry without them (same as CREATE path)
-                    if (!response.ok && responseData.error?.message?.includes('Attachments')) {
-                        console.warn('Attachment field error during update, retrying without attachments...');
-                        delete updateData.fields['Attachments'];
-                        delete updateData.fields['Attachments 2'];
-                        response = await fetch(
-                            `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}/${existingRecord.id}`,
-                            {
-                                method: 'PATCH',
-                                headers: {
-                                    'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(updateData)
-                            }
-                        );
-                        responseData = await response.json();
-                        console.log('Airtable update retry response:', responseData);
-                    }
 
                 } else {
                     // CREATE new record
@@ -1103,40 +1102,17 @@
 
                     console.log('Creating new record:', JSON.stringify(formData, null, 2));
 
-                    response = await fetch(
-                        `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`,
-                        {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(formData)
-                        }
-                    );
+                    response = await fetch('/.netlify/functions/submit-story', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'create',
+                            data: formData.fields
+                        })
+                    });
 
                     responseData = await response.json();
                     console.log('Airtable create response:', responseData);
-
-                    // If attachment fields cause errors, retry without them
-                    if (!response.ok && responseData.error?.message?.includes('Attachments')) {
-                        console.warn('Attachment field error, retrying without attachments...');
-                        delete formData.fields['Attachments'];
-                        delete formData.fields['Attachments 2'];
-                        response = await fetch(
-                            `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`,
-                            {
-                                method: 'POST',
-                                headers: {
-                                    'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(formData)
-                            }
-                        );
-                        responseData = await response.json();
-                        console.log('Airtable retry response:', responseData);
-                    }
                 }
 
                 if (response.ok) {
