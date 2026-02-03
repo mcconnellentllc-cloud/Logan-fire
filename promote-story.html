@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promote This Story — The Logan Fire</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .promote-hero {
+            background: linear-gradient(135deg, var(--color-earth) 0%, #3d3225 100%);
+            color: white;
+            padding: 6rem 2rem 4rem;
+            text-align: center;
+        }
+        .promote-hero h1 {
+            color: white;
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1rem;
+        }
+        .promote-hero .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.6;
+        }
+        .gratitude-section {
+            background: var(--color-wheat);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        .gratitude-section h2 {
+            color: var(--color-earth);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+        .gratitude-message {
+            max-width: 750px;
+            margin: 0 auto;
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: var(--color-earth);
+        }
+        .gratitude-message p {
+            margin-bottom: 1.5rem;
+        }
+        .heart-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .why-share {
+            padding: 4rem 2rem;
+            background: var(--color-light);
+        }
+        .why-share h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .share-reasons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .share-reason {
+            background: white;
+            padding: 2rem;
+            border-left: 4px solid var(--color-fire);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .share-reason h3 {
+            color: var(--color-earth);
+            margin-bottom: 0.75rem;
+            font-size: 1.2rem;
+        }
+        .share-reason p {
+            color: var(--color-smoke);
+            line-height: 1.7;
+        }
+        .final-thanks {
+            background: var(--color-earth);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        .final-thanks p {
+            font-size: 1.3rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+            font-style: italic;
+        }
+        .share-section {
+            padding-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <a href="index.html" class="nav-brand">The Logan Fire</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Timeline</a></li>
+            <li><a href="testimonials.html">Voices</a></li>
+            <li><a href="media.html">Media Coverage</a></li>
+            <li><a href="submit.html">Share Your Story</a></li>
+            <li><a href="promote-story.html" class="active">Promote</a></li>
+            <li><a href="preorder.html" style="background: var(--color-fire); color: white; padding: 0.5rem 1rem;">Preorder Book</a></li>
+        </ul>
+    </nav>
+
+    <div class="promote-hero">
+        <h1>Help Us Share This Story</h1>
+        <p class="subtitle">Every share brings another voice to the chorus. Every person who sees this story helps preserve the memory of what happened — and the courage it took to face it.</p>
+    </div>
+
+    <section class="gratitude-section">
+        <span class="heart-icon">&#10084;</span>
+        <h2>From the Bottom of Our Hearts — Thank You</h2>
+        <div class="gratitude-message">
+            <p>We are deeply grateful that you've taken the time to learn about the Logan Fire. This story belongs to an entire community — the firefighters who stood against walls of flame, the farmers who grabbed shovels and refused to back down, the neighbors who showed up with water trucks and sandwiches and hope.</p>
+            <p>By sharing this story, you become part of something bigger. You help ensure that the courage, sacrifice, and resilience of these plains people isn't forgotten. You help carry their story forward.</p>
+            <p><strong>That means everything to us.</strong></p>
+        </div>
+    </section>
+
+    <section class="why-share">
+        <h2>Why Your Share Matters</h2>
+        <div class="share-reasons">
+            <div class="share-reason">
+                <h3>Preserve the Memory</h3>
+                <p>Stories fade without voices to carry them. When you share, you help preserve the memory of March 6, 2017 — the fear, the fight, and the incredible community response.</p>
+            </div>
+            <div class="share-reason">
+                <h3>Honor Those Who Stood</h3>
+                <p>Every firefighter, farmer, and volunteer who faced those flames deserves to be remembered. Your share is a small act of recognition for their courage.</p>
+            </div>
+            <div class="share-reason">
+                <h3>Connect More Voices</h3>
+                <p>Someone you know might have been there. Someone might have a story they've never told. Your share could be the spark that brings another voice forward.</p>
+            </div>
+            <div class="share-reason">
+                <h3>Support the Book</h3>
+                <p>We're documenting these stories in a book to preserve them forever. Every share helps us reach more people who lived through it — and more readers who want to honor them.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="share-section">
+        <h2>Share the Story</h2>
+        <p class="share-subtitle">Use the tools below to spread the word</p>
+
+        <div class="share-container">
+            <div class="qr-section">
+                <h3>Scan to Visit</h3>
+                <div id="qrcode"></div>
+                <button id="download-qr" class="download-qr-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download QR Code
+                </button>
+                <p style="margin-top: 1rem; font-size: 0.85rem; opacity: 0.8;">Print it. Post it. Share it at the coffee shop, the fire station, or the grain elevator.</p>
+            </div>
+
+            <div class="share-buttons-section">
+                <h3>Share via</h3>
+                <div class="share-buttons">
+                    <button id="share-copy" class="share-btn copy-link">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        Copy Link
+                    </button>
+
+                    <button id="share-native" class="share-btn native-share">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="18" cy="5" r="3"/>
+                            <circle cx="6" cy="12" r="3"/>
+                            <circle cx="18" cy="19" r="3"/>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                        </svg>
+                        Share
+                    </button>
+
+                    <a href="#" id="share-facebook" class="share-btn facebook">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                        </svg>
+                        Facebook
+                    </a>
+
+                    <a href="#" id="share-twitter" class="share-btn twitter">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                        X
+                    </a>
+
+                    <a href="#" id="share-email" class="share-btn email">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                        Email
+                    </a>
+
+                    <a href="#" id="share-whatsapp" class="share-btn whatsapp">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                        WhatsApp
+                    </a>
+                </div>
+
+                <div class="share-url">
+                    <code>www.flamesoffury.com</code>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="final-thanks">
+        <p>"When you share this story, you carry the fire forward — not the one that burned, but the one that lit up in the hearts of everyone who stood against it."</p>
+    </section>
+
+    <footer>
+        <p class="footer-quote">"The fire came for everything. We came right back at it. That's who we are out here."</p>
+        <p class="copyright">&copy; 2025 The Logan Fire · <a href="attribution.html" style="color: inherit; text-decoration: none; opacity: 0.7;">Attribution</a> · <a href="manuscript.html" style="color: inherit; text-decoration: none; opacity: 0.7;">Author Access</a></p>
+    </footer>
+
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <!-- Share functionality -->
+    <script src="js/share.js"></script>
+</body>
+</html>
