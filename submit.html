@@ -465,7 +465,7 @@
                             <strong>Click to upload photos</strong><br>
                             or drag and drop
                         </span>
-                        <p class="file-types">JPG, PNG, HEIC — max 5 photos, 5MB each</p>
+                        <p class="file-types">JPG, PNG, HEIC — upload as many as you have, 5MB each</p>
                     </div>
                     <div id="photo-previews" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1rem;"></div>
                     <p style="font-size: 0.85rem; color: var(--color-smoke); margin-top: 0.5rem;">
@@ -498,6 +498,21 @@
                     <label style="display: block; margin-bottom: 0.5rem; cursor: pointer;">
                         <input type="radio" id="permission-no" name="book-permission" value="no">
                         <strong>No</strong> — I prefer my story NOT be included in the book. I'm sharing for the historical record only, and I trust you'll respect my decision.
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label style="font-weight: bold; margin-bottom: 0.75rem; display: block;">May we share your story publicly on the website?</label>
+                <p style="font-size: 0.9rem; color: var(--color-smoke); margin-bottom: 0.75rem;">This means your story (with your chosen alias) could appear on our Voices page now, like other community members. This is separate from the book.</p>
+                <div style="margin-left: 0.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; cursor: pointer;">
+                        <input type="radio" id="public-yes" name="public-permission" value="yes" required>
+                        <strong>Yes</strong> — I'm okay with my story being shared publicly on the website using my alias.
+                    </label>
+                    <label style="display: block; margin-bottom: 0.5rem; cursor: pointer;">
+                        <input type="radio" id="public-no" name="public-permission" value="no">
+                        <strong>No</strong> — Please keep my story private. I only want the author to see it.
                     </label>
                 </div>
             </div>
@@ -653,7 +668,7 @@
         // Photo Upload Handler
         // ===========================================
         let uploadedPhotos = []; // Array of {name, file, preview}
-        const MAX_PHOTOS = 5;
+        const MAX_PHOTOS = 50; // Increased limit to gather more historical photos
         const MAX_SIZE_MB = 5;
 
         function handlePhotoUpload(event) {
@@ -944,6 +959,10 @@
                 const permissionValue = document.querySelector('input[name="book-permission"]:checked').value;
                 const includeInBook = permissionValue === 'yes';
 
+                // Get public display permission
+                const publicPermissionValue = document.querySelector('input[name="public-permission"]:checked').value;
+                const displayPublicly = publicPermissionValue === 'yes';
+
                 // Get recording permission if recording exists
                 let recordingPermission = '';
                 if (recordingBlob) {
@@ -961,6 +980,9 @@
                 // Build notes with all permission and media info
                 let notesArr = [];
                 const timestamp = new Date().toLocaleString();
+                notesArr.push(`[${timestamp}] Submission`);
+                notesArr.push(`Book permission: ${includeInBook ? 'Yes' : 'No'}`);
+                notesArr.push(`Public display: ${displayPublicly ? 'Yes' : 'No'}`);
                 if (recordingBlob) {
                     const duration = `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`;
                     notesArr.push(`[${timestamp}] Voice recording: ${duration}`);
@@ -998,6 +1020,10 @@
                         updateData.fields['Has Recording'] = true;
                         updateData.fields['Recording Duration'] = `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`;
                     }
+
+                    // Update public display permission (can be changed on subsequent submissions)
+                    updateData.fields['Display Publicly'] = displayPublicly ? 'Yes' : 'No';
+                    updateData.fields['Include in Book'] = includeInBook ? 'Yes' : 'No';
 
                     // Append new notes to existing notes
                     if (notesArr.length > 0) {
@@ -1083,6 +1109,7 @@
                             'Has Recording': recordingBlob ? true : false,
                             'Recording Duration': recordingBlob ? `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}` : '',
                             'Include in Book': includeInBook ? 'Yes' : 'No',
+                            'Display Publicly': displayPublicly ? 'Yes' : 'No',
                             'Submitted At': new Date().toISOString()
                         }
                     };
