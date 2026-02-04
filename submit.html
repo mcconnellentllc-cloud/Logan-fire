@@ -465,7 +465,7 @@
                             <strong>Click to upload photos</strong><br>
                             or drag and drop
                         </span>
-                        <p class="file-types">JPG, PNG, HEIC — max 5 photos, 5MB each</p>
+                        <p class="file-types">JPG, PNG, HEIC — upload as many as you have, 5MB each</p>
                     </div>
                     <div id="photo-previews" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1rem;"></div>
                     <p style="font-size: 0.85rem; color: var(--color-smoke); margin-top: 0.5rem;">
@@ -653,7 +653,7 @@
         // Photo Upload Handler
         // ===========================================
         let uploadedPhotos = []; // Array of {name, file, preview}
-        const MAX_PHOTOS = 5;
+        const MAX_PHOTOS = 50; // Increased limit to gather more historical photos
         const MAX_SIZE_MB = 5;
 
         function handlePhotoUpload(event) {
