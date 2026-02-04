@@ -351,7 +351,7 @@
                     fields: {
                         'Name': document.getElementById('name').value,
                         'Email': document.getElementById('email').value,
-                        'Signed Up': new Date().toISOString(),
+                        'Signed Up': new Date().toISOString().split('T')[0],
                         'Status': 'Waiting',
                         'Paid': false
                     }
