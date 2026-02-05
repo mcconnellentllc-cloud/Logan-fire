@@ -1031,33 +1031,19 @@
                         updateData.fields['Notes'] = existingNotes ? existingNotes + '\n\n' + notesArr.join('\n') : notesArr.join('\n');
                     }
 
-                    // Smart story update: only append meaningful story content
+                    // Always save story content if provided
                     const newStory = document.getElementById('story').value || '';
                     if (newStory && newStory.trim()) {
-                        const storyText = newStory.trim().toLowerCase();
                         const existingStory = existingRecord.fields['Story'] || '';
 
-                        // Phrases that indicate photo/media uploads - not story content
-                        const mediaKeywords = ['pic', 'photo', 'image', 'upload', 'attach', 'adding more', 'more pics', 'here are'];
-                        const isMediaComment = mediaKeywords.some(keyword => storyText.includes(keyword));
-
-                        // Very short text is likely not a meaningful story addition
-                        const isTooShort = newStory.trim().length < 50;
-
-                        // Skip if it looks like a photo comment or action item
-                        const shouldSkip = isMediaComment || (isTooShort && existingStory);
-
-                        if (!shouldSkip) {
-                            if (existingStory && existingStory.trim()) {
-                                // Append new content with timestamp separator
-                                const timestamp = new Date().toLocaleString();
-                                updateData.fields['Story'] = existingStory + '\n\n---\n[' + timestamp + ']\n' + newStory.trim();
-                            } else {
-                                // No existing story, just use the new one
-                                updateData.fields['Story'] = newStory.trim();
-                            }
+                        if (existingStory && existingStory.trim()) {
+                            // Append new content with timestamp separator
+                            const timestamp = new Date().toLocaleString();
+                            updateData.fields['Story'] = existingStory + '\n\n---\n[' + timestamp + ']\n' + newStory.trim();
+                        } else {
+                            // No existing story, just use the new one
+                            updateData.fields['Story'] = newStory.trim();
                         }
-                        // If shouldSkip is true, we don't touch the Story field at all - preserving the original
                     }
 
                     console.log('Update data:', JSON.stringify(updateData, null, 2));
