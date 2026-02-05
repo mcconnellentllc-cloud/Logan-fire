@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — The Logan Fire</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .admin-hero {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+        }
+        .admin-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .admin-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Password Gate */
+        .password-gate {
+            max-width: 400px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .password-gate h2 {
+            color: var(--color-earth);
+            margin-bottom: 1rem;
+        }
+        .password-gate input {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+        }
+        .password-gate input:focus {
+            outline: none;
+            border-color: var(--color-fire);
+        }
+        .password-gate button {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--color-fire);
+            color: white;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .password-gate button:hover {
+            background: var(--color-ember);
+        }
+        .error-message {
+            color: #e74c3c;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* Admin Content */
+        .admin-content {
+            display: none;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .admin-content.visible {
+            display: block;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--color-wheat);
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--color-fire);
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--color-smoke);
+        }
+
+        /* Controls */
+        .admin-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .view-toggle button {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--color-earth);
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .view-toggle button.active {
+            background: var(--color-earth);
+            color: white;
+        }
+        .view-toggle button:hover:not(.active) {
+            background: var(--color-wheat);
+        }
+        .search-filter {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .search-filter input,
+        .search-filter select {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            font-size: 0.9rem;
+        }
+        .logout-btn {
+            padding: 0.5rem 1rem;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        /* Card Grid View */
+        .submissions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        .submissions-grid.hidden {
+            display: none;
+        }
+        .submission-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .submission-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .card-header {
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--color-earth) 0%, var(--color-dark) 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        .card-header .connection-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+        .card-photos {
+            position: relative;
+            height: 180px;
+            background: #f0f0f0;
+            overflow: hidden;
+        }
+        .card-photos img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .card-photos .no-photos {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #999;
+            font-size: 0.9rem;
+        }
+        .card-photos .photo-count {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+        .photo-hidden-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .card-body {
+            padding: 1rem;
+        }
+        .card-story {
+            font-size: 0.9rem;
+            color: var(--color-dark);
+            line-height: 1.5;
+            max-height: 100px;
+            overflow: hidden;
+            position: relative;
+        }
+        .card-story::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(transparent, white);
+        }
+        .card-meta {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: var(--color-smoke);
+        }
+        .card-meta p {
+            margin: 0.25rem 0;
+        }
+        .card-actions {
+            padding: 1rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .toggle-btn {
+            padding: 0.4rem 0.75rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .toggle-btn.photos-on {
+            background: #27ae60;
+            color: white;
+        }
+        .toggle-btn.photos-off {
+            background: #e74c3c;
+            color: white;
+        }
+        .toggle-btn.approved {
+            background: #27ae60;
+            color: white;
+        }
+        .toggle-btn.not-approved {
+            background: #95a5a6;
+            color: white;
+        }
+        .toggle-btn:hover {
+            opacity: 0.9;
+        }
+        .view-full-btn {
+            background: var(--color-earth);
+            color: white;
+        }
+
+        /* List View */
+        .submissions-list {
+            display: none;
+        }
+        .submissions-list.visible {
+            display: block;
+        }
+        .list-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .list-table th,
+        .list-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .list-table th {
+            background: var(--color-earth);
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+        .list-table tr:hover {
+            background: #f9f9f9;
+        }
+        .list-table .story-preview {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .status-badge.yes {
+            background: #d5f5e3;
+            color: #27ae60;
+        }
+        .status-badge.no {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+
+        /* Full Story Modal */
+        .story-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 1001;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+        .story-modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .modal-content {
+            background: white;
+            max-width: 800px;
+            width: 100%;
+            border-radius: 12px;
+            margin: 2rem auto;
+            overflow: hidden;
+        }
+        .modal-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--color-earth) 0%, var(--color-dark) 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 {
+            margin: 0;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        .modal-body {
+            padding: 2rem;
+        }
+        .modal-section {
+            margin-bottom: 1.5rem;
+        }
+        .modal-section h4 {
+            color: var(--color-earth);
+            margin-bottom: 0.5rem;
+            border-bottom: 2px solid var(--color-wheat);
+            padding-bottom: 0.5rem;
+        }
+        .modal-photos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+        .modal-photos img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .modal-photos img:hover {
+            opacity: 0.8;
+        }
+        .modal-story {
+            white-space: pre-wrap;
+            line-height: 1.8;
+        }
+        .modal-audio {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        .modal-notes {
+            background: #f9f9f9;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--color-smoke);
+        }
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--color-wheat);
+            border-top-color: var(--color-fire);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 1rem;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 2rem;
+            background: #27ae60;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+        .toast.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .toast.error {
+            background: #e74c3c;
+        }
+
+        /* Section Tabs */
+        .section-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid var(--color-earth);
+        }
+        .section-tab {
+            padding: 1rem 2rem;
+            background: #f5f5f5;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-smoke);
+            transition: all 0.2s;
+            border-radius: 8px 8px 0 0;
+            margin-right: 0.25rem;
+        }
+        .section-tab:hover {
+            background: #e0e0e0;
+        }
+        .section-tab.active {
+            background: var(--color-earth);
+            color: white;
+        }
+        .section-content {
+            display: none;
+        }
+        .section-content.active {
+            display: block;
+        }
+
+        /* Manuscript Section */
+        .manuscript-section {
+            margin-top: 1rem;
+        }
+        .manuscript-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+        .manuscript-stats {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 4px;
+        }
+        .manuscript-stats .stat-item {
+            color: white;
+        }
+        .manuscript-stats .stat-number {
+            color: var(--color-fire);
+        }
+        .manuscript-stats .stat-label {
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Part Headers */
+        .part-header-card {
+            background: linear-gradient(135deg, var(--color-earth) 0%, var(--color-dark) 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            margin: 2rem 0 1rem 0;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .part-header-card:first-child {
+            margin-top: 0;
+        }
+
+        /* Chapter Cards */
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .chapters-grid.hidden {
+            display: none;
+        }
+        .chapter-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .chapter-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .chapter-card-header {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chapter-card-header h4 {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--color-dark);
+        }
+        .chapter-status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .chapter-status-badge.drafted {
+            background: #d5f5e3;
+            color: #27ae60;
+        }
+        .chapter-status-badge.outline {
+            background: #fdebd0;
+            color: #e67e22;
+        }
+        .chapter-status-badge.pending {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+        .chapter-card-body {
+            padding: 1rem;
+        }
+        .chapter-meta {
+            font-size: 0.85rem;
+            color: var(--color-smoke);
+            margin-bottom: 0.75rem;
+        }
+        .chapter-notes-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-earth);
+            margin-bottom: 0.5rem;
+        }
+        .chapter-notes-input {
+            width: 100%;
+            min-height: 80px;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        .chapter-notes-input:focus {
+            outline: none;
+            border-color: var(--color-fire);
+        }
+        .chapter-notes-input::placeholder {
+            color: #aaa;
+        }
+        .chapter-card-actions {
+            padding: 0.75rem 1rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+        .save-notes-btn {
+            padding: 0.4rem 1rem;
+            background: var(--color-fire);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .save-notes-btn:hover {
+            background: var(--color-ember);
+        }
+        .save-notes-btn.saved {
+            background: #27ae60;
+        }
+        .view-chapter-btn {
+            padding: 0.4rem 1rem;
+            background: var(--color-earth);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .view-chapter-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Chapter List View */
+        .chapters-list {
+            display: none;
+        }
+        .chapters-list.visible {
+            display: block;
+        }
+        .chapters-list-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .chapters-list-table th,
+        .chapters-list-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .chapters-list-table th {
+            background: var(--color-earth);
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+        .chapters-list-table tr:hover {
+            background: #f9f9f9;
+        }
+        .chapters-list-table .notes-cell {
+            max-width: 400px;
+        }
+        .chapters-list-table .notes-cell textarea {
+            width: 100%;
+            min-height: 60px;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            resize: vertical;
+        }
+        .part-row {
+            background: linear-gradient(135deg, var(--color-earth) 0%, var(--color-dark) 100%) !important;
+            color: white;
+            font-weight: bold;
+        }
+        .part-row:hover {
+            background: linear-gradient(135deg, var(--color-earth) 0%, var(--color-dark) 100%) !important;
+        }
+
+        /* Export/Import Section */
+        .export-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .export-section h4 {
+            color: var(--color-earth);
+            margin-bottom: 1rem;
+        }
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .export-btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .export-btn.primary {
+            background: var(--color-fire);
+            color: white;
+        }
+        .export-btn.secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        .export-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .submissions-grid,
+            .chapters-grid {
+                grid-template-columns: 1fr;
+            }
+            .admin-controls,
+            .manuscript-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .list-table,
+            .chapters-list-table {
+                font-size: 0.8rem;
+            }
+            .list-table th,
+            .list-table td,
+            .chapters-list-table th,
+            .chapters-list-table td {
+                padding: 0.5rem;
+            }
+            .section-tabs {
+                flex-direction: column;
+            }
+            .section-tab {
+                border-radius: 0;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <a href="index.html" class="nav-brand">The Logan Fire</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Timeline</a></li>
+            <li><a href="testimonials.html">Voices</a></li>
+            <li><a href="media.html">Media Coverage</a></li>
+            <li><a href="submit.html">Share Your Story</a></li>
+            <li><a href="promote-story.html">Promote</a></li>
+            <li><a href="preorder.html" style="background: var(--color-fire); color: white; padding: 0.5rem 1rem;">Preorder Book</a></li>
+        </ul>
+    </nav>
+
+    <div class="admin-hero" style="padding-top: 80px;">
+        <h1>Admin Dashboard</h1>
+        <p>Manage submissions, moderate content, and review the manuscript</p>
+    </div>
+
+    <!-- Password Gate -->
+    <div id="password-gate" class="password-gate">
+        <h2>Admin Access Required</h2>
+        <p style="color: var(--color-smoke); margin-bottom: 1.5rem;">Enter the admin password to continue</p>
+        <input type="password" id="password-input" placeholder="Enter password" autocomplete="off">
+        <button onclick="checkPassword()">Access Dashboard</button>
+        <p id="error-message" class="error-message"></p>
+    </div>
+
+    <!-- Admin Content (hidden until authenticated) -->
+    <div id="admin-content" class="admin-content">
+        <!-- Section Tabs -->
+        <div class="section-tabs">
+            <button class="section-tab active" onclick="switchSection('submissions')">Submissions</button>
+            <button class="section-tab" onclick="switchSection('manuscript')">Manuscript</button>
+        </div>
+
+        <!-- SUBMISSIONS SECTION -->
+        <div id="submissions-section" class="section-content active">
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-number" id="stat-total">-</div>
+                <div class="stat-label">Total Submissions</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="stat-approved">-</div>
+                <div class="stat-label">For Book</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="stat-public">-</div>
+                <div class="stat-label">Public Display</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="stat-photos">-</div>
+                <div class="stat-label">With Photos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="stat-recordings">-</div>
+                <div class="stat-label">With Recordings</div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="admin-controls">
+            <div class="view-toggle">
+                <button id="btn-card-view" class="active" onclick="setView('card')">Cards</button>
+                <button id="btn-list-view" onclick="setView('list')">List</button>
+            </div>
+            <div class="search-filter">
+                <input type="text" id="search-input" placeholder="Search name, email, story..." onkeyup="filterSubmissions()">
+                <select id="filter-connection" onchange="filterSubmissions()">
+                    <option value="">All Connections</option>
+                    <option value="Local Resident">Local Resident</option>
+                    <option value="Farmer/Rancher">Farmer/Rancher</option>
+                    <option value="Firefighter/First Responder">Firefighter/First Responder</option>
+                    <option value="Volunteer">Volunteer</option>
+                    <option value="Evacuee">Evacuee</option>
+                    <option value="Family Member">Family Member</option>
+                    <option value="Other">Other</option>
+                </select>
+                <select id="filter-status" onchange="filterSubmissions()">
+                    <option value="">All Status</option>
+                    <option value="book-yes">For Book: Yes</option>
+                    <option value="book-no">For Book: No</option>
+                    <option value="public-yes">Public: Yes</option>
+                    <option value="public-no">Public: No</option>
+                    <option value="has-photos">Has Photos</option>
+                    <option value="photos-approved">Photos Approved</option>
+                    <option value="photos-hidden">Photos Hidden</option>
+                </select>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+
+        <!-- Card View -->
+        <div id="submissions-grid" class="submissions-grid">
+            <div class="loading">Loading submissions...</div>
+        </div>
+
+        <!-- List View -->
+        <div id="submissions-list" class="submissions-list">
+            <table class="list-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Connection</th>
+                        <th>Story</th>
+                        <th>Photos</th>
+                        <th>For Book</th>
+                        <th>Public</th>
+                        <th>Photos Visible</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="list-body">
+                </tbody>
+            </table>
+        </div>
+        </div><!-- End Submissions Section -->
+
+        <!-- MANUSCRIPT SECTION -->
+        <div id="manuscript-section" class="section-content">
+            <div class="manuscript-section">
+                <!-- Manuscript Stats -->
+                <div class="manuscript-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">34</div>
+                        <div class="stat-label">Total Chapters</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Parts</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="chapters-with-notes">0</div>
+                        <div class="stat-label">With Notes</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Drafted</div>
+                    </div>
+                </div>
+
+                <!-- Manuscript Controls -->
+                <div class="manuscript-controls">
+                    <div class="view-toggle">
+                        <button id="btn-chapter-card-view" class="active" onclick="setChapterView('card')">Cards</button>
+                        <button id="btn-chapter-list-view" onclick="setChapterView('list')">List</button>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <select id="filter-part" onchange="filterChapters()">
+                            <option value="">All Parts</option>
+                            <option value="prologue">Prologue</option>
+                            <option value="part1">Part One: Before the Fire</option>
+                            <option value="part2">Part Two: The Day the World Burned</option>
+                            <option value="part3">Part Three: The Reckoning</option>
+                            <option value="part4">Part Four: The Response</option>
+                            <option value="part5">Part Five: Rebuilding</option>
+                            <option value="part6">Part Six: The Producers</option>
+                            <option value="epilogue">Epilogue</option>
+                        </select>
+                        <a href="manuscript.html" target="_blank" class="view-chapter-btn">Open Full Manuscript</a>
+                    </div>
+                </div>
+
+                <!-- Chapter Cards View -->
+                <div id="chapters-grid" class="chapters-grid">
+                    <!-- Populated by JavaScript -->
+                </div>
+
+                <!-- Chapter List View -->
+                <div id="chapters-list" class="chapters-list">
+                    <table class="chapters-list-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">Chapter</th>
+                                <th style="width: 15%;">Part</th>
+                                <th style="width: 10%;">Status</th>
+                                <th style="width: 35%;">Notes / Feel</th>
+                                <th style="width: 10%;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="chapters-list-body">
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Export/Import Notes -->
+                <div class="export-section">
+                    <h4>Notes Management</h4>
+                    <p style="color: var(--color-smoke); margin-bottom: 1rem; font-size: 0.9rem;">
+                        Your chapter notes are saved locally in your browser. Export them to save a backup or import previously exported notes.
+                    </p>
+                    <div class="export-buttons">
+                        <button class="export-btn primary" onclick="exportNotes()">Export Notes (JSON)</button>
+                        <button class="export-btn secondary" onclick="document.getElementById('import-notes-input').click()">Import Notes</button>
+                        <input type="file" id="import-notes-input" accept=".json" style="display: none;" onchange="importNotes(event)">
+                        <button class="export-btn secondary" onclick="clearAllNotes()">Clear All Notes</button>
+                    </div>
+                </div>
+            </div>
+        </div><!-- End Manuscript Section -->
+    </div>
+
+    <!-- Full Story Modal -->
+    <div id="story-modal" class="story-modal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="modal-name">Submission Details</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h4>Contact Info</h4>
+                    <p><strong>Name:</strong> <span id="modal-full-name"></span></p>
+                    <p><strong>Email:</strong> <span id="modal-email"></span></p>
+                    <p><strong>Alias:</strong> <span id="modal-alias"></span></p>
+                    <p><strong>Connection:</strong> <span id="modal-connection"></span></p>
+                    <p><strong>Submitted:</strong> <span id="modal-date"></span></p>
+                </div>
+
+                <div class="modal-section" id="modal-photos-section">
+                    <h4>Photos (<span id="modal-photo-count">0</span>)</h4>
+                    <div id="modal-photos" class="modal-photos"></div>
+                </div>
+
+                <div class="modal-section" id="modal-audio-section" style="display: none;">
+                    <h4>Voice Recording</h4>
+                    <audio id="modal-audio" class="modal-audio" controls></audio>
+                </div>
+
+                <div class="modal-section">
+                    <h4>Full Story</h4>
+                    <div id="modal-story" class="modal-story"></div>
+                </div>
+
+                <div class="modal-section">
+                    <h4>Permissions & Notes</h4>
+                    <p><strong>Include in Book:</strong> <span id="modal-book"></span></p>
+                    <p><strong>Display Publicly:</strong> <span id="modal-public"></span></p>
+                    <p><strong>Photos Visible:</strong> <span id="modal-photos-status"></span></p>
+                    <h4 style="margin-top: 1rem;">Raw Notes</h4>
+                    <div id="modal-notes" class="modal-notes"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <footer style="background: var(--color-dark); color: white; text-align: center; padding: 2rem; margin-top: 3rem;">
+        <p style="font-size: 0.9rem; opacity: 0.7;">&copy; 2025 The Logan Fire — Admin Dashboard</p>
+    </footer>
+
+    <script>
+        // ===========================================
+        // CONFIGURATION
+        // ===========================================
+        const AIRTABLE_API_KEY = 'patCAEiRtNeklkxZg.f78be1a8f71e7b310cadbe27a7d1b94bde5677af845e6a1352d756a81f5ab729';
+        const AIRTABLE_BASE_ID = 'appN4OIz2fbVguxSV';
+        const AIRTABLE_TABLE_NAME = 'Stories';
+
+        // Same password hash as manuscript (you can change this to a different password)
+        const PASSWORD_HASH = 'cdf22fb0f3672e931197584d3335c3b87b4bf103a0b8b6d58d31a7174aab6d71';
+
+        // Store all submissions
+        let allSubmissions = [];
+        let filteredSubmissions = [];
+        let currentView = 'card';
+
+        // ===========================================
+        // Authentication
+        // ===========================================
+        async function hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function checkPassword() {
+            const input = document.getElementById('password-input');
+            const errorMsg = document.getElementById('error-message');
+            const password = input.value;
+
+            const hash = await hashPassword(password);
+
+            if (hash === PASSWORD_HASH) {
+                sessionStorage.setItem('admin_access', 'granted');
+                errorMsg.style.display = 'none';
+                showDashboard();
+            } else {
+                errorMsg.textContent = 'Incorrect password. Please try again.';
+                errorMsg.style.display = 'block';
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById('password-gate').style.display = 'none';
+            document.getElementById('admin-content').classList.add('visible');
+            loadSubmissions();
+        }
+
+        function logout() {
+            sessionStorage.removeItem('admin_access');
+            location.reload();
+        }
+
+        // Check on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (sessionStorage.getItem('admin_access') === 'granted') {
+                showDashboard();
+            }
+
+            // Enter key support
+            const input = document.getElementById('password-input');
+            if (input) {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkPassword();
+                    }
+                });
+            }
+        });
+
+        // ===========================================
+        // Load Submissions from Airtable
+        // ===========================================
+        async function loadSubmissions() {
+            try {
+                // Fetch ALL records (no filter)
+                const response = await fetch(
+                    `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${AIRTABLE_API_KEY}`
+                        }
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch submissions');
+                }
+
+                const data = await response.json();
+                allSubmissions = data.records.map(record => {
+                    const fields = record.fields;
+                    const notes = fields['Notes'] || '';
+
+                    // Get photos
+                    const attachments = fields['Attachments'] || [];
+                    let photos = [];
+                    if (attachments.length > 0) {
+                        photos = attachments.map(p => {
+                            if (p.url) return p.url;
+                            if (p.thumbnails?.full?.url) return p.thumbnails.full.url;
+                            if (p.thumbnails?.large?.url) return p.thumbnails.large.url;
+                            return null;
+                        }).filter(url => url !== null);
+
+                        // Fallback: Parse Cloudinary URLs from Notes
+                        if (photos.length === 0) {
+                            const cloudinaryMatches = notes.match(/Photo \d+: (https:\/\/res\.cloudinary\.com\/[^\s]+)/g);
+                            if (cloudinaryMatches) {
+                                photos = cloudinaryMatches.map(match => match.replace(/Photo \d+: /, ''));
+                            }
+                        }
+                    }
+
+                    // Get recordings
+                    const recordings = fields['Attachments 2'] || [];
+                    const recording = recordings.length > 0 ? recordings[0].url : null;
+
+                    // Determine if photos are approved/visible
+                    // Photos are visible if permission was granted AND not explicitly hidden
+                    const photoPermission = notes.includes('Photo permission: Yes');
+                    const photosHidden = notes.includes('[ADMIN: Photos Hidden]');
+                    const photosVisible = photos.length > 0 && photoPermission && !photosHidden;
+
+                    return {
+                        id: record.id,
+                        name: fields['Name'] || 'Unknown',
+                        email: fields['Email'] || '',
+                        alias: fields['Preferred Alias'] || '',
+                        connection: fields['Connection'] || '',
+                        story: fields['Story'] || '',
+                        photos: photos,
+                        recording: recording,
+                        hasRecording: fields['Has Recording'] || false,
+                        recordingDuration: fields['Recording Duration'] || '',
+                        includeInBook: fields['Include in Book'] === 'Yes',
+                        displayPublicly: fields['Display Publicly'] === 'Yes',
+                        photosVisible: photosVisible,
+                        photoPermission: photoPermission,
+                        photosHidden: photosHidden,
+                        notes: notes,
+                        submittedAt: fields['Submitted At'] || ''
+                    };
+                });
+
+                // Sort by submission date (newest first)
+                allSubmissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+
+                filteredSubmissions = [...allSubmissions];
+                updateStats();
+                renderSubmissions();
+
+            } catch (error) {
+                console.error('Error loading submissions:', error);
+                document.getElementById('submissions-grid').innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #e74c3c;">
+                        Failed to load submissions. Please check your connection and try again.
+                    </div>
+                `;
+            }
+        }
+
+        // ===========================================
+        // Update Stats
+        // ===========================================
+        function updateStats() {
+            document.getElementById('stat-total').textContent = allSubmissions.length;
+            document.getElementById('stat-approved').textContent = allSubmissions.filter(s => s.includeInBook).length;
+            document.getElementById('stat-public').textContent = allSubmissions.filter(s => s.displayPublicly).length;
+            document.getElementById('stat-photos').textContent = allSubmissions.filter(s => s.photos.length > 0).length;
+            document.getElementById('stat-recordings').textContent = allSubmissions.filter(s => s.hasRecording).length;
+        }
+
+        // ===========================================
+        // View Toggle
+        // ===========================================
+        function setView(view) {
+            currentView = view;
+            document.getElementById('btn-card-view').classList.toggle('active', view === 'card');
+            document.getElementById('btn-list-view').classList.toggle('active', view === 'list');
+            document.getElementById('submissions-grid').classList.toggle('hidden', view !== 'card');
+            document.getElementById('submissions-list').classList.toggle('visible', view === 'list');
+        }
+
+        // ===========================================
+        // Filter Submissions
+        // ===========================================
+        function filterSubmissions() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const connectionFilter = document.getElementById('filter-connection').value;
+            const statusFilter = document.getElementById('filter-status').value;
+
+            filteredSubmissions = allSubmissions.filter(sub => {
+                // Search filter
+                const matchesSearch = !searchTerm ||
+                    sub.name.toLowerCase().includes(searchTerm) ||
+                    sub.email.toLowerCase().includes(searchTerm) ||
+                    sub.story.toLowerCase().includes(searchTerm) ||
+                    sub.alias.toLowerCase().includes(searchTerm);
+
+                // Connection filter
+                const matchesConnection = !connectionFilter ||
+                    sub.connection.toLowerCase().includes(connectionFilter.toLowerCase());
+
+                // Status filter
+                let matchesStatus = true;
+                if (statusFilter === 'book-yes') matchesStatus = sub.includeInBook;
+                if (statusFilter === 'book-no') matchesStatus = !sub.includeInBook;
+                if (statusFilter === 'public-yes') matchesStatus = sub.displayPublicly;
+                if (statusFilter === 'public-no') matchesStatus = !sub.displayPublicly;
+                if (statusFilter === 'has-photos') matchesStatus = sub.photos.length > 0;
+                if (statusFilter === 'photos-approved') matchesStatus = sub.photosVisible;
+                if (statusFilter === 'photos-hidden') matchesStatus = sub.photos.length > 0 && !sub.photosVisible;
+
+                return matchesSearch && matchesConnection && matchesStatus;
+            });
+
+            renderSubmissions();
+        }
+
+        // ===========================================
+        // Render Submissions
+        // ===========================================
+        function renderSubmissions() {
+            renderCardView();
+            renderListView();
+        }
+
+        function renderCardView() {
+            const grid = document.getElementById('submissions-grid');
+
+            if (filteredSubmissions.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--color-smoke);">
+                        No submissions match your filters.
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filteredSubmissions.map(sub => `
+                <div class="submission-card" data-id="${sub.id}">
+                    <div class="card-header">
+                        <h3>${escapeHtml(sub.name)}</h3>
+                        <span class="connection-badge">${escapeHtml(sub.connection || 'Unknown')}</span>
+                    </div>
+                    <div class="card-photos">
+                        ${sub.photos.length > 0 ? `
+                            <img src="${sub.photos[0]}" alt="Submitted photo" loading="lazy">
+                            ${sub.photos.length > 1 ? `<span class="photo-count">${sub.photos.length} photos</span>` : ''}
+                            ${!sub.photosVisible ? `<div class="photo-hidden-overlay">Photos Hidden</div>` : ''}
+                        ` : `
+                            <div class="no-photos">No photos submitted</div>
+                        `}
+                    </div>
+                    <div class="card-body">
+                        <div class="card-story">${escapeHtml(sub.story.substring(0, 300))}${sub.story.length > 300 ? '...' : ''}</div>
+                        <div class="card-meta">
+                            <p><strong>Email:</strong> ${escapeHtml(sub.email || 'Not provided')}</p>
+                            <p><strong>Alias:</strong> ${escapeHtml(sub.alias || 'None')}</p>
+                            <p><strong>Submitted:</strong> ${formatDate(sub.submittedAt)}</p>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        ${sub.photos.length > 0 ? `
+                            <button class="toggle-btn ${sub.photosVisible ? 'photos-on' : 'photos-off'}"
+                                    onclick="togglePhotos('${sub.id}')">
+                                ${sub.photosVisible ? 'Photos ON' : 'Photos OFF'}
+                            </button>
+                        ` : ''}
+                        <button class="toggle-btn ${sub.includeInBook ? 'approved' : 'not-approved'}"
+                                onclick="toggleBook('${sub.id}')">
+                            Book: ${sub.includeInBook ? 'Yes' : 'No'}
+                        </button>
+                        <button class="toggle-btn ${sub.displayPublicly ? 'approved' : 'not-approved'}"
+                                onclick="togglePublic('${sub.id}')">
+                            Public: ${sub.displayPublicly ? 'Yes' : 'No'}
+                        </button>
+                        <button class="toggle-btn view-full-btn" onclick="openModal('${sub.id}')">
+                            View Full
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderListView() {
+            const tbody = document.getElementById('list-body');
+
+            if (filteredSubmissions.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 2rem; color: var(--color-smoke);">
+                            No submissions match your filters.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = filteredSubmissions.map(sub => `
+                <tr data-id="${sub.id}">
+                    <td><strong>${escapeHtml(sub.name)}</strong></td>
+                    <td>${escapeHtml(sub.email || '-')}</td>
+                    <td>${escapeHtml(sub.connection || '-')}</td>
+                    <td class="story-preview">${escapeHtml(sub.story.substring(0, 100))}...</td>
+                    <td>${sub.photos.length > 0 ? `${sub.photos.length} photo(s)` : '-'}</td>
+                    <td><span class="status-badge ${sub.includeInBook ? 'yes' : 'no'}">${sub.includeInBook ? 'Yes' : 'No'}</span></td>
+                    <td><span class="status-badge ${sub.displayPublicly ? 'yes' : 'no'}">${sub.displayPublicly ? 'Yes' : 'No'}</span></td>
+                    <td>
+                        ${sub.photos.length > 0 ? `
+                            <span class="status-badge ${sub.photosVisible ? 'yes' : 'no'}">${sub.photosVisible ? 'Visible' : 'Hidden'}</span>
+                        ` : '-'}
+                    </td>
+                    <td>
+                        ${sub.photos.length > 0 ? `
+                            <button class="toggle-btn ${sub.photosVisible ? 'photos-on' : 'photos-off'}"
+                                    onclick="togglePhotos('${sub.id}')" style="margin-right: 0.25rem;">
+                                ${sub.photosVisible ? 'Hide' : 'Show'}
+                            </button>
+                        ` : ''}
+                        <button class="toggle-btn view-full-btn" onclick="openModal('${sub.id}')">View</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ===========================================
+        // Toggle Functions
+        // ===========================================
+        async function togglePhotos(recordId) {
+            const submission = allSubmissions.find(s => s.id === recordId);
+            if (!submission) return;
+
+            const newPhotosHidden = !submission.photosHidden;
+
+            try {
+                // Update Notes field to include/remove admin marker
+                let newNotes = submission.notes;
+                if (newPhotosHidden) {
+                    // Add marker to hide photos
+                    if (!newNotes.includes('[ADMIN: Photos Hidden]')) {
+                        newNotes = '[ADMIN: Photos Hidden]\n' + newNotes;
+                    }
+                } else {
+                    // Remove marker to show photos
+                    newNotes = newNotes.replace(/\[ADMIN: Photos Hidden\]\n?/g, '');
+                }
+
+                await updateAirtableRecord(recordId, { 'Notes': newNotes });
+
+                // Update local data
+                submission.photosHidden = newPhotosHidden;
+                submission.photosVisible = submission.photos.length > 0 && submission.photoPermission && !newPhotosHidden;
+                submission.notes = newNotes;
+
+                renderSubmissions();
+                showToast(newPhotosHidden ? 'Photos hidden from public view' : 'Photos now visible on site');
+
+            } catch (error) {
+                console.error('Error toggling photos:', error);
+                showToast('Failed to update. Please try again.', true);
+            }
+        }
+
+        async function toggleBook(recordId) {
+            const submission = allSubmissions.find(s => s.id === recordId);
+            if (!submission) return;
+
+            const newValue = !submission.includeInBook;
+
+            try {
+                await updateAirtableRecord(recordId, { 'Include in Book': newValue ? 'Yes' : 'No' });
+                submission.includeInBook = newValue;
+                updateStats();
+                renderSubmissions();
+                showToast(`Submission ${newValue ? 'approved' : 'removed'} for book`);
+            } catch (error) {
+                console.error('Error toggling book status:', error);
+                showToast('Failed to update. Please try again.', true);
+            }
+        }
+
+        async function togglePublic(recordId) {
+            const submission = allSubmissions.find(s => s.id === recordId);
+            if (!submission) return;
+
+            const newValue = !submission.displayPublicly;
+
+            try {
+                await updateAirtableRecord(recordId, { 'Display Publicly': newValue ? 'Yes' : 'No' });
+                submission.displayPublicly = newValue;
+                updateStats();
+                renderSubmissions();
+                showToast(`Submission ${newValue ? 'now public' : 'now private'}`);
+            } catch (error) {
+                console.error('Error toggling public status:', error);
+                showToast('Failed to update. Please try again.', true);
+            }
+        }
+
+        async function updateAirtableRecord(recordId, fields) {
+            const response = await fetch(
+                `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}/${recordId}`,
+                {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ fields })
+                }
+            );
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error?.message || 'Update failed');
+            }
+
+            return await response.json();
+        }
+
+        // ===========================================
+        // Modal Functions
+        // ===========================================
+        function openModal(recordId) {
+            const submission = allSubmissions.find(s => s.id === recordId);
+            if (!submission) return;
+
+            document.getElementById('modal-name').textContent = submission.name;
+            document.getElementById('modal-full-name').textContent = submission.name;
+            document.getElementById('modal-email').textContent = submission.email || 'Not provided';
+            document.getElementById('modal-alias').textContent = submission.alias || 'None specified';
+            document.getElementById('modal-connection').textContent = submission.connection || 'Not specified';
+            document.getElementById('modal-date').textContent = formatDate(submission.submittedAt);
+            document.getElementById('modal-story').textContent = submission.story || 'No story provided';
+            document.getElementById('modal-book').textContent = submission.includeInBook ? 'Yes' : 'No';
+            document.getElementById('modal-public').textContent = submission.displayPublicly ? 'Yes' : 'No';
+            document.getElementById('modal-photos-status').textContent = submission.photos.length > 0
+                ? (submission.photosVisible ? 'Yes (Visible)' : 'No (Hidden)')
+                : 'N/A (No photos)';
+            document.getElementById('modal-notes').textContent = submission.notes || 'No notes';
+
+            // Photos
+            const photosSection = document.getElementById('modal-photos-section');
+            const photosContainer = document.getElementById('modal-photos');
+            document.getElementById('modal-photo-count').textContent = submission.photos.length;
+
+            if (submission.photos.length > 0) {
+                photosSection.style.display = 'block';
+                photosContainer.innerHTML = submission.photos.map(photo =>
+                    `<img src="${photo}" alt="Submitted photo" onclick="window.open('${photo}', '_blank')">`
+                ).join('');
+            } else {
+                photosSection.style.display = 'none';
+            }
+
+            // Audio
+            const audioSection = document.getElementById('modal-audio-section');
+            const audioPlayer = document.getElementById('modal-audio');
+            if (submission.recording) {
+                audioSection.style.display = 'block';
+                audioPlayer.src = submission.recording;
+            } else {
+                audioSection.style.display = 'none';
+                audioPlayer.src = '';
+            }
+
+            document.getElementById('story-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event) {
+            if (event && event.target && event.target.id !== 'story-modal') {
+                return;
+            }
+            document.getElementById('story-modal').classList.remove('active');
+            document.body.style.overflow = '';
+
+            // Stop audio playback
+            const audioPlayer = document.getElementById('modal-audio');
+            if (audioPlayer) {
+                audioPlayer.pause();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // ===========================================
+        // Utility Functions
+        // ===========================================
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text || '';
+            return div.innerHTML;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return 'Unknown';
+            try {
+                const date = new Date(dateStr);
+                return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.toggle('error', isError);
+            toast.classList.add('visible');
+
+            setTimeout(() => {
+                toast.classList.remove('visible');
+            }, 3000);
+        }
+
+        // ===========================================
+        // Section Switching
+        // ===========================================
+        function switchSection(section) {
+            // Update tabs
+            document.querySelectorAll('.section-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.section-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(section + '-section').classList.add('active');
+
+            // Load manuscript data if switching to manuscript
+            if (section === 'manuscript') {
+                renderChapters();
+            }
+        }
+
+        // ===========================================
+        // Manuscript Data
+        // ===========================================
+        const MANUSCRIPT_CHAPTERS = [
+            { id: 'prologue', title: 'Prologue: We Are Not the Same', part: 'prologue', status: 'drafted' },
+            // Part One
+            { id: 'ch1', title: 'Chapter 1: Small Town Morning', part: 'part1', status: 'drafted', meta: 'March 6, 2017 — 7:00 AM' },
+            { id: 'ch2', title: 'Chapter 2: Cole\'s Warning', part: 'part1', status: 'drafted', meta: '~8:30 AM' },
+            { id: 'ch3', title: 'Chapter 3: Fourth Generation', part: 'part1', status: 'drafted' },
+            { id: 'ch4', title: 'Chapter 4: Drought Country', part: 'part1', status: 'drafted' },
+            // Part Two
+            { id: 'ch6', title: 'Chapter 6: Spark', part: 'part2', status: 'drafted', meta: '11:30 AM' },
+            { id: 'ch7', title: 'Chapter 7: The Smell of Smoke', part: 'part2', status: 'drafted', meta: '~10:00-11:30 AM' },
+            { id: 'ch8', title: 'Chapter 8: Into the Fire', part: 'part2', status: 'drafted' },
+            { id: 'ch9', title: 'Chapter 9: The Firebreak', part: 'part2', status: 'drafted' },
+            { id: 'ch10', title: 'Chapter 10: Racing the Flames', part: 'part2', status: 'drafted' },
+            { id: 'ch11', title: 'Chapter 11: The Cattle', part: 'part2', status: 'drafted' },
+            { id: 'ch12', title: 'Chapter 12: The Houses', part: 'part2', status: 'drafted' },
+            { id: 'ch13', title: 'Chapter 13: The Long Night', part: 'part2', status: 'drafted' },
+            { id: 'ch14', title: 'Chapter 14: Day Two', part: 'part2', status: 'drafted', meta: 'March 7, 2017' },
+            // Part Three
+            { id: 'ch15', title: 'Chapter 15: Counting the Cost', part: 'part3', status: 'drafted' },
+            { id: 'ch16', title: 'Chapter 16: The Investigation', part: 'part3', status: 'drafted' },
+            { id: 'ch17', title: 'Chapter 17: Meanwhile, Across the Plains', part: 'part3', status: 'drafted' },
+            { id: 'ch18', title: 'Chapter 18: The Media Arrives', part: 'part3', status: 'drafted' },
+            { id: 'ch19', title: 'Chapter 19: What the Land Remembers', part: 'part3', status: 'drafted' },
+            { id: 'ch20', title: 'Chapter 20: Lifted', part: 'part3', status: 'drafted' },
+            // Part Four
+            { id: 'ch21', title: 'Chapter 21: The Phone Starts Ringing', part: 'part4', status: 'drafted' },
+            { id: 'ch22', title: 'Chapter 22: The Disaster Assistance Center', part: 'part4', status: 'drafted' },
+            { id: 'ch23', title: 'Chapter 23: The Haxtun Community Credit Union', part: 'part4', status: 'drafted' },
+            { id: 'ch24', title: 'Chapter 24: Volunteers', part: 'part4', status: 'drafted' },
+            { id: 'ch25', title: 'Chapter 25: The Six-Month Miracle', part: 'part4', status: 'drafted' },
+            { id: 'ch26', title: 'Chapter 26: Letters from Strangers', part: 'part4', status: 'drafted' },
+            // Part Five
+            { id: 'ch27', title: 'Chapter 27: The First Green', part: 'part5', status: 'drafted' },
+            { id: 'ch28', title: 'Chapter 28: Replacing the Irreplaceable', part: 'part5', status: 'drafted' },
+            { id: 'ch29', title: 'Chapter 29: The Kids\' Questions', part: 'part5', status: 'drafted' },
+            { id: 'ch30', title: 'Chapter 30: What We Carry', part: 'part5', status: 'drafted' },
+            // Part Six
+            { id: 'ch31', title: 'Chapter 31: The Producers', part: 'part6', status: 'drafted' },
+            { id: 'ch32', title: 'Chapter 32: The Ones Who Serve', part: 'part6', status: 'drafted' },
+            { id: 'ch33', title: 'Chapter 33: The Long View', part: 'part6', status: 'drafted' },
+            { id: 'epilogue', title: 'Epilogue: The Code We Live By', part: 'epilogue', status: 'drafted' }
+        ];
+
+        const PART_NAMES = {
+            'prologue': 'Prologue',
+            'part1': 'Part One: Before the Fire',
+            'part2': 'Part Two: The Day the World Burned',
+            'part3': 'Part Three: The Reckoning',
+            'part4': 'Part Four: The Response',
+            'part5': 'Part Five: Rebuilding',
+            'part6': 'Part Six: The Producers',
+            'epilogue': 'Epilogue'
+        };
+
+        let chapterNotes = {};
+        let currentChapterView = 'card';
+        let filteredChapters = [...MANUSCRIPT_CHAPTERS];
+
+        // ===========================================
+        // Load/Save Notes from localStorage
+        // ===========================================
+        function loadChapterNotes() {
+            const saved = localStorage.getItem('logan_fire_chapter_notes');
+            if (saved) {
+                try {
+                    chapterNotes = JSON.parse(saved);
+                } catch (e) {
+                    chapterNotes = {};
+                }
+            }
+            updateNotesStats();
+        }
+
+        function saveChapterNote(chapterId, note) {
+            chapterNotes[chapterId] = note;
+            localStorage.setItem('logan_fire_chapter_notes', JSON.stringify(chapterNotes));
+            updateNotesStats();
+        }
+
+        function updateNotesStats() {
+            const count = Object.values(chapterNotes).filter(n => n && n.trim()).length;
+            document.getElementById('chapters-with-notes').textContent = count;
+        }
+
+        // ===========================================
+        // Chapter View Toggle
+        // ===========================================
+        function setChapterView(view) {
+            currentChapterView = view;
+            document.getElementById('btn-chapter-card-view').classList.toggle('active', view === 'card');
+            document.getElementById('btn-chapter-list-view').classList.toggle('active', view === 'list');
+            document.getElementById('chapters-grid').classList.toggle('hidden', view !== 'card');
+            document.getElementById('chapters-list').classList.toggle('visible', view === 'list');
+        }
+
+        // ===========================================
+        // Filter Chapters
+        // ===========================================
+        function filterChapters() {
+            const partFilter = document.getElementById('filter-part').value;
+
+            if (!partFilter) {
+                filteredChapters = [...MANUSCRIPT_CHAPTERS];
+            } else {
+                filteredChapters = MANUSCRIPT_CHAPTERS.filter(ch => ch.part === partFilter);
+            }
+
+            renderChapters();
+        }
+
+        // ===========================================
+        // Render Chapters
+        // ===========================================
+        function renderChapters() {
+            loadChapterNotes();
+            renderChapterCards();
+            renderChapterList();
+        }
+
+        function renderChapterCards() {
+            const grid = document.getElementById('chapters-grid');
+            let html = '';
+            let currentPart = '';
+
+            filteredChapters.forEach(chapter => {
+                // Add part header if we're in a new part
+                if (chapter.part !== currentPart) {
+                    currentPart = chapter.part;
+                    html += `<div class="part-header-card" style="grid-column: 1 / -1;">${PART_NAMES[chapter.part]}</div>`;
+                }
+
+                const note = chapterNotes[chapter.id] || '';
+                html += `
+                    <div class="chapter-card" data-chapter-id="${chapter.id}">
+                        <div class="chapter-card-header">
+                            <h4>${escapeHtml(chapter.title)}</h4>
+                            <span class="chapter-status-badge ${chapter.status}">${chapter.status}</span>
+                        </div>
+                        <div class="chapter-card-body">
+                            ${chapter.meta ? `<div class="chapter-meta">${escapeHtml(chapter.meta)}</div>` : ''}
+                            <div class="chapter-notes-label">Your Notes / Feel:</div>
+                            <textarea class="chapter-notes-input"
+                                      id="notes-${chapter.id}"
+                                      placeholder="Add your thoughts about this chapter... tone, changes needed, ideas..."
+                                      onchange="saveChapterNote('${chapter.id}', this.value)">${escapeHtml(note)}</textarea>
+                        </div>
+                        <div class="chapter-card-actions">
+                            <button class="save-notes-btn" onclick="saveAndConfirm('${chapter.id}')">Save Notes</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html || '<div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--color-smoke);">No chapters match your filter.</div>';
+        }
+
+        function renderChapterList() {
+            const tbody = document.getElementById('chapters-list-body');
+            let html = '';
+            let currentPart = '';
+
+            filteredChapters.forEach(chapter => {
+                // Add part header row if we're in a new part
+                if (chapter.part !== currentPart) {
+                    currentPart = chapter.part;
+                    html += `<tr class="part-row"><td colspan="5">${PART_NAMES[chapter.part]}</td></tr>`;
+                }
+
+                const note = chapterNotes[chapter.id] || '';
+                html += `
+                    <tr data-chapter-id="${chapter.id}">
+                        <td><strong>${escapeHtml(chapter.title)}</strong>${chapter.meta ? `<br><small style="color: var(--color-smoke);">${escapeHtml(chapter.meta)}</small>` : ''}</td>
+                        <td>${PART_NAMES[chapter.part].split(':')[0]}</td>
+                        <td><span class="chapter-status-badge ${chapter.status}">${chapter.status}</span></td>
+                        <td class="notes-cell">
+                            <textarea id="list-notes-${chapter.id}"
+                                      placeholder="Notes..."
+                                      onchange="saveChapterNote('${chapter.id}', this.value)">${escapeHtml(note)}</textarea>
+                        </td>
+                        <td>
+                            <button class="save-notes-btn" onclick="saveAndConfirm('${chapter.id}')">Save</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html || '<tr><td colspan="5" style="text-align: center; padding: 2rem; color: var(--color-smoke);">No chapters match your filter.</td></tr>';
+        }
+
+        function saveAndConfirm(chapterId) {
+            // Get value from whichever view is active
+            const cardInput = document.getElementById('notes-' + chapterId);
+            const listInput = document.getElementById('list-notes-' + chapterId);
+            const note = (cardInput && cardInput.value) || (listInput && listInput.value) || '';
+
+            saveChapterNote(chapterId, note);
+
+            // Sync both inputs
+            if (cardInput) cardInput.value = note;
+            if (listInput) listInput.value = note;
+
+            showToast('Notes saved!');
+        }
+
+        // ===========================================
+        // Export/Import Notes
+        // ===========================================
+        function exportNotes() {
+            const dataStr = JSON.stringify(chapterNotes, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'logan_fire_chapter_notes_' + new Date().toISOString().split('T')[0] + '.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('Notes exported successfully!');
+        }
+
+        function importNotes(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    chapterNotes = { ...chapterNotes, ...imported };
+                    localStorage.setItem('logan_fire_chapter_notes', JSON.stringify(chapterNotes));
+                    renderChapters();
+                    showToast('Notes imported successfully!');
+                } catch (err) {
+                    showToast('Failed to import notes. Invalid file format.', true);
+                }
+            };
+            reader.readAsText(file);
+
+            // Reset input so same file can be imported again
+            event.target.value = '';
+        }
+
+        function clearAllNotes() {
+            if (!confirm('Are you sure you want to clear ALL chapter notes? This cannot be undone.')) {
+                return;
+            }
+
+            chapterNotes = {};
+            localStorage.removeItem('logan_fire_chapter_notes');
+            renderChapters();
+            showToast('All notes cleared.');
+        }
+
+        // Initialize manuscript on load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadChapterNotes();
+        });
+    </script>
+</body>
+</html>
