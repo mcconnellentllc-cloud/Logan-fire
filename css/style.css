@@ -657,16 +657,37 @@ footer {
     color: var(--color-smoke);
 }
 
-.logout-btn {
+.manuscript-nav {
     position: fixed;
     top: 1rem;
     right: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    z-index: 100;
+}
+
+.admin-link {
+    background: var(--color-flame);
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    border-radius: 3px;
+}
+
+.admin-link:hover {
+    background: var(--color-dark);
+}
+
+.logout-btn {
     background: var(--color-smoke);
     color: white;
     border: none;
     padding: 0.5rem 1rem;
     cursor: pointer;
     font-size: 0.8rem;
+    border-radius: 3px;
 }
 
 .logout-btn:hover {
