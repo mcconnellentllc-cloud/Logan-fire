@@ -35,67 +35,88 @@
             opacity: 0.9;
         }
 
-        /* Soundtrack Player */
-        .soundtrack-player {
-            background: var(--color-dark);
-            padding: 1rem 2rem;
-            position: sticky;
-            top: 60px;
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
+        /* Soundtrack Section */
+        .soundtrack-section {
+            background: linear-gradient(180deg, var(--color-dark) 0%, #1a1a1a 100%);
+            padding: 2rem;
+            border-bottom: 1px solid rgba(211, 84, 0, 0.3);
         }
 
-        .soundtrack-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        .soundtrack-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .soundtrack-header h2 {
             color: var(--color-wheat);
-        }
-
-        .soundtrack-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--color-fire);
-            border-radius: 50%;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 0.75rem;
         }
 
-        .soundtrack-icon svg {
-            width: 20px;
-            height: 20px;
-            fill: white;
+        .soundtrack-header h2 svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--color-fire);
         }
 
-        .soundtrack-details {
-            text-align: left;
-        }
-
-        .soundtrack-title {
-            font-weight: bold;
+        .soundtrack-header p {
+            color: var(--color-smoke);
             font-size: 0.95rem;
         }
 
-        .soundtrack-artist {
-            font-size: 0.8rem;
-            opacity: 0.7;
+        .soundtrack-header p strong {
+            color: var(--color-fire);
         }
 
-        .audio-controls {
+        /* Song List */
+        .song-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .song-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: border-color 0.3s, transform 0.2s;
+        }
+
+        .song-item:hover {
+            border-color: var(--color-fire);
+            transform: translateY(-2px);
+        }
+
+        .song-item iframe {
+            width: 100%;
+            height: 120px;
+            border: none;
+        }
+
+        /* Slideshow Controls */
+        .slideshow-controls {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 30px;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
         .slideshow-btn {
             background: var(--color-fire);
             border: none;
-            padding: 0.6rem 1.2rem;
+            padding: 0.8rem 1.5rem;
             border-radius: 25px;
             cursor: pointer;
             display: flex;
@@ -103,7 +124,7 @@
             gap: 0.5rem;
             transition: background 0.3s, transform 0.2s;
             color: white;
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 500;
         }
 
@@ -113,8 +134,8 @@
         }
 
         .slideshow-btn svg {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             fill: white;
         }
 
@@ -142,18 +163,10 @@
             display: inline;
         }
 
-        /* Suno Embed Player */
-        .suno-embed-container {
-            width: 100%;
-            max-width: 400px;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .suno-embed-container iframe {
-            width: 100%;
-            height: 100px;
-            border: none;
+        .slideshow-hint {
+            color: var(--color-smoke);
+            font-size: 0.85rem;
+            text-align: center;
         }
 
         /* Gallery Container */
@@ -384,19 +397,26 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .soundtrack-player {
-                padding: 0.75rem 1rem;
-                top: 100px;
+            .soundtrack-section {
+                padding: 1.5rem 1rem;
+            }
+
+            .soundtrack-header h2 {
+                font-size: 1.2rem;
+            }
+
+            .song-list {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .song-item iframe {
+                height: 100px;
+            }
+
+            .slideshow-controls {
                 flex-direction: column;
-                gap: 1rem;
-            }
-
-            .soundtrack-info {
-                display: none;
-            }
-
-            .suno-embed-container {
-                max-width: 100%;
+                padding: 0.75rem;
             }
 
             .carousel {
@@ -440,37 +460,50 @@
         </div>
     </div>
 
-    <!-- Soundtrack Player -->
-    <div class="soundtrack-player">
-        <div class="soundtrack-info">
-            <div class="soundtrack-icon">
+    <!-- Soundtrack Section -->
+    <div class="soundtrack-section">
+        <div class="soundtrack-header">
+            <h2>
                 <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                The Logan Fire Soundtrack
+            </h2>
+            <p><strong>Click play on any song</strong> to start the music, then start the slideshow below</p>
+        </div>
+
+        <!-- Song List with Individual Embeds -->
+        <div class="song-list">
+            <div class="song-item">
+                <iframe src="https://suno.com/embed/a9c2f5f9-164d-4d73-bbb1-8afdbd0eef15" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
-            <div class="soundtrack-details">
-                <a href="https://suno.com/playlist/abfde62d-d8f4-428d-96ff-241dab6f4a41" target="_blank" style="text-decoration: none; color: inherit;">
-                    <div class="soundtrack-title">The Logan Fire Soundtrack</div>
-                    <div class="soundtrack-artist">Listen on Suno</div>
-                </a>
+            <div class="song-item">
+                <iframe src="https://suno.com/embed/83f1fac0-8cff-4604-893d-593ed1a5bc5c" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <div class="song-item">
+                <iframe src="https://suno.com/embed/8fda0724-80cb-4bf1-9c26-73d566f25bf1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <div class="song-item">
+                <iframe src="https://suno.com/embed/9c7f0c5b-d020-4f8c-8e57-b59345b7415e" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <div class="song-item">
+                <iframe src="https://suno.com/embed/25301c8a-1bbf-48e7-a060-67c4f0389119" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
         </div>
 
-        <!-- Suno Embed Player -->
-        <div class="suno-embed-container">
-            <iframe
-                src="https://suno.com/embed/playlist/abfde62d-d8f4-428d-96ff-241dab6f4a41"
-                allow="autoplay; encrypted-media"
-                allowfullscreen>
-            </iframe>
-        </div>
-
-        <div class="audio-controls">
+        <!-- Slideshow Controls -->
+        <div class="slideshow-controls">
             <button class="slideshow-btn" id="slideshowBtn" title="Auto-advance slideshow">
                 <svg class="play-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                 <svg class="pause-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-                <span class="btn-text-play">Auto Slideshow</span>
+                <span class="btn-text-play">Start Slideshow</span>
                 <span class="btn-text-pause">Pause Slideshow</span>
             </button>
         </div>
+        <p class="slideshow-hint">Photos will auto-advance every 8 seconds while music plays</p>
+        <p style="text-align: center; margin-top: 1rem;">
+            <a href="https://suno.com/playlist/abfde62d-d8f4-428d-96ff-241dab6f4a41" target="_blank" style="color: var(--color-fire); text-decoration: none; font-size: 0.9rem;">
+                View full playlist on Suno &rarr;
+            </a>
+        </p>
     </div>
 
     <!-- Photo Gallery -->
