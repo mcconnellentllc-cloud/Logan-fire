@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery — The Logan Fire</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Gallery Hero - Smaller */
+        .gallery-hero {
+            position: relative;
+            height: 40vh;
+            min-height: 300px;
+            background: linear-gradient(135deg, var(--color-dark) 0%, var(--color-earth) 50%, var(--color-fire) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--color-light);
+            padding-top: 60px;
+        }
+
+        .gallery-hero h1 {
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 20px rgba(0,0,0,0.5);
+        }
+
+        .gallery-hero .subtitle {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        /* Soundtrack Player */
+        .soundtrack-player {
+            background: var(--color-dark);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 60px;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .soundtrack-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--color-wheat);
+        }
+
+        .soundtrack-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--color-fire);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .soundtrack-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .soundtrack-details {
+            text-align: left;
+        }
+
+        .soundtrack-title {
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .soundtrack-artist {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .play-btn {
+            background: var(--color-fire);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .play-btn:hover {
+            background: var(--color-ember);
+            transform: scale(1.05);
+        }
+
+        .play-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .play-btn .pause-icon {
+            display: none;
+        }
+
+        .play-btn.playing .play-icon {
+            display: none;
+        }
+
+        .play-btn.playing .pause-icon {
+            display: block;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .volume-control svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--color-wheat);
+            fill: none;
+        }
+
+        .volume-slider {
+            width: 80px;
+            accent-color: var(--color-fire);
+        }
+
+        .progress-container {
+            flex: 1;
+            max-width: 300px;
+            min-width: 150px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--color-fire);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        .time-display {
+            font-size: 0.75rem;
+            color: var(--color-smoke);
+            margin-top: 0.25rem;
+            text-align: center;
+        }
+
+        /* Gallery Container */
+        .gallery-container {
+            background: var(--color-dark);
+            padding: 2rem 0;
+            min-height: 60vh;
+        }
+
+        /* Carousel */
+        .carousel {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 60px;
+        }
+
+        .carousel-track {
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            transition: transform 0.5s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .carousel-image {
+            max-width: 100%;
+            max-height: 60vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 4px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .carousel-caption {
+            color: var(--color-light);
+            text-align: center;
+            padding: 1.5rem;
+            max-width: 800px;
+        }
+
+        .carousel-caption h3 {
+            font-size: 1.3rem;
+            color: var(--color-wheat);
+            margin-bottom: 0.5rem;
+        }
+
+        .carousel-caption p {
+            font-size: 1rem;
+            color: var(--color-smoke);
+            line-height: 1.6;
+        }
+
+        .carousel-caption .photo-credit {
+            font-size: 0.85rem;
+            color: var(--color-fire);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        /* Carousel Navigation */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(211, 84, 0, 0.9);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.2s;
+            z-index: 10;
+        }
+
+        .carousel-btn:hover {
+            background: var(--color-ember);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+            fill: none;
+            stroke-width: 3;
+        }
+
+        .carousel-prev {
+            left: 0;
+        }
+
+        .carousel-next {
+            right: 0;
+        }
+
+        /* Carousel Indicators */
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            padding: 0 1rem;
+        }
+
+        .carousel-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .carousel-indicator:hover {
+            background: rgba(255,255,255,0.5);
+        }
+
+        .carousel-indicator.active {
+            background: var(--color-fire);
+            transform: scale(1.2);
+        }
+
+        /* Thumbnail Strip */
+        .thumbnail-strip {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            padding: 0 1rem;
+            flex-wrap: wrap;
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.3s, transform 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .thumbnail:hover {
+            opacity: 0.8;
+        }
+
+        .thumbnail.active {
+            opacity: 1;
+            border-color: var(--color-fire);
+            transform: scale(1.05);
+        }
+
+        /* Photo Counter */
+        .photo-counter {
+            text-align: center;
+            color: var(--color-smoke);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        /* Empty State */
+        .gallery-empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--color-light);
+        }
+
+        .gallery-empty h2 {
+            color: var(--color-wheat);
+            margin-bottom: 1rem;
+        }
+
+        .gallery-empty p {
+            color: var(--color-smoke);
+            max-width: 500px;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* Placeholder Image */
+        .placeholder-image {
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(211,84,0,0.3), rgba(93,78,55,0.3));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            border: 2px dashed var(--color-fire);
+        }
+
+        .placeholder-image svg {
+            width: 80px;
+            height: 80px;
+            stroke: var(--color-fire);
+            fill: none;
+        }
+
+        /* Keyboard hints */
+        .keyboard-hints {
+            text-align: center;
+            padding: 1rem;
+            color: var(--color-smoke);
+            font-size: 0.85rem;
+        }
+
+        .keyboard-hints kbd {
+            background: rgba(255,255,255,0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            margin: 0 0.25rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .soundtrack-player {
+                padding: 0.75rem 1rem;
+                top: 100px;
+            }
+
+            .soundtrack-info {
+                display: none;
+            }
+
+            .progress-container {
+                display: none;
+            }
+
+            .carousel {
+                padding: 0 40px;
+            }
+
+            .carousel-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .thumbnail-strip {
+                display: none;
+            }
+
+            .keyboard-hints {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <a href="index.html" class="nav-brand">The Logan Fire</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Timeline</a></li>
+            <li><a href="testimonials.html">Voices</a></li>
+            <li><a href="gallery.html" class="active">Gallery</a></li>
+            <li><a href="media.html">Media Coverage</a></li>
+            <li><a href="submit.html">Share Your Story</a></li>
+            <li><a href="promote-story.html">Promote</a></li>
+            <li><a href="preorder.html" style="background: var(--color-fire); color: white; padding: 0.5rem 1rem;">Preorder Book</a></li>
+        </ul>
+    </nav>
+
+    <div class="gallery-hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Photo Gallery</h1>
+            <p class="subtitle">Images from the Logan Fire and the community response</p>
+        </div>
+    </div>
+
+    <!-- Soundtrack Player -->
+    <div class="soundtrack-player">
+        <div class="soundtrack-info">
+            <div class="soundtrack-icon">
+                <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            </div>
+            <div class="soundtrack-details">
+                <div class="soundtrack-title">Heart of the Heartland</div>
+                <div class="soundtrack-artist">The Logan Fire Soundtrack</div>
+            </div>
+        </div>
+
+        <div class="audio-controls">
+            <button class="play-btn" id="playBtn" title="Play/Pause">
+                <svg class="play-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <svg class="pause-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="time-display">
+                    <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+                </div>
+            </div>
+
+            <div class="volume-control">
+                <svg viewBox="0 0 24 24" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="0.7">
+            </div>
+        </div>
+    </div>
+
+    <!-- Photo Gallery -->
+    <div class="gallery-container">
+        <div class="carousel" id="carousel">
+            <button class="carousel-btn carousel-prev" id="prevBtn" title="Previous photo">
+                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+
+            <div class="carousel-track" id="carouselTrack">
+                <!-- Slide 1 -->
+                <div class="carousel-slide" data-index="0">
+                    <div class="placeholder-image">
+                        <svg viewBox="0 0 24 24" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </div>
+                    <div class="carousel-caption">
+                        <h3>The Fire Approaches</h3>
+                        <p>A wall of smoke and flame stretching across the horizon as the fire made its way toward Haxtun on March 6, 2017.</p>
+                        <p class="photo-credit">Photo placeholder - Submit your photos</p>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="carousel-slide" data-index="1">
+                    <div class="placeholder-image">
+                        <svg viewBox="0 0 24 24" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </div>
+                    <div class="carousel-caption">
+                        <h3>Community Response</h3>
+                        <p>Farmers and firefighters working side by side, using tractors and water trucks to create firebreaks and protect homes.</p>
+                        <p class="photo-credit">Photo placeholder - Submit your photos</p>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="carousel-slide" data-index="2">
+                    <div class="placeholder-image">
+                        <svg viewBox="0 0 24 24" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </div>
+                    <div class="carousel-caption">
+                        <h3>Fighting Through the Night</h3>
+                        <p>Volunteers and firefighters battling embers past midnight. The countryside glowed like a thousand campfires.</p>
+                        <p class="photo-credit">Photo placeholder - Submit your photos</p>
+                    </div>
+                </div>
+
+                <!-- Slide 4 -->
+                <div class="carousel-slide" data-index="3">
+                    <div class="placeholder-image">
+                        <svg viewBox="0 0 24 24" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </div>
+                    <div class="carousel-caption">
+                        <h3>The Aftermath</h3>
+                        <p>32,546 acres of scorched earth. The landscape transformed in mere hours by the fastest-moving fire anyone had seen.</p>
+                        <p class="photo-credit">Photo placeholder - Submit your photos</p>
+                    </div>
+                </div>
+
+                <!-- Slide 5 -->
+                <div class="carousel-slide" data-index="4">
+                    <div class="placeholder-image">
+                        <svg viewBox="0 0 24 24" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </div>
+                    <div class="carousel-caption">
+                        <h3>Recovery Begins</h3>
+                        <p>Hay convoys arriving from neighboring states. The community pulling together to help affected families rebuild.</p>
+                        <p class="photo-credit">Photo placeholder - Submit your photos</p>
+                    </div>
+                </div>
+
+                <!-- Slide 6 -->
+                <div class="carousel-slide" data-index="5">
+                    <div class="placeholder-image">
+                        <svg viewBox="0 0 24 24" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </div>
+                    <div class="carousel-caption">
+                        <h3>Green Returns</h3>
+                        <p>Spring 2017 - Farmers planted oats to stabilize the soil. Life returning to the scorched earth.</p>
+                        <p class="photo-credit">Photo placeholder - Submit your photos</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="carousel-btn carousel-next" id="nextBtn" title="Next photo">
+                <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+        </div>
+
+        <div class="carousel-indicators" id="carouselIndicators">
+            <!-- Indicators will be generated by JavaScript -->
+        </div>
+
+        <div class="photo-counter">
+            <span id="currentSlide">1</span> of <span id="totalSlides">6</span>
+        </div>
+
+        <div class="keyboard-hints">
+            Use <kbd>&larr;</kbd> <kbd>&rarr;</kbd> arrow keys to navigate | <kbd>Space</kbd> to play/pause music
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <section style="background: var(--color-wheat); padding: 3rem 2rem; text-align: center;">
+        <h2 style="color: var(--color-earth); margin-bottom: 1rem;">Share Your Photos</h2>
+        <p style="max-width: 600px; margin: 0 auto 1.5rem; color: var(--color-earth);">
+            Do you have photos from the Logan Fire? The smoke, the flames, the community response, the recovery?
+            Your images help tell this story and preserve the memory of what happened.
+        </p>
+        <a href="submit.html" class="btn">Submit Your Photos</a>
+    </section>
+
+    <!-- Share Section -->
+    <section class="share-section">
+        <h2>Share This Gallery</h2>
+        <p class="share-subtitle">Help preserve the visual history of the Logan Fire</p>
+
+        <div class="share-container">
+            <div class="qr-section">
+                <h3>Scan to Visit</h3>
+                <div id="qrcode"></div>
+                <button id="download-qr" class="download-qr-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download QR Code
+                </button>
+            </div>
+
+            <div class="share-buttons-section">
+                <h3>Share via</h3>
+                <div class="share-buttons">
+                    <button id="share-copy" class="share-btn copy-link">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        Copy Link
+                    </button>
+
+                    <button id="share-native" class="share-btn native-share">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="18" cy="5" r="3"/>
+                            <circle cx="6" cy="12" r="3"/>
+                            <circle cx="18" cy="19" r="3"/>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                        </svg>
+                        Share
+                    </button>
+
+                    <a href="#" id="share-facebook" class="share-btn facebook">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                        </svg>
+                        Facebook
+                    </a>
+
+                    <a href="#" id="share-twitter" class="share-btn twitter">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                        X
+                    </a>
+
+                    <a href="#" id="share-email" class="share-btn email">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                        Email
+                    </a>
+                </div>
+
+                <div class="share-url">
+                    <code>www.flamesoffury.com/gallery</code>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p class="footer-quote">"A picture's worth a thousand words. These photos tell the story of a community that refused to give up."</p>
+        <p class="copyright">&copy; 2025 The Logan Fire · <a href="attribution.html" style="color: inherit; text-decoration: none; opacity: 0.7;">Attribution</a> · <a href="privacy.html" style="color: inherit; text-decoration: none; opacity: 0.7;">Privacy</a> · <a href="terms.html" style="color: inherit; text-decoration: none; opacity: 0.7;">Terms</a></p>
+    </footer>
+
+    <!-- Hidden Audio Element -->
+    <audio id="soundtrack" preload="metadata">
+        <!-- Add your soundtrack file here -->
+        <!-- <source src="audio/heart-of-the-heartland.mp3" type="audio/mpeg"> -->
+        <!-- <source src="audio/heart-of-the-heartland.ogg" type="audio/ogg"> -->
+    </audio>
+
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+    <!-- Gallery & Audio Script -->
+    <script>
+        // ============================================
+        // CAROUSEL FUNCTIONALITY
+        // ============================================
+        const carousel = {
+            track: document.getElementById('carouselTrack'),
+            slides: document.querySelectorAll('.carousel-slide'),
+            prevBtn: document.getElementById('prevBtn'),
+            nextBtn: document.getElementById('nextBtn'),
+            indicators: document.getElementById('carouselIndicators'),
+            currentSlideEl: document.getElementById('currentSlide'),
+            totalSlidesEl: document.getElementById('totalSlides'),
+            currentIndex: 0,
+            autoPlayInterval: null,
+            autoPlayDelay: 8000, // 8 seconds per slide
+
+            init() {
+                this.totalSlidesEl.textContent = this.slides.length;
+                this.createIndicators();
+                this.bindEvents();
+                this.updateSlide();
+            },
+
+            createIndicators() {
+                this.slides.forEach((_, index) => {
+                    const indicator = document.createElement('button');
+                    indicator.className = 'carousel-indicator' + (index === 0 ? ' active' : '');
+                    indicator.setAttribute('aria-label', `Go to slide ${index + 1}`);
+                    indicator.addEventListener('click', () => this.goToSlide(index));
+                    this.indicators.appendChild(indicator);
+                });
+            },
+
+            bindEvents() {
+                this.prevBtn.addEventListener('click', () => this.prev());
+                this.nextBtn.addEventListener('click', () => this.next());
+
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') this.prev();
+                    if (e.key === 'ArrowRight') this.next();
+                });
+
+                // Pause autoplay on hover
+                this.track.addEventListener('mouseenter', () => this.stopAutoPlay());
+                this.track.addEventListener('mouseleave', () => this.startAutoPlay());
+
+                // Touch/swipe support
+                let touchStartX = 0;
+                let touchEndX = 0;
+
+                this.track.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+
+                this.track.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    if (touchStartX - touchEndX > 50) this.next();
+                    if (touchEndX - touchStartX > 50) this.prev();
+                }, { passive: true });
+            },
+
+            updateSlide() {
+                // Move track
+                this.slides.forEach((slide, index) => {
+                    slide.style.transform = `translateX(${-this.currentIndex * 100}%)`;
+                });
+
+                // Update indicators
+                const indicators = this.indicators.querySelectorAll('.carousel-indicator');
+                indicators.forEach((ind, index) => {
+                    ind.classList.toggle('active', index === this.currentIndex);
+                });
+
+                // Update counter
+                this.currentSlideEl.textContent = this.currentIndex + 1;
+            },
+
+            next() {
+                this.currentIndex = (this.currentIndex + 1) % this.slides.length;
+                this.updateSlide();
+            },
+
+            prev() {
+                this.currentIndex = (this.currentIndex - 1 + this.slides.length) % this.slides.length;
+                this.updateSlide();
+            },
+
+            goToSlide(index) {
+                this.currentIndex = index;
+                this.updateSlide();
+            },
+
+            startAutoPlay() {
+                if (audioPlayer.isPlaying) {
+                    this.autoPlayInterval = setInterval(() => this.next(), this.autoPlayDelay);
+                }
+            },
+
+            stopAutoPlay() {
+                clearInterval(this.autoPlayInterval);
+            }
+        };
+
+        // ============================================
+        // AUDIO PLAYER FUNCTIONALITY
+        // ============================================
+        const audioPlayer = {
+            audio: document.getElementById('soundtrack'),
+            playBtn: document.getElementById('playBtn'),
+            progressBar: document.getElementById('progressBar'),
+            progressFill: document.getElementById('progressFill'),
+            currentTimeEl: document.getElementById('currentTime'),
+            durationEl: document.getElementById('duration'),
+            volumeSlider: document.getElementById('volumeSlider'),
+            isPlaying: false,
+
+            init() {
+                this.bindEvents();
+                this.audio.volume = 0.7;
+            },
+
+            bindEvents() {
+                this.playBtn.addEventListener('click', () => this.togglePlay());
+
+                this.audio.addEventListener('loadedmetadata', () => {
+                    this.durationEl.textContent = this.formatTime(this.audio.duration);
+                });
+
+                this.audio.addEventListener('timeupdate', () => {
+                    const progress = (this.audio.currentTime / this.audio.duration) * 100;
+                    this.progressFill.style.width = progress + '%';
+                    this.currentTimeEl.textContent = this.formatTime(this.audio.currentTime);
+                });
+
+                this.audio.addEventListener('ended', () => {
+                    this.isPlaying = false;
+                    this.playBtn.classList.remove('playing');
+                    carousel.stopAutoPlay();
+                });
+
+                this.progressBar.addEventListener('click', (e) => {
+                    const rect = this.progressBar.getBoundingClientRect();
+                    const percent = (e.clientX - rect.left) / rect.width;
+                    this.audio.currentTime = percent * this.audio.duration;
+                });
+
+                this.volumeSlider.addEventListener('input', (e) => {
+                    this.audio.volume = e.target.value;
+                });
+
+                // Spacebar to play/pause
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space' && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT') {
+                        e.preventDefault();
+                        this.togglePlay();
+                    }
+                });
+            },
+
+            togglePlay() {
+                if (this.isPlaying) {
+                    this.audio.pause();
+                    this.playBtn.classList.remove('playing');
+                    carousel.stopAutoPlay();
+                } else {
+                    // Check if audio source exists
+                    if (this.audio.src || this.audio.querySelector('source')) {
+                        this.audio.play().catch(() => {
+                            // No audio file - just control slideshow
+                            console.log('No audio file loaded');
+                        });
+                    }
+                    this.playBtn.classList.add('playing');
+                    carousel.startAutoPlay();
+                }
+                this.isPlaying = !this.isPlaying;
+            },
+
+            formatTime(seconds) {
+                if (isNaN(seconds)) return '0:00';
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return mins + ':' + (secs < 10 ? '0' : '') + secs;
+            }
+        };
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            carousel.init();
+            audioPlayer.init();
+        });
+    </script>
+
+    <!-- Share functionality -->
+    <script src="js/share.js"></script>
+</body>
+</html>
