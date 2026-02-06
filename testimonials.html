@@ -722,8 +722,17 @@
 
         <section class="quotes-section">
             <h2>In Their Own Words</h2>
+            <p class="subtitle">Quotes from those who have shared publicly</p>
             <div id="quotes-grid" class="quotes-grid">
                 <div class="loading">Loading stories...</div>
+            </div>
+        </section>
+
+        <section class="quotes-section" id="anonymous-section" style="margin-top: 3rem;">
+            <h2>Anonymous Voices</h2>
+            <p class="subtitle">Stories shared privately, names protected</p>
+            <div id="anonymous-quotes-grid" class="quotes-grid">
+                <div class="loading">Loading...</div>
             </div>
         </section>
 
@@ -914,11 +923,12 @@
             const contributorsGrid = document.getElementById('contributors-grid');
             const quotesGrid = document.getElementById('quotes-grid');
             const photoGallery = document.getElementById('photo-gallery');
+            const anonymousGrid = document.getElementById('anonymous-quotes-grid');
 
             try {
-                // Fetch records from Airtable - only those that gave permission
-                const response = await fetch(
-                    `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?filterByFormula={Include in Book}="Yes"`,
+                // Fetch PUBLIC records - only those that explicitly gave permission for public display
+                const publicResponse = await fetch(
+                    `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?filterByFormula={Display Publicly}="Yes"`,
                     {
                         headers: {
                             'Authorization': `Bearer ${AIRTABLE_API_KEY}`
@@ -926,12 +936,29 @@
                     }
                 );
 
-                if (!response.ok) {
-                    throw new Error('Failed to fetch stories');
+                // Fetch PRIVATE records - for anonymous quotes (not public, but approved for book OR have story)
+                const privateResponse = await fetch(
+                    `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?filterByFormula=AND({Display Publicly}!="Yes",{Include in Book}="Yes")`,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${AIRTABLE_API_KEY}`
+                        }
+                    }
+                );
+
+                if (!publicResponse.ok) {
+                    throw new Error('Failed to fetch public stories');
                 }
 
-                const data = await response.json();
-                const records = data.records || [];
+                const publicData = await publicResponse.json();
+                const records = publicData.records || [];
+
+                // Get private records for anonymous quotes
+                let privateRecords = [];
+                if (privateResponse.ok) {
+                    const privateData = await privateResponse.json();
+                    privateRecords = privateData.records || [];
+                }
 
                 // Process data
                 const contributors = [];
@@ -991,14 +1018,17 @@
                     const hasPhotos = fields['Attachments'] && Array.isArray(fields['Attachments']) && fields['Attachments'].length > 0;
                     // Photo permission is granted if they submitted photos (checked in Notes or just assume yes if attachments exist)
                     // Also check for admin override - if admin hid the photos, don't show them
-                    const adminHiddenPhotos = notes.includes('[ADMIN: Photos Hidden]');
-                    const photoPermissionGranted = hasPhotos && !adminHiddenPhotos && (notes.includes('Photo permission: Yes') || !notes.includes('Photo permission: No'));
+                    const adminHiddenAll = notes.includes('[ADMIN: Photos Hidden]');
+                    const photoPermissionGranted = hasPhotos && !adminHiddenAll && (notes.includes('Photo permission: Yes') || !notes.includes('Photo permission: No'));
+
+                    // Parse individually hidden photo indices
+                    const hiddenPhotoIndices = parseHiddenPhotoIndices(notes);
 
                     // Try multiple ways to get photo URLs (Airtable signed URLs can expire)
                     let allPhotos = [];
                     if (photoPermissionGranted && hasPhotos) {
                         // First try: Get URLs from Attachments field
-                        allPhotos = fields['Attachments'].map(p => {
+                        let rawPhotos = fields['Attachments'].map(p => {
                             // Try different URL properties Airtable might provide
                             if (p.url) return p.url;
                             if (p.thumbnails?.full?.url) return p.thumbnails.full.url;
@@ -1007,12 +1037,15 @@
                         }).filter(url => url !== null);
 
                         // Fallback: Parse Cloudinary URLs from Notes if Attachments URLs are empty/invalid
-                        if (allPhotos.length === 0 || allPhotos.every(url => !url)) {
+                        if (rawPhotos.length === 0 || rawPhotos.every(url => !url)) {
                             const cloudinaryMatches = notes.match(/Photo \d+: (https:\/\/res\.cloudinary\.com\/[^\s]+)/g);
                             if (cloudinaryMatches) {
-                                allPhotos = cloudinaryMatches.map(match => match.replace(/Photo \d+: /, ''));
+                                rawPhotos = cloudinaryMatches.map(match => match.replace(/Photo \d+: /, ''));
                             }
                         }
+
+                        // Filter out individually hidden photos
+                        allPhotos = rawPhotos.filter((_, index) => !hiddenPhotoIndices.includes(index));
                     }
                     const firstPhoto = allPhotos.length > 0 ? allPhotos[0] : null;
 
@@ -1144,6 +1177,43 @@
                     `;
                 }
 
+                // =============================================
+                // ANONYMOUS QUOTES from private submissions
+                // =============================================
+                const anonymousQuotes = [];
+                privateRecords.forEach(record => {
+                    const fields = record.fields;
+                    const story = fields['Story'] || '';
+                    const connection = fields['Connection'] || 'Community Member';
+
+                    if (story && story.trim().length > 30) {
+                        let excerpt = extractQuote(story);
+                        if (excerpt) {
+                            anonymousQuotes.push({
+                                text: excerpt,
+                                connection: connection
+                            });
+                        }
+                    }
+                });
+
+                // Shuffle and display anonymous quotes
+                const shuffledAnonymous = shuffleArray(anonymousQuotes);
+                const anonymousSection = document.getElementById('anonymous-section');
+
+                if (shuffledAnonymous.length > 0) {
+                    anonymousSection.style.display = 'block';
+                    anonymousGrid.innerHTML = shuffledAnonymous.map(quote => `
+                        <div class="quote-card">
+                            <p>${escapeHtml(quote.text)}</p>
+                            <div class="quote-source">— ${escapeHtml(quote.connection)}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    // Hide anonymous section if no private quotes
+                    anonymousSection.style.display = 'none';
+                }
+
             } catch (error) {
                 console.error('Error loading testimonials:', error);
                 contributorsGrid.innerHTML = `
@@ -1228,6 +1298,16 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        // Parse hidden photo indices from admin notes
+        function parseHiddenPhotoIndices(notes) {
+            // Look for pattern: [ADMIN: Hidden Photos: 0,2,5]
+            const match = notes.match(/\[ADMIN: Hidden Photos: ([\d,]+)\]/);
+            if (match) {
+                return match[1].split(',').map(n => parseInt(n.trim(), 10)).filter(n => !isNaN(n));
+            }
+            return [];
         }
 
         // Gallery data for slideshow
