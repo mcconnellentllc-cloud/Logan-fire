@@ -465,8 +465,10 @@
                 <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
             </div>
             <div class="soundtrack-details">
-                <div class="soundtrack-title">Heart of the Heartland</div>
-                <div class="soundtrack-artist">The Logan Fire Soundtrack</div>
+                <a href="https://suno.com/playlist/abfde62d-d8f4-428d-96ff-241dab6f4a41" target="_blank" style="text-decoration: none; color: inherit;">
+                    <div class="soundtrack-title">The Logan Fire Soundtrack</div>
+                    <div class="soundtrack-artist">Listen on Suno</div>
+                </a>
             </div>
         </div>
 
@@ -476,18 +478,11 @@
                 <svg class="pause-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
             </button>
 
-            <div class="progress-container">
-                <div class="progress-bar" id="progressBar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <div class="time-display">
-                    <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
-                </div>
-            </div>
-
-            <div class="volume-control">
-                <svg viewBox="0 0 24 24" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="0.7">
+            <div class="progress-container" style="text-align: center;">
+                <a href="https://suno.com/playlist/abfde62d-d8f4-428d-96ff-241dab6f4a41" target="_blank"
+                   style="color: var(--color-fire); text-decoration: none; font-size: 0.85rem;">
+                    Open Full Soundtrack
+                </a>
             </div>
         </div>
     </div>
@@ -500,75 +495,14 @@
             </button>
 
             <div class="carousel-track" id="carouselTrack">
-                <!-- Slide 1 -->
-                <div class="carousel-slide" data-index="0">
+                <!-- Loading state -->
+                <div class="carousel-slide loading-slide" data-index="0">
                     <div class="placeholder-image">
                         <svg viewBox="0 0 24 24" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                     </div>
                     <div class="carousel-caption">
-                        <h3>The Fire Approaches</h3>
-                        <p>A wall of smoke and flame stretching across the horizon as the fire made its way toward Haxtun on March 6, 2017.</p>
-                        <p class="photo-credit">Photo placeholder - Submit your photos</p>
-                    </div>
-                </div>
-
-                <!-- Slide 2 -->
-                <div class="carousel-slide" data-index="1">
-                    <div class="placeholder-image">
-                        <svg viewBox="0 0 24 24" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    </div>
-                    <div class="carousel-caption">
-                        <h3>Community Response</h3>
-                        <p>Farmers and firefighters working side by side, using tractors and water trucks to create firebreaks and protect homes.</p>
-                        <p class="photo-credit">Photo placeholder - Submit your photos</p>
-                    </div>
-                </div>
-
-                <!-- Slide 3 -->
-                <div class="carousel-slide" data-index="2">
-                    <div class="placeholder-image">
-                        <svg viewBox="0 0 24 24" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    </div>
-                    <div class="carousel-caption">
-                        <h3>Fighting Through the Night</h3>
-                        <p>Volunteers and firefighters battling embers past midnight. The countryside glowed like a thousand campfires.</p>
-                        <p class="photo-credit">Photo placeholder - Submit your photos</p>
-                    </div>
-                </div>
-
-                <!-- Slide 4 -->
-                <div class="carousel-slide" data-index="3">
-                    <div class="placeholder-image">
-                        <svg viewBox="0 0 24 24" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    </div>
-                    <div class="carousel-caption">
-                        <h3>The Aftermath</h3>
-                        <p>32,546 acres of scorched earth. The landscape transformed in mere hours by the fastest-moving fire anyone had seen.</p>
-                        <p class="photo-credit">Photo placeholder - Submit your photos</p>
-                    </div>
-                </div>
-
-                <!-- Slide 5 -->
-                <div class="carousel-slide" data-index="4">
-                    <div class="placeholder-image">
-                        <svg viewBox="0 0 24 24" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    </div>
-                    <div class="carousel-caption">
-                        <h3>Recovery Begins</h3>
-                        <p>Hay convoys arriving from neighboring states. The community pulling together to help affected families rebuild.</p>
-                        <p class="photo-credit">Photo placeholder - Submit your photos</p>
-                    </div>
-                </div>
-
-                <!-- Slide 6 -->
-                <div class="carousel-slide" data-index="5">
-                    <div class="placeholder-image">
-                        <svg viewBox="0 0 24 24" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    </div>
-                    <div class="carousel-caption">
-                        <h3>Green Returns</h3>
-                        <p>Spring 2017 - Farmers planted oats to stabilize the soil. Life returning to the scorched earth.</p>
-                        <p class="photo-credit">Photo placeholder - Submit your photos</p>
+                        <h3>Loading Photos...</h3>
+                        <p>Fetching images from the community collection.</p>
                     </div>
                 </div>
             </div>
@@ -587,7 +521,7 @@
         </div>
 
         <div class="keyboard-hints">
-            Use <kbd>&larr;</kbd> <kbd>&rarr;</kbd> arrow keys to navigate | <kbd>Space</kbd> to play/pause music
+            Use <kbd>&larr;</kbd> <kbd>&rarr;</kbd> arrow keys to navigate | <kbd>Space</kbd> to start/stop slideshow
         </div>
     </div>
 
@@ -677,12 +611,10 @@
         <p class="copyright">&copy; 2025 The Logan Fire · <a href="attribution.html" style="color: inherit; text-decoration: none; opacity: 0.7;">Attribution</a> · <a href="privacy.html" style="color: inherit; text-decoration: none; opacity: 0.7;">Privacy</a> · <a href="terms.html" style="color: inherit; text-decoration: none; opacity: 0.7;">Terms</a></p>
     </footer>
 
-    <!-- Hidden Audio Element -->
-    <audio id="soundtrack" preload="metadata">
-        <!-- Add your soundtrack file here -->
-        <!-- <source src="audio/heart-of-the-heartland.mp3" type="audio/mpeg"> -->
-        <!-- <source src="audio/heart-of-the-heartland.ogg" type="audio/ogg"> -->
-    </audio>
+    <!-- Suno Playlist Embed -->
+    <div id="suno-player-container" style="display: none;">
+        <iframe id="suno-player" src="https://suno.com/embed/playlist/abfde62d-d8f4-428d-96ff-241dab6f4a41" width="100%" height="150" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
 
     <!-- QR Code Library -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
@@ -690,11 +622,141 @@
     <!-- Gallery & Audio Script -->
     <script>
         // ============================================
+        // AIRTABLE CONFIGURATION
+        // ============================================
+        const AIRTABLE_API_KEY = 'patCAEiRtNeklkxZg.f78be1a8f71e7b310cadbe27a7d1b94bde5677af845e6a1352d756a81f5ab729';
+        const AIRTABLE_BASE_ID = 'appN4OIz2fbVguxSV';
+        const AIRTABLE_TABLE_NAME = 'Stories';
+        const SUNO_PLAYLIST_URL = 'https://suno.com/playlist/abfde62d-d8f4-428d-96ff-241dab6f4a41';
+
+        // ============================================
+        // HELPER FUNCTIONS
+        // ============================================
+        function parseHiddenPhotoIndices(notes) {
+            const match = notes.match(/\[ADMIN: Hidden Photos: ([^\]]+)\]/);
+            if (match) {
+                return match[1].split(',').map(i => parseInt(i.trim())).filter(i => !isNaN(i));
+            }
+            return [];
+        }
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        // ============================================
+        // LOAD PHOTOS FROM AIRTABLE
+        // ============================================
+        async function loadPhotosFromAirtable() {
+            try {
+                const response = await fetch(
+                    `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${AIRTABLE_API_KEY}`
+                        }
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch from Airtable');
+                }
+
+                const data = await response.json();
+                const photos = [];
+
+                data.records.forEach(record => {
+                    const fields = record.fields;
+                    const notes = fields['Notes'] || '';
+                    const connection = fields['Connection'] || 'Community Member';
+
+                    // Check for photos in Attachments field
+                    const hasPhotos = fields['Attachments'] && Array.isArray(fields['Attachments']) && fields['Attachments'].length > 0;
+                    const adminHiddenAll = notes.includes('[ADMIN: Photos Hidden]');
+                    const photoPermissionGranted = hasPhotos && !adminHiddenAll && (notes.includes('Photo permission: Yes') || !notes.includes('Photo permission: No'));
+                    const hiddenPhotoIndices = parseHiddenPhotoIndices(notes);
+
+                    if (photoPermissionGranted && hasPhotos) {
+                        // Get URLs from Attachments field
+                        let rawPhotos = fields['Attachments'].map(p => {
+                            if (p.url) return p.url;
+                            if (p.thumbnails?.full?.url) return p.thumbnails.full.url;
+                            if (p.thumbnails?.large?.url) return p.thumbnails.large.url;
+                            return null;
+                        }).filter(url => url !== null);
+
+                        // Fallback: Parse Cloudinary URLs from Notes
+                        if (rawPhotos.length === 0 || rawPhotos.every(url => !url)) {
+                            const cloudinaryMatches = notes.match(/Photo \d+: (https:\/\/res\.cloudinary\.com\/[^\s]+)/g);
+                            if (cloudinaryMatches) {
+                                rawPhotos = cloudinaryMatches.map(match => match.replace(/Photo \d+: /, ''));
+                            }
+                        }
+
+                        // Filter out individually hidden photos
+                        const filteredPhotos = rawPhotos.filter((_, index) => !hiddenPhotoIndices.includes(index));
+                        filteredPhotos.forEach(photoUrl => {
+                            photos.push({
+                                url: photoUrl,
+                                caption: connection
+                            });
+                        });
+                    }
+                });
+
+                return shuffleArray(photos);
+            } catch (error) {
+                console.error('Error loading photos:', error);
+                return [];
+            }
+        }
+
+        // ============================================
+        // BUILD CAROUSEL SLIDES
+        // ============================================
+        function buildCarouselSlides(photos) {
+            const track = document.getElementById('carouselTrack');
+
+            if (photos.length === 0) {
+                track.innerHTML = `
+                    <div class="carousel-slide" data-index="0">
+                        <div class="placeholder-image">
+                            <svg viewBox="0 0 24 24" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        </div>
+                        <div class="carousel-caption">
+                            <h3>No Photos Yet</h3>
+                            <p>Be the first to share your photos from the Logan Fire. Your images help tell this story.</p>
+                            <p class="photo-credit"><a href="submit.html" style="color: var(--color-fire);">Submit your photos</a></p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            track.innerHTML = photos.map((photo, index) => `
+                <div class="carousel-slide" data-index="${index}">
+                    <img class="carousel-image" src="${photo.url}" alt="Photo from the Logan Fire" loading="${index < 3 ? 'eager' : 'lazy'}">
+                    <div class="carousel-caption">
+                        <p class="photo-credit">Shared by: ${photo.caption}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update total slides counter
+            document.getElementById('totalSlides').textContent = photos.length;
+        }
+
+        // ============================================
         // CAROUSEL FUNCTIONALITY
         // ============================================
         const carousel = {
-            track: document.getElementById('carouselTrack'),
-            slides: document.querySelectorAll('.carousel-slide'),
+            track: null,
+            slides: null,
             prevBtn: document.getElementById('prevBtn'),
             nextBtn: document.getElementById('nextBtn'),
             indicators: document.getElementById('carouselIndicators'),
@@ -705,9 +767,21 @@
             autoPlayDelay: 8000, // 8 seconds per slide
 
             init() {
+                this.track = document.getElementById('carouselTrack');
+                this.slides = document.querySelectorAll('.carousel-slide');
                 this.totalSlidesEl.textContent = this.slides.length;
                 this.createIndicators();
                 this.bindEvents();
+                this.updateSlide();
+            },
+
+            reinit() {
+                this.track = document.getElementById('carouselTrack');
+                this.slides = document.querySelectorAll('.carousel-slide');
+                this.currentIndex = 0;
+                this.indicators.innerHTML = '';
+                this.totalSlidesEl.textContent = this.slides.length;
+                this.createIndicators();
                 this.updateSlide();
             },
 
@@ -733,7 +807,9 @@
 
                 // Pause autoplay on hover
                 this.track.addEventListener('mouseenter', () => this.stopAutoPlay());
-                this.track.addEventListener('mouseleave', () => this.startAutoPlay());
+                this.track.addEventListener('mouseleave', () => {
+                    if (audioPlayer.isPlaying) this.startAutoPlay();
+                });
 
                 // Touch/swipe support
                 let touchStartX = 0;
@@ -751,6 +827,9 @@
             },
 
             updateSlide() {
+                // Re-query slides in case they changed
+                this.slides = document.querySelectorAll('.carousel-slide');
+
                 // Move track
                 this.slides.forEach((slide, index) => {
                     slide.style.transform = `translateX(${-this.currentIndex * 100}%)`;
@@ -767,11 +846,13 @@
             },
 
             next() {
+                this.slides = document.querySelectorAll('.carousel-slide');
                 this.currentIndex = (this.currentIndex + 1) % this.slides.length;
                 this.updateSlide();
             },
 
             prev() {
+                this.slides = document.querySelectorAll('.carousel-slide');
                 this.currentIndex = (this.currentIndex - 1 + this.slides.length) % this.slides.length;
                 this.updateSlide();
             },
@@ -782,9 +863,8 @@
             },
 
             startAutoPlay() {
-                if (audioPlayer.isPlaying) {
-                    this.autoPlayInterval = setInterval(() => this.next(), this.autoPlayDelay);
-                }
+                this.stopAutoPlay();
+                this.autoPlayInterval = setInterval(() => this.next(), this.autoPlayDelay);
             },
 
             stopAutoPlay() {
@@ -793,10 +873,9 @@
         };
 
         // ============================================
-        // AUDIO PLAYER FUNCTIONALITY
+        // AUDIO PLAYER FUNCTIONALITY (Slideshow control + Suno link)
         // ============================================
         const audioPlayer = {
-            audio: document.getElementById('soundtrack'),
             playBtn: document.getElementById('playBtn'),
             progressBar: document.getElementById('progressBar'),
             progressFill: document.getElementById('progressFill'),
@@ -807,39 +886,14 @@
 
             init() {
                 this.bindEvents();
-                this.audio.volume = 0.7;
+                // Set display to show Suno info
+                this.durationEl.textContent = 'Suno';
             },
 
             bindEvents() {
                 this.playBtn.addEventListener('click', () => this.togglePlay());
 
-                this.audio.addEventListener('loadedmetadata', () => {
-                    this.durationEl.textContent = this.formatTime(this.audio.duration);
-                });
-
-                this.audio.addEventListener('timeupdate', () => {
-                    const progress = (this.audio.currentTime / this.audio.duration) * 100;
-                    this.progressFill.style.width = progress + '%';
-                    this.currentTimeEl.textContent = this.formatTime(this.audio.currentTime);
-                });
-
-                this.audio.addEventListener('ended', () => {
-                    this.isPlaying = false;
-                    this.playBtn.classList.remove('playing');
-                    carousel.stopAutoPlay();
-                });
-
-                this.progressBar.addEventListener('click', (e) => {
-                    const rect = this.progressBar.getBoundingClientRect();
-                    const percent = (e.clientX - rect.left) / rect.width;
-                    this.audio.currentTime = percent * this.audio.duration;
-                });
-
-                this.volumeSlider.addEventListener('input', (e) => {
-                    this.audio.volume = e.target.value;
-                });
-
-                // Spacebar to play/pause
+                // Spacebar to play/pause slideshow
                 document.addEventListener('keydown', (e) => {
                     if (e.code === 'Space' && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT') {
                         e.preventDefault();
@@ -850,36 +904,31 @@
 
             togglePlay() {
                 if (this.isPlaying) {
-                    this.audio.pause();
                     this.playBtn.classList.remove('playing');
                     carousel.stopAutoPlay();
                 } else {
-                    // Check if audio source exists
-                    if (this.audio.src || this.audio.querySelector('source')) {
-                        this.audio.play().catch(() => {
-                            // No audio file - just control slideshow
-                            console.log('No audio file loaded');
-                        });
-                    }
                     this.playBtn.classList.add('playing');
                     carousel.startAutoPlay();
+                    // Open Suno in new tab on first play
+                    if (!this.hasOpenedSuno) {
+                        window.open(SUNO_PLAYLIST_URL, '_blank');
+                        this.hasOpenedSuno = true;
+                    }
                 }
                 this.isPlaying = !this.isPlaying;
-            },
-
-            formatTime(seconds) {
-                if (isNaN(seconds)) return '0:00';
-                const mins = Math.floor(seconds / 60);
-                const secs = Math.floor(seconds % 60);
-                return mins + ':' + (secs < 10 ? '0' : '') + secs;
             }
         };
 
         // ============================================
         // INITIALIZE
         // ============================================
-        document.addEventListener('DOMContentLoaded', () => {
-            carousel.init();
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load photos from Airtable
+            const photos = await loadPhotosFromAirtable();
+            buildCarouselSlides(photos);
+
+            // Initialize carousel and audio player
+            carousel.reinit();
             audioPlayer.init();
         });
     </script>
