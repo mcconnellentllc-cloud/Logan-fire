@@ -695,6 +695,7 @@
         <ul class="nav-links">
             <li><a href="index.html">Timeline</a></li>
             <li><a href="testimonials.html" class="active">Voices</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
             <li><a href="media.html">Media Coverage</a></li>
             <li><a href="submit.html">Share Your Story</a></li>
             <li><a href="promote-story.html">Promote</a></li>
@@ -926,9 +927,9 @@
             const anonymousGrid = document.getElementById('anonymous-quotes-grid');
 
             try {
-                // Fetch PUBLIC records - only those that explicitly gave permission for public display
-                const publicResponse = await fetch(
-                    `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?filterByFormula={Display Publicly}="Yes"`,
+                // Fetch all book-approved records for photos and contributors
+                const bookApprovedResponse = await fetch(
+                    `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?filterByFormula={Include in Book}="Yes"`,
                     {
                         headers: {
                             'Authorization': `Bearer ${AIRTABLE_API_KEY}`
@@ -936,29 +937,16 @@
                     }
                 );
 
-                // Fetch PRIVATE records - for anonymous quotes (not public, but approved for book OR have story)
-                const privateResponse = await fetch(
-                    `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?filterByFormula=AND({Display Publicly}!="Yes",{Include in Book}="Yes")`,
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${AIRTABLE_API_KEY}`
-                        }
-                    }
-                );
-
-                if (!publicResponse.ok) {
-                    throw new Error('Failed to fetch public stories');
+                if (!bookApprovedResponse.ok) {
+                    throw new Error('Failed to fetch stories');
                 }
 
-                const publicData = await publicResponse.json();
-                const records = publicData.records || [];
+                const bookApprovedData = await bookApprovedResponse.json();
+                const allRecords = bookApprovedData.records || [];
 
-                // Get private records for anonymous quotes
-                let privateRecords = [];
-                if (privateResponse.ok) {
-                    const privateData = await privateResponse.json();
-                    privateRecords = privateData.records || [];
-                }
+                // Separate into public (Display Publicly=Yes) and private records
+                const records = allRecords.filter(r => r.fields['Display Publicly'] === 'Yes');
+                const privateRecords = allRecords.filter(r => r.fields['Display Publicly'] !== 'Yes');
 
                 // Process data
                 const contributors = [];
@@ -1084,6 +1072,43 @@
                             photos.push({
                                 url: photoUrl,
                                 caption: connection
+                            });
+                        });
+                    }
+                });
+
+                // Also collect photos from PRIVATE records for the gallery
+                // (they agreed to be in the book, so photos can be shown, just without identifying info)
+                privateRecords.forEach(record => {
+                    const fields = record.fields;
+                    const connection = fields['Connection'] || 'Community Member';
+                    const notes = fields['Notes'] || '';
+
+                    const hasPhotos = fields['Attachments'] && Array.isArray(fields['Attachments']) && fields['Attachments'].length > 0;
+                    const adminHiddenAll = notes.includes('[ADMIN: Photos Hidden]');
+                    const photoPermissionGranted = hasPhotos && !adminHiddenAll && (notes.includes('Photo permission: Yes') || !notes.includes('Photo permission: No'));
+                    const hiddenPhotoIndices = parseHiddenPhotoIndices(notes);
+
+                    if (photoPermissionGranted && hasPhotos) {
+                        let rawPhotos = fields['Attachments'].map(p => {
+                            if (p.url) return p.url;
+                            if (p.thumbnails?.full?.url) return p.thumbnails.full.url;
+                            if (p.thumbnails?.large?.url) return p.thumbnails.large.url;
+                            return null;
+                        }).filter(url => url !== null);
+
+                        if (rawPhotos.length === 0 || rawPhotos.every(url => !url)) {
+                            const cloudinaryMatches = notes.match(/Photo \d+: (https:\/\/res\.cloudinary\.com\/[^\s]+)/g);
+                            if (cloudinaryMatches) {
+                                rawPhotos = cloudinaryMatches.map(match => match.replace(/Photo \d+: /, ''));
+                            }
+                        }
+
+                        const filteredPhotos = rawPhotos.filter((_, index) => !hiddenPhotoIndices.includes(index));
+                        filteredPhotos.forEach(photoUrl => {
+                            photos.push({
+                                url: photoUrl,
+                                caption: connection // Show role but not name for privacy
                             });
                         });
                     }
