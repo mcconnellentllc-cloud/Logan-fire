@@ -51,14 +51,10 @@
         }
 
         .soundtrack-info {
-            display: none;
+            display: flex;
             align-items: center;
             gap: 1rem;
             color: var(--color-wheat);
-        }
-
-        .soundtrack-info.visible {
-            display: flex;
         }
 
         .soundtrack-icon {
@@ -98,17 +94,13 @@
             color: var(--color-smoke);
         }
 
-        /* Suno Embed Player - Hidden by default */
+        /* Suno Embed Player - Visible by default so users can click play */
         .suno-embed-container {
             width: 100%;
             max-width: 500px;
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            display: none;
-        }
-
-        .suno-embed-container.visible {
             display: block;
         }
 
@@ -472,7 +464,7 @@
             </div>
             <div class="soundtrack-details">
                 <div class="soundtrack-title">The Logan Fire Soundtrack</div>
-                <div class="soundtrack-artist">Play music with the slideshow</div>
+                <div class="soundtrack-artist">Press play below, then start the slideshow</div>
             </div>
         </div>
 
@@ -490,7 +482,7 @@
             <button class="slideshow-btn" id="slideshowBtn" title="Auto-advance slideshow">
                 <svg class="play-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                 <svg class="pause-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-                <span class="btn-text-play">Start Slideshow with Music</span>
+                <span class="btn-text-play">Start Slideshow</span>
                 <span class="btn-text-pause">Pause</span>
             </button>
         </div>
@@ -880,10 +872,7 @@
         // ============================================
         const slideshowController = {
             slideshowBtn: document.getElementById('slideshowBtn'),
-            sunoContainer: document.querySelector('.suno-embed-container'),
-            soundtrackInfo: document.querySelector('.soundtrack-info'),
             isPlaying: false,
-            hasStarted: false,
 
             init() {
                 this.bindEvents();
@@ -908,13 +897,6 @@
                 } else {
                     this.slideshowBtn.classList.add('playing');
                     carousel.startAutoPlay();
-
-                    // Reveal music player and info on first start
-                    if (!this.hasStarted) {
-                        this.sunoContainer.classList.add('visible');
-                        this.soundtrackInfo.classList.add('visible');
-                        this.hasStarted = true;
-                    }
                 }
                 this.isPlaying = !this.isPlaying;
             }
