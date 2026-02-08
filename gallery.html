@@ -168,6 +168,67 @@
             font-style: italic;
         }
 
+        /* Soundtrack Section - Individual Song Players */
+        .soundtrack-section {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+            padding: 3rem 2rem;
+        }
+
+        .soundtrack-section h2 {
+            color: var(--color-wheat);
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .soundtrack-section .section-subtitle {
+            color: var(--color-smoke);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .soundtrack-section .section-subtitle a {
+            color: var(--color-fire);
+            text-decoration: none;
+        }
+
+        .soundtrack-section .section-subtitle a:hover {
+            text-decoration: underline;
+        }
+
+        .soundtrack-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .soundtrack-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border-left: 3px solid var(--color-fire);
+        }
+
+        .soundtrack-card h3 {
+            color: var(--color-wheat);
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .soundtrack-card .artist {
+            color: var(--color-smoke);
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .soundtrack-card audio {
+            width: 100%;
+            height: 40px;
+        }
+
         /* Slideshow Controls */
         .slideshow-controls {
             display: flex;
@@ -588,6 +649,15 @@
             Use <kbd>&larr;</kbd> <kbd>&rarr;</kbd> arrow keys to navigate | <kbd>Space</kbd> to start/stop slideshow
         </div>
     </div>
+
+    <!-- Soundtrack Section - Individual Songs -->
+    <section class="soundtrack-section">
+        <h2>The Logan Fire Soundtrack</h2>
+        <p class="section-subtitle">Original music by <a href="https://suno.com/@broosetucker" target="_blank">Broose Tucker</a></p>
+        <div class="soundtrack-grid" id="soundtrackGrid">
+            <!-- Songs populated by JavaScript -->
+        </div>
+    </section>
 
     <!-- Call to Action -->
     <section style="background: var(--color-wheat); padding: 3rem 2rem; text-align: center;">
@@ -1121,6 +1191,25 @@
         };
 
         // ============================================
+        // POPULATE SOUNDTRACK SECTION
+        // ============================================
+        function populateSoundtrack() {
+            const grid = document.getElementById('soundtrackGrid');
+            if (!grid) return;
+
+            grid.innerHTML = MUSIC_PLAYLIST.map((song, index) => `
+                <div class="soundtrack-card">
+                    <h3>${song.title}</h3>
+                    <p class="artist">by ${song.artist || 'Broose Tucker'}</p>
+                    <audio controls preload="none">
+                        <source src="${song.urls[0]}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+            `).join('');
+        }
+
+        // ============================================
         // INITIALIZE
         // ============================================
         document.addEventListener('DOMContentLoaded', async () => {
@@ -1132,6 +1221,7 @@
             carousel.reinit();
             musicController.init();
             slideshowController.init();
+            populateSoundtrack();
         });
     </script>
 
