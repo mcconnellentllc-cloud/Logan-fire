@@ -94,20 +94,78 @@
             color: var(--color-smoke);
         }
 
-        /* Suno Embed Player - Visible by default so users can click play */
-        .suno-embed-container {
-            width: 100%;
-            max-width: 500px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        /* Music Player - Compact inline player */
+        .music-player-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 0.75rem 1.25rem;
+            border-radius: 50px;
+            max-width: 400px;
+        }
+
+        .music-play-btn {
+            background: var(--color-fire);
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.2s;
+            flex-shrink: 0;
+        }
+
+        .music-play-btn:hover {
+            background: var(--color-ember);
+            transform: scale(1.05);
+        }
+
+        .music-play-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .music-play-btn .pause-icon {
+            display: none;
+        }
+
+        .music-play-btn.playing .play-icon {
+            display: none;
+        }
+
+        .music-play-btn.playing .pause-icon {
             display: block;
         }
 
-        .suno-embed-container iframe {
-            width: 100%;
-            height: 150px;
-            border: none;
+        .music-info {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .music-title {
+            color: var(--color-wheat);
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .music-artist {
+            color: var(--color-smoke);
+            font-size: 0.75rem;
+        }
+
+        .music-status {
+            color: var(--color-fire);
+            font-size: 0.7rem;
+            font-style: italic;
         }
 
         /* Slideshow Controls */
@@ -464,17 +522,22 @@
             </div>
             <div class="soundtrack-details">
                 <div class="soundtrack-title">The Logan Fire Soundtrack</div>
-                <div class="soundtrack-artist">Press play below, then start the slideshow</div>
+                <div class="soundtrack-artist">by Broose Tucker</div>
             </div>
         </div>
 
-        <!-- Embedded Suno Player - Plays the full soundtrack -->
-        <div class="suno-embed-container">
-            <iframe
-                src="https://suno.com/embed/playlist/abfde62d-d8f4-428d-96ff-241dab6f4a41"
-                allow="autoplay; encrypted-media"
-                allowfullscreen>
-            </iframe>
+        <!-- Music Player - Direct MP3 playback -->
+        <div class="music-player-container">
+            <button class="music-play-btn" id="musicPlayBtn" title="Play/Pause Music">
+                <svg class="play-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <svg class="pause-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
+            <div class="music-info">
+                <div class="music-title" id="musicTitle">Heart of the Heartland</div>
+                <div class="music-artist">Broose Tucker</div>
+                <div class="music-status" id="musicStatus"></div>
+            </div>
+            <audio id="galleryMusic" preload="auto" crossorigin="anonymous"></audio>
         </div>
 
         <!-- Slideshow Controls -->
@@ -617,6 +680,56 @@
 
     <!-- Gallery & Audio Script -->
     <script>
+        // ============================================
+        // MUSIC PLAYLIST - Direct MP3 links for reliable playback
+        // ============================================
+        const MUSIC_PLAYLIST = [
+            {
+                title: 'Heart of the Heartland',
+                artist: 'Broose Tucker',
+                urls: [
+                    'https://cdn1.suno.ai/9c7f0c5b-d020-4f8c-8e57-b59345b7415e.mp3',
+                    'https://cdn2.suno.ai/9c7f0c5b-d020-4f8c-8e57-b59345b7415e.mp3'
+                ]
+            },
+            {
+                title: 'When the Flames Came Over',
+                artist: 'Broose Tucker',
+                urls: [
+                    'https://cdn1.suno.ai/a9c2f5f9-164d-4d73-bbb1-8afdbd0eef15.mp3',
+                    'https://cdn2.suno.ai/a9c2f5f9-164d-4d73-bbb1-8afdbd0eef15.mp3'
+                ]
+            },
+            {
+                title: 'Drill It Down',
+                artist: 'Broose Tucker',
+                urls: [
+                    'https://cdn1.suno.ai/83f1fac0-8cff-4604-893d-593ed1a5bc5c.mp3',
+                    'https://cdn2.suno.ai/83f1fac0-8cff-4604-893d-593ed1a5bc5c.mp3'
+                ]
+            },
+            {
+                title: 'Out of the Ashes',
+                artist: 'Broose Tucker',
+                urls: [
+                    'https://cdn1.suno.ai/8fda0724-80cb-4bf1-9c26-73d566f25bf1.mp3',
+                    'https://cdn2.suno.ai/8fda0724-80cb-4bf1-9c26-73d566f25bf1.mp3'
+                ]
+            },
+            {
+                title: 'Ride for the Brand',
+                artist: 'Broose Tucker',
+                urls: [
+                    'https://cdn1.suno.ai/ab01e3e2-0a7e-4c64-b73e-55cf5ae4f5f4.mp3',
+                    'https://cdn2.suno.ai/ab01e3e2-0a7e-4c64-b73e-55cf5ae4f5f4.mp3'
+                ]
+            }
+        ];
+
+        let currentSongIndex = 0;
+        let currentUrlIndex = 0;
+        let musicLoaded = false;
+
         // ============================================
         // AIRTABLE CONFIGURATION
         // ============================================
@@ -868,7 +981,108 @@
         };
 
         // ============================================
-        // SLIDESHOW CONTROLLER (reveals music player on start)
+        // MUSIC CONTROLLER
+        // ============================================
+        const musicController = {
+            player: null,
+            playBtn: null,
+            titleEl: null,
+            statusEl: null,
+            isPlaying: false,
+
+            init() {
+                this.player = document.getElementById('galleryMusic');
+                this.playBtn = document.getElementById('musicPlayBtn');
+                this.titleEl = document.getElementById('musicTitle');
+                this.statusEl = document.getElementById('musicStatus');
+
+                this.bindEvents();
+                this.loadMusic();
+            },
+
+            bindEvents() {
+                this.playBtn.addEventListener('click', () => this.toggle());
+
+                this.player.onerror = () => {
+                    console.error('Music load error');
+                    if (!musicLoaded) {
+                        currentUrlIndex++;
+                        this.tryLoadUrl();
+                    }
+                };
+
+                this.player.oncanplay = () => {
+                    musicLoaded = true;
+                    this.statusEl.textContent = '';
+                };
+
+                this.player.onended = () => {
+                    this.playNextSong();
+                };
+            },
+
+            loadMusic() {
+                this.tryLoadUrl();
+            },
+
+            tryLoadUrl() {
+                const song = MUSIC_PLAYLIST[currentSongIndex];
+
+                if (currentUrlIndex >= song.urls.length) {
+                    // Try next song
+                    if (currentSongIndex < MUSIC_PLAYLIST.length - 1) {
+                        currentSongIndex++;
+                        currentUrlIndex = 0;
+                        this.tryLoadUrl();
+                    } else {
+                        this.statusEl.textContent = '(unavailable)';
+                    }
+                    return;
+                }
+
+                this.statusEl.textContent = '(loading...)';
+                this.titleEl.textContent = song.title;
+                this.player.src = song.urls[currentUrlIndex];
+                this.player.load();
+            },
+
+            playNextSong() {
+                currentSongIndex = (currentSongIndex + 1) % MUSIC_PLAYLIST.length;
+                currentUrlIndex = 0;
+                musicLoaded = false;
+                this.tryLoadUrl();
+                if (this.isPlaying) {
+                    this.player.play().catch(e => console.log('Autoplay blocked'));
+                }
+            },
+
+            play() {
+                this.player.play().then(() => {
+                    this.isPlaying = true;
+                    this.playBtn.classList.add('playing');
+                }).catch(e => {
+                    console.log('Play failed:', e);
+                    this.statusEl.textContent = '(tap to play)';
+                });
+            },
+
+            pause() {
+                this.player.pause();
+                this.isPlaying = false;
+                this.playBtn.classList.remove('playing');
+            },
+
+            toggle() {
+                if (this.isPlaying) {
+                    this.pause();
+                } else {
+                    this.play();
+                }
+            }
+        };
+
+        // ============================================
+        // SLIDESHOW CONTROLLER
         // ============================================
         const slideshowController = {
             slideshowBtn: document.getElementById('slideshowBtn'),
@@ -894,9 +1108,13 @@
                 if (this.isPlaying) {
                     this.slideshowBtn.classList.remove('playing');
                     carousel.stopAutoPlay();
+                    // Also pause music when slideshow stops
+                    musicController.pause();
                 } else {
                     this.slideshowBtn.classList.add('playing');
                     carousel.startAutoPlay();
+                    // Also start music when slideshow starts
+                    musicController.play();
                 }
                 this.isPlaying = !this.isPlaying;
             }
@@ -910,8 +1128,9 @@
             const photos = await loadPhotosFromAirtable();
             buildCarouselSlides(photos);
 
-            // Initialize carousel and slideshow controller
+            // Initialize carousel, music, and slideshow controller
             carousel.reinit();
+            musicController.init();
             slideshowController.init();
         });
     </script>
