@@ -130,6 +130,130 @@
         .cta-box .btn:hover {
             background: var(--color-ember);
         }
+
+        /* Herald Full Article Styles */
+        .herald-section {
+            margin-bottom: 3rem;
+        }
+        .herald-credit-banner {
+            background: var(--color-wheat);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--color-earth);
+        }
+        .herald-credit-banner h3 {
+            color: var(--color-earth);
+            margin-bottom: 0.75rem;
+        }
+        .herald-credit-banner .credit-line {
+            font-weight: 600;
+            color: var(--color-earth);
+            margin-top: 0.75rem;
+        }
+        .herald-article {
+            background: white;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        .herald-article-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            color: white;
+            padding: 1.25rem 1.5rem;
+        }
+        .herald-article-header h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+            line-height: 1.3;
+        }
+        .herald-article-header .herald-issue {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        .herald-article-header .herald-byline {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+        .herald-article-body {
+            padding: 1.5rem;
+            line-height: 1.8;
+            color: #333;
+        }
+        .herald-article-body p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+        .herald-article-body p:last-child {
+            margin-bottom: 0;
+        }
+        .herald-photo-captions {
+            background: #f5f5f5;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e0e0e0;
+        }
+        .herald-photo-captions h4 {
+            color: var(--color-earth);
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+        .herald-photo-captions ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .herald-photo-captions li {
+            font-size: 0.85rem;
+            color: #555;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-style: italic;
+        }
+        .herald-photo-captions li:last-child {
+            border-bottom: none;
+        }
+        .herald-article-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .herald-pdf-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-fire);
+            color: white;
+            padding: 0.5rem 1.25rem;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .herald-pdf-link:hover {
+            background: var(--color-ember);
+        }
+        .herald-pdf-link svg {
+            flex-shrink: 0;
+        }
+        .herald-sidebar {
+            background: #f0f0f0;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 3px solid var(--color-fire);
+        }
+        .herald-sidebar h4 {
+            color: var(--color-earth);
+            margin-bottom: 0.75rem;
+        }
+        .herald-sidebar ul {
+            list-style: disc;
+            padding-left: 1.25rem;
+        }
+        .herald-sidebar li {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
     </style>
 </head>
 <body>
@@ -257,51 +381,191 @@
         <div class="media-section">
             <h2>Newspaper Coverage</h2>
 
-            <div style="background: var(--color-wheat); padding: 1.5rem; margin-bottom: 2rem; border-left: 4px solid var(--color-earth);">
-                <h3 style="color: var(--color-earth); margin-bottom: 0.75rem;">The Haxtun-Fleming Herald</h3>
+            <div class="herald-section">
+
+            <div class="herald-credit-banner">
+                <h3>The Haxtun-Fleming Herald</h3>
                 <p style="font-style: italic; margin-bottom: 0.5rem;">Haxtun, Colorado — The community's hometown newspaper</p>
-                <p style="font-size: 0.9rem; color: #555;">The Haxtun-Fleming Herald provided firsthand coverage of the Logan Fire and its aftermath as it unfolded in their own backyard. As the local paper serving Haxtun and the surrounding communities, the Herald documented the fire, the community response, and the long road to recovery. Their reporting and photography contributed to the historical record of this event. The Herald submitted their coverage for inclusion in this project.</p>
+                <p style="font-size: 0.9rem; color: #555;">The Haxtun-Fleming Herald provided firsthand coverage of the Logan Fire and its aftermath as it unfolded in their own backyard. As the local paper serving Haxtun and the surrounding communities, the Herald documented the fire, the community response, and the long road to recovery. Their reporting and original photography are published here with permission.</p>
+                <p class="credit-line">Coverage courtesy of Candie Salyards and Spring, Haxtun-Fleming Herald — <a href="https://www.hfherald.com/" target="_blank" style="color: var(--color-earth);">www.hfherald.com</a></p>
             </div>
 
-            <div class="media-card">
-                <h3>Fire Engulfs Logan and Phillips Counties</h3>
-                <p class="source">Haxtun-Fleming Herald — March 2017</p>
-                <p class="excerpt">The Herald's coverage of the fire as it raced across 32,546 acres of Logan and Phillips County ranchland, threatening the town of Haxtun and forcing school evacuations. Firsthand reporting from the community at the center of the blaze.</p>
+            <!-- ARTICLE 1 — March 8, 2017 -->
+            <div class="herald-article">
+                <div class="herald-article-header">
+                    <h3>Northeast Colorado plains devastated by Monday afternoon wildfire; four homes lost</h3>
+                    <div class="herald-issue">Haxtun-Fleming Herald — Volume 42, Number 23 — Wednesday, March 8, 2017</div>
+                    <div class="herald-byline">By Candie Salyards</div>
+                </div>
+                <div class="herald-article-body">
+                    <p>Devastation swept through the plains of northeastern Colorado Monday afternoon as a wildfire raged from east of Sterling to north of Haxtun. Fire crews from all over the State are still battling blazes that have taken four homes; three in Logan County and one in Phillips.</p>
+                    <p>The fire, which was reported just before noon on Monday, began near Proctor, just east of Sterling and quickly spread southeast. The flames jumped Interstate 76, raging over the Crook/Fleming highway, through the wind farms and wrecking havoc north of Haxtun where damage is incomprehensible as of Tuesday morning. Parts of Highway 59 still remain closed as firemen continue to battle the fire with winds at upper speeds of 60 miles per hour.</p>
+                    <p>Haxtun and Fleming volunteer fire departments were first called, along with 10 others, to assist with the fire near Proctor. Teams traveled with the fire as it spread across the plains causing evacuations in Fleming, Dailey and eventually Haxtun. Fleming and Caliche schools were evacuated, as was Haxtun. Haxtun students were bussed south to Lone Star Schools and were eventually returned in the early evening once evacuation threats were lifted. Over 900 residents were called to evacuate east of Logan County Road 49 on Monday afternoon.</p>
+                    <p>As of Tuesday morning, fire officials said the raging fire has charred over 30,000 acres and over 80 firemen and 17 fire departments are working to contain the blaze and additional resources are on the way. Seven fire engines stayed on location of hot spots throughout the night to attempt to keep control. Matt Branch, with the Colorado Division of Fire Prevention and Control, said as of Tuesday morning the fire is only 50 percent contained.</p>
+                    <p>In a press briefing at the Haxtun Community Center on Tuesday morning, Branch said the day's goals for fire crews were to locate hot spots in trees and brush and to knock them down and douse flames. Plans are to find heat sources that remain and gain control before winds cause pop out fires that could run aggressively with high winds that continue to blow across the area.</p>
+                    <p>Firemen from all over Colorado remain in Haxtun as of Tuesday morning along with local farmers with tractors and water trucks, county crews with road graters and local community members with bulldozers and other equipment ready to battle anything that may spark back up.</p>
+                    <p>Phillips County Sheriff Rob Urbach and Branch said they are confident that crews would gain more containment on the fire throughout Tuesday but windy conditions and blowing smoke and dirt create dangerous conditions for firemen. Visibility, Urbach said, at times is less than two feet. Officials said their number one concern is for safety of firemen in conditions that are often dangerous due to large plumes of black smoke that can be seen and smelt for miles.</p>
+                    <p>As of Tuesday, no major injuries were reported. Urbach said firemen are mostly dealing with smoke and dirt in their eyes.</p>
+                    <p>According to a community Facebook page set up to assist local families affected by the fire, monetary donations may be made at the Haxtun Community Federal Credit Union for general fire relief or for specific families. There are also GoFundMe pages set up for Haxtun residents Jared and Sara Firme and Pam Adams who lost their homes in the fire on Monday night. Keith Sagehorn, from Holyoke, added that the Colorado Farm Bureau is currently working to set up a relief fund for local residents and additional information will be released in the future. For more information on that, contact Sagehorn at (970) 854-3199.</p>
+                    <p>Material donations may be taken to Pro-Till/Old Smith Hardware building on Colorado Avenue in Haxtun. Any unused donations will be given to Retread Threads once affected families have what they need. According to relief organizers, affected families are overwhelmed with the love and support shown over the past 24 hours, but ask that all donations be given and or taken to one location. The families also ask that food donations be given to firemen and those assisting in battling the fire.</p>
+                    <p>Local churches have opened their doors for residents displaced by the fire and for firemen in need of support and aid.</p>
+                    <p>For more information on donations visit Haxtun Community Fire Relief on Facebook.</p>
+                </div>
+                <div class="herald-photo-captions">
+                    <h4>Photo Captions from This Issue</h4>
+                    <ul>
+                        <li>(Courtesy photo by Brian Biesemeier) A PROPANE tank and a pile of rubble are what remains of a garage that once stood at the home of Lynn Seger after a fire ravaged through northeastern Colorado Monday afternoon, March 6. As of Tuesday morning, 80 firemen from 17 departments continue to battle the blaze.</li>
+                        <li>(Herald photo by Candie Salyards) A stack of hay burns late into the night on Monday at the home of Matt and Jessica Firme four miles north of Haxtun. A wild fire sparked around noon in Proctor spread across the plains damaging homes, land, outbuildings and equipment and killing a large number of cattle and other livestock, animals and wildlife.</li>
+                        <li>(Courtesy photo from Haley Harms) FIRE TRUCKS from all over the State line the streets of Haxtun on Monday night, waiting for their next assignment and to relieve others fighting a wildfire that has now burned over 30,000 acres as of Tuesday morning.</li>
+                    </ul>
+                </div>
+                <div class="herald-article-footer">
+                    <a href="media/assets/HFHerald_Volume42Issue23_03082017.pdf" class="herald-pdf-link" download>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download Original PDF
+                    </a>
+                </div>
             </div>
 
-            <div class="media-card">
-                <h3>Community Rallies After Devastating Fire</h3>
-                <p class="source">Haxtun-Fleming Herald — March 2017</p>
-                <p class="excerpt">Coverage of the massive community response — churches providing meals for weeks, Points West Community Bank setting up a fire relief fund, local clubs and organizations gathering cash donations, and hay trucked in from surrounding towns and neighboring states to replace what was lost.</p>
+            <!-- ARTICLE 2 — March 15, 2017 -->
+            <div class="herald-article">
+                <div class="herald-article-header">
+                    <h3>Volunteers join forces following grass fire</h3>
+                    <div class="herald-issue">Haxtun-Fleming Herald — Volume 42, Number 24 — Wednesday, March 15, 2017</div>
+                    <div class="herald-byline">By Candie Salyards</div>
+                </div>
+                <div class="herald-article-body">
+                    <p>Hellen Keller said, "alone we can do so little; together we can do so much." Those words speak of actions from the Haxtun community and kind hearted individuals from all over the county, state and country following a 32,000-acre grass fire that swept across Phillips and Logan counties last week. Donations for those who fought, lost or volunteered throughout the blaze that burned for several days have come from neighbors, friends, family members and complete strangers hundreds of miles away.</p>
+                    <p>Monday, March 6 and the days following will forever be engraved in the lives of those who witnessed total destruction and devastation but also the reminder of rural country living and the heartfelt display of dedication and sacrifice from those who live here.</p>
+                    <p>"We are overwhelmed," Sara Firme said days after her family lost their home, outbuildings and equipment to the fire. "You watch these things happen to other people and you help out but you never expect it to happen to you. It's very humbling."</p>
+                    <p>Sara and her husband Jared lost their home early Monday evening as the fire spread to their farm north of Haxtun on County Road 7. They since have found a place to stay while they begin the process of rebuilding their farming heritage on land that has been in the family for decades.</p>
+                    <p>"Thank you … for all the support and to the firemen and all the volunteers," Firme said of the outpouring of kindness shown to the family over the past week.</p>
+                    <p>Four homes were lost in the fire that began just before noon last Monday near Proctor. Lieutenant Dennis Aulston with the Logan County Sheriff's Office said the blaze began on private property near the South Platte river. The fire spread southeast due to winds ranging from 40-60 miles per hour over 26 miles over land. Total, 32,563 acres were torched.</p>
+                    <p>Aulston said at this time information on how the fire started is not being released. He said the Logan County Sheriff's Office and the Colorado Bureau of Investigation are taking the lead on the investigation and that no arrests or warrants had been issued as of Monday afternoon.</p>
+                    <p>In addition to Firme's, Haxtun community resident Pam Adams and Logan County residents Bill Bruntz and Richard and Donna Lawler lost their homes last Monday.</p>
+                    <p>As soon as the fire's path and destruction was evident, organizers and community members began to rally together for the almost 20 fire departments that came to assist with the blaze, command staff stationed at the Haxtun Community Center and for those who were in the fire's path. Within no time volunteers were stationed at the fire hall organizing food, drinks and snacks for firemen while gathering eye drops for those coming in with smoke and dust in their eyes in addition to collecting toiletries and other supplies for firemen who had traveled from long distances to offer assistance.</p>
+                    <p>Others began to collect clothes, household items, food and cleaning supplies for those affected by the fire, smoke and dust. As of Friday afternoon, tables upon tables and shelf after shelf were stocked with donations at Pro-Till along Haxtun's main street for those who need it.</p>
+                    <p>"It's indescribable to me, just the sheer volume of it," Alicia Schram said of the donations that continue to pour in this week. Schram and other community volunteers set up a Facebook page "Haxtun Community Fire Relief" to offer assistance and serve as an avenue of communication for all those affected. The first post made to the page reached over 31,600 people, Schram said. Donations, in forms of money, gift cards, clothes, toys, household items and ag related products have come from as far as Florida, Utah and New Mexico.</p>
+                    <p>Schram said she received a message from officials at Sidney Schools in Nebraska with a donation of over $1,500; students used their day off of school last week to work for area businesses and picked up trash for donations to the fire relief fund. Others have done the same, she said, like area FFA chapters who volunteered their time to work for donations to give to fire relief.</p>
+                    <p>As news broke on the evening of March 8 that the fire was 100 percent contained, local and county officials began collecting information on the overwhelming amount of devastation caused by the fire. Local rancher Kyle McConnell was among those who lost cattle in the fire that spread across two counties. McConnell's GoFundMe page says the rancher lost over 180 head of cattle totaling nearly $380,000. A press release from Kyle Moulton, Logan County Emergency Management, said it's been reported that nearly 200 head of cattle perished in the fire. At least one horse had to be put down due to injuries suffered from the blaze.</p>
+                    <p>Since the smoke cleared and hot spots are out, farmers and ranchers have scrambled to plant oats on land to help keep dirt from blowing and to retain moisture in the soil. In addition to donations of oats, the farming community has seen gifts of hay, fencing products and other items to help start rebuilding. Others have pledged cow/calf pairs to those who lost their ranching operations to begin the rebuilding process.</p>
+                    <p>For information on how to help those affected by the fire, visit the Haxtun Community Fire Relief page on Facebook. The page features links to individual family GoFundMe pages as well as information to donate locally.</p>
+                    <p>Accounts have been set up at the Haxtun Community Federal Credit Union for general fire relief as well as specific areas in need. Other accounts include those for individual families, local fire departments and agriculture.</p>
+                    <p>According to emergency managers and local officials, no major injures were reported throughout the fire and the days following, however some fire departments are beginning to report damage to equipment and vehicles.</p>
+                    <p>Phillips and Logan county commissioners have set up a Disaster Assistance Center meeting to provide opportunities for the fire victims.</p>
+                </div>
+                <div class="herald-photo-captions">
+                    <h4>Photo Captions from This Issue</h4>
+                    <ul>
+                        <li>(Herald photo by Candie Salyards) BURNT metal, rubble and dust are all that that remain just past a tree row at the home of Mike and Susan Salyards' house north of Haxtun. The fire swept through the property destroying most outbuildings and coming within feet of the home that was saved by fire crews.</li>
+                        <li>(Herald photo by Candie Salyards) LYNN Seger suffered the loss of several outbuildings and other damages to his farm north of town during the fire. Crews were able to save his home, however, flames came dangerously close to the home's perimeter.</li>
+                        <li>(Herald photo by Candie Salyards) FLAMES came within feet of Mike and Susan Salyards' house and garage, melting the siding on the sides of the structures.</li>
+                        <li>(Herald photo by Candie Salyards) FIRE CREWS and volunteers with loaders and other heavy equipment work to spread out piles of hay at Matt and Jessica Firme's house on Wednesday afternoon in hopes to douse the smoldering stacks.</li>
+                        <li>(Herald photo by Candie Salyards) WHAT REMAINS of Jared and Sara Firme's home northeast of Haxtun. Haxtun volunteer firemen stayed at the location throughout the night saving what they could and controlling the rest of the burn site.</li>
+                    </ul>
+                </div>
+                <div class="herald-article-footer">
+                    <a href="media/assets/HFHerald_Volume42Issue24_03152017.pdf" class="herald-pdf-link" download>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download Original PDF
+                    </a>
+                </div>
             </div>
 
-            <div class="media-card">
-                <h3>Haxtun Volunteer Fire Department Auction and Dinner</h3>
-                <p class="source">Haxtun-Fleming Herald — 2017</p>
-                <p class="excerpt">The community raised support for the Haxtun Volunteer Fire Department with an auction and dinner that brought in over $150,000 — a testament to the generosity and grit of plains communities.</p>
+            <!-- ARTICLE 3 — March 22, 2017 -->
+            <div class="herald-article">
+                <div class="herald-article-header">
+                    <h3>Donations for fire victims pour in at Pro Till</h3>
+                    <div class="herald-issue">Haxtun-Fleming Herald — Volume 42, Number 25 — Wednesday, March 22, 2017</div>
+                    <div class="herald-byline">By Candie Salyards</div>
+                </div>
+                <div class="herald-article-body">
+                    <p>Over the past few weeks, donations have poured into the Haxtun community in forms of clothes, food, household items, cleaning supplies, agriculture products, toiletries and money to help those affected by the Phillips/Logan County Fire. The flames, which torched over 32,000 acres, started on Monday, March 6 and burned for several days.</p>
+                    <p>Much was lost during the fire, including four homes, numerous outbuildings and close to 200 head of cattle. Since news of destruction spread, giving individuals have helped in ways unimaginable to those who were affected.</p>
+                    <p>Trucks have driven hundreds of miles to donate hay for those who need to feed cattle, children have cleaned their bedrooms to find toys to contribute and others have sold livestock several times over to raise funds for those who are now rebuilding from the fire that started near the South Platte River and traveled nearly 26 miles in winds on the upper side of 60 miles per hour.</p>
+                    <p>A steer auctioned at Brush Livestock last Friday brought in over $34,000 for fire victims. At a recent FFA auction in Wiggins, a hog was sold seven times, bringing in $3,650 for the same cause.</p>
+                    <p>On Thursday, March 16, six semi-trucks full of round hay bales made their way to the Haxtun area from Iowa, South Dakota and Minessota as drivers distributed the goods to local ranchers who will need feed for their cattle herds now and for those who will need it in the future.</p>
+                    <p>Funds have been established at the Haxtun Community Federal Credit Union for general fire relief as well as individual family needs in addition to local volunteer fire departments. Now that the smoke has cleared and the dust has settled, an advisory board has been established to help disperse those funds where they are needed.</p>
+                    <p>The advisory board is made up of five community members including John Chapdelaine, John Everitt, Mark Gueck, Todd Workman and Kristin Hadeen. The advisory board has been established to assist in monetary relief efforts for all those affected by the fire. The funds were donated directly to the Haxtun Chamber of Commerce in accounts at the credit union specifically or fire relief efforts. The HFRAB will represent interests of both the donors and recipients to the best of their ability.</p>
+
+                    <div class="herald-sidebar">
+                        <h4>Guiding Principals of the Advisory Board</h4>
+                        <ul>
+                            <li>All relief funds will be provided to the individuals and communities affected with priority to those who are most impacted by loss. Funds donated to specific causes/individuals will be funded directly to those individuals/entities.</li>
+                            <li>Funds distributed will be timely, equitable and reflective of the wide diversity of individual and community needs.</li>
+                            <li>Funds will be distributed to respond to both immediate and emerging needs of individuals and communities.</li>
+                            <li>All relief processes will be transparent, well publicized and accessible.</li>
+                            <li>Confidentiality will be maintained by the HFRAB in regards to the application process. There will be no sharing and disclosing of personal information.</li>
+                            <li>Distribution of funds will only be available to persons submitting a written application.</li>
+                            <li>The advisory board will have the responsibility to determine the criteria and priority for the allocation of funds.</li>
+                            <li>A report of the operation of the relief funds and the disbursal of funds may be required to be published.</li>
+                        </ul>
+                    </div>
+
+                    <p>Applications must be received by March, 30, 2017 and maybe picked up and returned to the Haxtun Fire Relief Advisory Board, C/O, Haxtun Community Federal Credit Union, P.O. Box 41, 229 S. Colorado Ave., Haxtun, CO 80731.</p>
+                    <p>For more information on the Haxtun Fire Relief Advisory Board, the application process or assistance in filing the application call (970) 520-5999.</p>
+                    <p>Pro-Till, the go-to location for donations and supplies, remains open to all those affected by the fire, in any way. People are encouraged to visit the location, on Haxtun's main street, for food, water, clothes, cleaning supplies and household goods. The United Methodist Community on Relief recently sent eight pallets full of cleaning supplies. These, too are available at Pro-Till.</p>
+
+                    <div class="herald-sidebar">
+                        <h4>Fire Relief Benefit Slated for April 15 in Haxtun</h4>
+                        <p>Dinner, live entertainment and silent and live auctions are all planned for a community fire relief benefit slated for Saturday, April 15 at the Haxtun Fire Hall.</p>
+                        <p>Free-will dinner will begin at 6 p.m. followed by live entertainment from Braydon Zink and fellow musician Madison Rodges. The night will also feature a live and silent auction.</p>
+                        <p>Organizers are in the initial planning stages but so far have a number of auction items including a 40 foot storage container with free delivery within 50 miles of Haxtun, a camping set with a large cooler and Colorado memorabilia. Additional items will be added in the coming weeks.</p>
+                        <p>In addition to raising funds for fire relief efforts, the night will feature appreciation for local firemen and departments.</p>
+                        <p>For more information on the event, contact committee members Paige Thompson, Laura Knode, Haley Harms, Marc Bornhoft, Holly Kurtzer, Kindra Plumb, Tammy Webster, Pam Haynes, Amanda Mavis, Julie Thayer, Alicia Schram or Candie Salyards.</p>
+                        <p>To donate items for the live or silent auction contact Knode at (970) 774-4500.</p>
+                    </div>
+                </div>
+                <div class="herald-photo-captions">
+                    <h4>Photo Captions from This Issue</h4>
+                    <ul>
+                        <li>(Herald photo by Candie Salyards) DONATIONS poured into Haxtun's Pro-Till following the Logan/Phillips county fire that swept over 30,000 acres. Those affected by the blaze are encouraged to visit Pro-Till for any necessary items including paper products, food, water, pet food, household items, clothes, cleaning supplies and toiletries.</li>
+                    </ul>
+                </div>
+                <div class="herald-article-footer">
+                    <a href="media/assets/HFHerald_Volume42Issue25_03232017.pdf" class="herald-pdf-link" download>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download Original PDF
+                    </a>
+                </div>
             </div>
 
-            <div class="media-card">
-                <h3>Farmers and Ranchers Assess Losses</h3>
-                <p class="source">Haxtun-Fleming Herald — March 2017</p>
-                <p class="excerpt">Reporting on the devastating toll: approximately 200 cattle lost, homes and outbuildings destroyed, miles of fencing gone, and stored hay burned. Local farm supply stores in Haxtun and Holyoke provided donated supplies to help rebuild pasture fences.</p>
+            <!-- ARTICLE 4 — April 19, 2017 -->
+            <div class="herald-article">
+                <div class="herald-article-header">
+                    <h3>Fire relief benefit held Saturday in Haxtun</h3>
+                    <div class="herald-issue">Haxtun-Fleming Herald — Volume 42, Number 29 — Wednesday, April 19, 2017</div>
+                    <div class="herald-byline">By Candie Salyards</div>
+                </div>
+                <div class="herald-article-body">
+                    <p>Six short weeks ago the Haxtun Fire Hall was full of volunteers, community members and firemen who were frantically doing their part to put out a fire that dangerously spread from Iliff to Haxtun on March 6. This weekend, the fire hall was again packed with those very same volunteers, community members and firemen but in a much different atmosphere.</p>
+                    <p>The Logan/Phillips County fire burned more than 32,500 acres, claimed four homes and destroyed a number of other buildings but one thing it did not destroy is the spirit and strength of the Haxtun community. Saturday night, during a benefit to honor those who fought the fire and to bring relief for those who suffered losses, more than 1,100 people packed the fire hall for dinner and fellowship and to come together to help those whose lives have been forever changed.</p>
+                    <p>Mayor Todd Workman spoke to the packed house Saturday evening after a free-will offering dinner that fed nearly 970 people. Workman said he recently signed a proclamation declaring March 6 Firefighter Appreciation Day in Haxtun.</p>
+                    <p>The proclamation starts, "firefighters are unsung heroes who are prepared to be summoned at any moment to risk their own safety to preserve lives and suppress fires."</p>
+                    <p>Workman thanked the many volunteers who battled the blaze until 100 percent containment came two days later on March 8. His proclamation ends, "the Town of Haxtun is greatly indebted to the valiant and hardworking volunteer firefighters that saved lives, homes, acres and our small community."</p>
+                    <p>Also to speak Saturday night was Jared and Sara Firme, who lost their home north of Haxtun on the evening the fire began. The couple thanked the community for their support, donations and prayers since the devastating fire that burned over the 26 miles. They also presented the Haxtun Volunteer Fire Department with a canvas photo of four local firemen battling the blaze at their home.</p>
+                    <p>Jared said Haxtun firemen stayed at their home throughout the night on March 6 while other departments went onto other locations to continue to fight the fire and that is one thing he would never forget.</p>
+                    <p>Austin and Val Wilson, with help from their nephew Caid Smith and his agriculture teacher and former Haxtun resident Andrea (Whitmore) Andersen, presented a metal cut out of the United States with the American flag, fireman logo and the hashtag #haxtunstrong to the HVFD.</p>
+                    <p>Once the presentations were finished, auctioneers Tyler Knode and Josh Larson auctioned more than 200 live auction items that brought in $142,650. Silent auction items on display added another $12,337 to the grand total of $154,987 brought in throughout the evening.</p>
+                    <p>When the last items were sold and the silent auction closed, performers Braydon Zink and Madison Rodges played for the crowd until the event's end. For more information on how to donate to fire relief efforts or to stay up-to-date with information on the Logan/Phillips County fire visit Haxtun Community Fire Relief on Facebook.</p>
+                    <p style="text-align: center; font-weight: bold; font-size: 1.1rem; margin-top: 1.5rem;">#haxtunstrong</p>
+                </div>
+                <div class="herald-photo-captions">
+                    <h4>Photo Captions from This Issue</h4>
+                    <ul>
+                        <li>(Herald photo by Candie Salyards) JARED AND SARA Firme thank firefighters, volunteers and community members who have shown support in a number of ways following the loss of their home in the recent fire while at the benefit on Saturday evening. The couple presented the HVFD with the picture Sara holds.</li>
+                        <li>(Herald photo by Candie Salyards) HAXTUN VOLUNTEER FIREMEN pictured at a benefit Saturday evening are back row (l-r), Steve Statz, Lila Statz, Garrett Krogmeier and Tracy Ham; middle row (l-r), Trever Fix, Jeff Firme, Stan Kennedy, John Davis, Levi Davis, Jeremy Atchison, Andrew Duell, Tom Bullard, Michael Davis, Jonah Wernsman, Kelly Michael and Dillon Workman; front row (l-r), Dan Firme, Tanya Mayhew, Ron Carpenter, Chad Bamford, Bruce Mahnke and Marc Bornhoft. Not pictured are Tracy Dickerson, Buck Widgery, Caleb Contreras, Tracy Oberle, Mark Evers, Cyrus Duell, Keith Davis and Tommy Davis.</li>
+                    </ul>
+                </div>
+                <div class="herald-article-footer">
+                    <a href="media/assets/HFHerald_Volume42Issue29_04192017.pdf" class="herald-pdf-link" download>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download Original PDF
+                    </a>
+                </div>
             </div>
 
-            <div class="media-card">
-                <h3>Tractors on the Fire Line</h3>
-                <p class="source">Haxtun-Fleming Herald — March 2017</p>
-                <p class="excerpt">How area farmers hooked up their equipment and drove miles to till fire breaks ahead of the rolling blaze. Though flames soared above and over their tractors, more and more came — alongside water tanks and firefighters from Holyoke, Fleming, Sterling, Crook, and Haxtun.</p>
-            </div>
-
-            <div class="media-card">
-                <h3>Recovery and Rebuilding</h3>
-                <p class="source">Haxtun-Fleming Herald — Spring/Summer 2017</p>
-                <p class="excerpt">Ongoing coverage of the recovery effort: Sterling Livestock auctioning donated steers for fire victims, local organizations coordinating fence repair, and the slow return of green to scorched earth across Phillips County.</p>
-            </div>
-
-            <div style="background: #f5f5f5; padding: 1rem 1.5rem; border-left: 3px solid var(--color-earth); margin-bottom: 2rem; font-size: 0.9rem; color: #555;">
-                <strong>Credit:</strong> The Haxtun-Fleming Herald submitted their coverage and information for publication in this project. Content and photographs from the Herald are used with their cooperation. The Herald can be reached at <a href="https://www.hfherald.com/" target="_blank" style="color: var(--color-earth);">hfherald.com</a>.
-            </div>
+            </div><!-- End Herald Section -->
 
             <div class="media-card">
                 <h3><a href="https://www.denverpost.com/2017/03/06/fast-moving-grass-fire-in-logan-county-closes-i-76/" target="_blank">Wind-driven wildfire grows to 30,000 acres in northeast Colorado</a></h3>
