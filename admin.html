@@ -768,6 +768,145 @@
             opacity: 0.9;
         }
 
+        /* Full Manuscript Viewer */
+        .full-manuscript-container {
+            display: none;
+            margin-top: 2rem;
+            border: 3px solid var(--color-earth);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .full-manuscript-container.visible {
+            display: block;
+        }
+        .full-manuscript-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .full-manuscript-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 3px;
+        }
+        .full-manuscript-header .subtitle {
+            font-style: italic;
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+        .full-manuscript-header .byline {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        .full-manuscript-header .draft-date {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+        .full-manuscript-content {
+            background: #fefefe;
+            padding: 3rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .full-manuscript-content .part-header {
+            background: linear-gradient(135deg, var(--color-earth) 0%, var(--color-dark) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            margin: 3rem -3rem 2rem -3rem;
+            text-align: center;
+        }
+        .full-manuscript-content .part-header h2 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+        .full-manuscript-content .part-header p {
+            margin: 0;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        .full-manuscript-content .chapter {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .full-manuscript-content .chapter:last-child {
+            border-bottom: none;
+        }
+        .full-manuscript-content .chapter h3 {
+            color: var(--color-earth);
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+        .full-manuscript-content .chapter-meta {
+            color: var(--color-smoke);
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        .full-manuscript-content .chapter-status {
+            display: inline-block;
+            background: #d5f5e3;
+            color: #27ae60;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+        .full-manuscript-content .draft-content {
+            line-height: 1.9;
+            color: #333;
+        }
+        .full-manuscript-content .draft-content p {
+            margin-bottom: 1.25rem;
+            text-align: justify;
+        }
+        .full-manuscript-content .draft-content h4 {
+            color: var(--color-earth);
+            font-size: 1.1rem;
+            margin: 2rem 0 1rem 0;
+        }
+        .full-manuscript-content .draft-content em {
+            color: var(--color-smoke);
+        }
+        .toggle-manuscript-btn {
+            padding: 0.6rem 1.5rem;
+            background: var(--color-fire);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .toggle-manuscript-btn:hover {
+            background: var(--color-ember);
+        }
+        .toggle-manuscript-btn.active {
+            background: #27ae60;
+        }
+        .manuscript-close-btn {
+            display: block;
+            margin: 2rem auto;
+            padding: 0.75rem 2rem;
+            background: var(--color-earth);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .manuscript-close-btn:hover {
+            opacity: 0.9;
+        }
+
         /* Photo Management Modal */
         .photo-modal {
             display: none;
@@ -1398,7 +1537,7 @@
                             <option value="part6">Part Six: The Producers</option>
                             <option value="epilogue">Epilogue</option>
                         </select>
-                        <a href="manuscript.html" target="_blank" class="view-chapter-btn">Open Full Manuscript</a>
+                        <button id="toggle-manuscript-btn" class="toggle-manuscript-btn" onclick="toggleFullManuscript()">View Full Manuscript</button>
                     </div>
                 </div>
 
