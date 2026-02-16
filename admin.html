@@ -1745,6 +1745,7 @@
                             <option value="reader-epilogue">Epilogue</option>
                         </select>
                         <button class="export-btn primary" onclick="exportNotes()">Export Notes</button>
+                        <button class="export-btn primary" onclick="copyNotesForClaude()" style="background: #8b5cf6;">Copy Notes for Claude</button>
                         <button class="export-btn secondary" onclick="document.getElementById('import-notes-input').click()">Import Notes</button>
                         <input type="file" id="import-notes-input" accept=".json" style="display: none;" onchange="importNotes(event)">
                         <button class="export-btn secondary" onclick="clearAllNotes()">Clear All Notes</button>
@@ -3051,6 +3052,79 @@
         // ===========================================
         // Export/Import Notes
         // ===========================================
+
+        // Chapter ID to readable name mapping
+        const CHAPTER_NAMES = {
+            'prologue': 'Prologue: We Are Not the Same',
+            'ch1': 'Chapter 1: Small Town Morning',
+            'ch2': 'Chapter 2: Cole\'s Warning',
+            'ch3': 'Chapter 3: The Call',
+            'ch4': 'Chapter 4: Red Flag',
+            'ch6': 'Chapter 6: Fire on the Horizon',
+            'ch7': 'Chapter 7: The Phone Call',
+            'ch8': 'Chapter 8: Get Out Now',
+            'ch9': 'Chapter 9: Driving Into Smoke',
+            'ch10': 'Chapter 10: The Line',
+            'ch11': 'Chapter 11: Holding Ground',
+            'ch12': 'Chapter 12: What We Lost',
+            'ch13': 'Chapter 13: Through the Night',
+            'ch14': 'Chapter 14: Dawn',
+            'ch15': 'Chapter 15: The Count',
+            'ch16': 'Chapter 16: Walking the Ashes',
+            'ch17': 'Chapter 17: What Remains',
+            'ch18': 'Chapter 18: The Investigation',
+            'ch19': 'Chapter 19: Facing It',
+            'ch20': 'Chapter 20: The Weight',
+            'ch21': 'Chapter 21: They Came',
+            'ch22': 'Chapter 22: Hay Trucks',
+            'ch23': 'Chapter 23: The Benefit',
+            'ch24': 'Chapter 24: Letters',
+            'ch25': 'Chapter 25: Rebuilding Fences',
+            'ch26': 'Chapter 26: First Calves',
+            'ch27': 'Chapter 27: One Year Later',
+            'ch28': 'Chapter 28: The Trial',
+            'ch29': 'Chapter 29: What We Learned',
+            'ch30': 'Chapter 30: Passing It Down',
+            'ch31': 'Chapter 31: The Next Generation',
+            'ch32': 'Chapter 32: Still Here',
+            'ch33': 'Chapter 33: The Code',
+            'epilogue': 'Epilogue: We Are Still Here'
+        };
+
+        function copyNotesForClaude() {
+            const notesWithContent = Object.entries(chapterNotes).filter(([id, note]) => note && note.trim());
+
+            if (notesWithContent.length === 0) {
+                showToast('No notes to copy!', true);
+                return;
+            }
+
+            let textOutput = '=== LOGAN FIRE CHAPTER NOTES ===\n';
+            textOutput += 'Exported: ' + new Date().toLocaleString() + '\n';
+            textOutput += '================================\n\n';
+
+            notesWithContent.forEach(([id, note]) => {
+                const chapterName = CHAPTER_NAMES[id] || id;
+                textOutput += '--- ' + chapterName + ' ---\n';
+                textOutput += note.trim() + '\n\n';
+            });
+
+            textOutput += '=== END OF NOTES ===\n';
+
+            navigator.clipboard.writeText(textOutput).then(() => {
+                showToast('Notes copied to clipboard! Paste them in Claude chat.');
+            }).catch(err => {
+                // Fallback for browsers without clipboard API
+                const textarea = document.createElement('textarea');
+                textarea.value = textOutput;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('Notes copied to clipboard! Paste them in Claude chat.');
+            });
+        }
+
         function exportNotes() {
             const dataStr = JSON.stringify(chapterNotes, null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
