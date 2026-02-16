@@ -907,6 +907,217 @@
             opacity: 0.9;
         }
 
+        /* Manuscript Reader */
+        .manuscript-reader {
+            background: #fefefe;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        .manuscript-reader-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .manuscript-reader-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 3px;
+        }
+        .manuscript-reader-header .subtitle {
+            font-style: italic;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .manuscript-reader-header .byline {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            margin-top: 0.25rem;
+        }
+        .reader-part-header {
+            background: linear-gradient(135deg, var(--color-earth) 0%, var(--color-dark) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            margin: 0;
+        }
+        .reader-part-header h2 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+        }
+        .reader-part-header p {
+            margin: 0;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        .reader-chapter {
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .reader-chapter:last-child {
+            border-bottom: none;
+        }
+        .reader-chapter-content {
+            padding: 2rem 3rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.9;
+            color: #333;
+        }
+        .reader-chapter-content h3 {
+            color: var(--color-earth);
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+        .reader-chapter-content .chapter-meta {
+            color: var(--color-smoke);
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        .reader-chapter-content .chapter-status {
+            display: inline-block;
+            background: #d5f5e3;
+            color: #27ae60;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+        .reader-chapter-content .draft-content p {
+            margin-bottom: 1.25rem;
+            text-align: justify;
+        }
+        .reader-chapter-content .draft-content h4 {
+            color: var(--color-earth);
+            font-size: 1.1rem;
+            margin: 2rem 0 1rem 0;
+        }
+        .reader-chapter-content .draft-content em {
+            color: var(--color-smoke);
+        }
+        /* Notes panel below each chapter */
+        .reader-notes-panel {
+            background: #f8f5f0;
+            border-top: 3px solid var(--color-fire);
+            padding: 1.5rem 3rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .reader-notes-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        .reader-notes-toggle h4 {
+            color: var(--color-earth);
+            margin: 0;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .reader-notes-toggle .note-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ccc;
+        }
+        .reader-notes-toggle .note-indicator.has-notes {
+            background: var(--color-fire);
+        }
+        .reader-notes-toggle .toggle-arrow {
+            font-size: 1.2rem;
+            color: var(--color-smoke);
+            transition: transform 0.2s;
+        }
+        .reader-notes-toggle .toggle-arrow.open {
+            transform: rotate(180deg);
+        }
+        .reader-notes-body {
+            display: none;
+            margin-top: 1rem;
+        }
+        .reader-notes-body.open {
+            display: block;
+        }
+        .reader-notes-body textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            resize: vertical;
+            box-sizing: border-box;
+            background: white;
+        }
+        .reader-notes-body textarea:focus {
+            outline: none;
+            border-color: var(--color-fire);
+        }
+        .reader-notes-body textarea::placeholder {
+            color: #aaa;
+        }
+        .reader-notes-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.75rem;
+        }
+        .reader-notes-actions .save-status {
+            font-size: 0.8rem;
+            color: var(--color-smoke);
+        }
+        .reader-save-btn {
+            padding: 0.5rem 1.25rem;
+            background: var(--color-fire);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .reader-save-btn:hover {
+            background: var(--color-ember);
+        }
+        .reader-save-btn.saved {
+            background: #27ae60;
+        }
+        /* Back to top button */
+        .reader-back-top {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: var(--color-earth);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: none;
+            z-index: 999;
+            font-size: 0.85rem;
+        }
+        .reader-back-top.visible {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .reader-chapter-content,
+            .reader-notes-panel {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+        }
+
         /* Photo Management Modal */
         .photo-modal {
             display: none;
@@ -1519,63 +1730,33 @@
                     </div>
                 </div>
 
-                <!-- Manuscript Controls -->
+                <!-- Reader Controls -->
                 <div class="manuscript-controls">
-                    <div class="view-toggle">
-                        <button id="btn-chapter-card-view" class="active" onclick="setChapterView('card')">Cards</button>
-                        <button id="btn-chapter-list-view" onclick="setChapterView('list')">List</button>
-                    </div>
-                    <div style="display: flex; gap: 1rem; align-items: center;">
-                        <select id="filter-part" onchange="filterChapters()">
-                            <option value="">All Parts</option>
-                            <option value="prologue">Prologue</option>
-                            <option value="part1">Part One: Before the Fire</option>
-                            <option value="part2">Part Two: The Day the World Burned</option>
-                            <option value="part3">Part Three: The Reckoning</option>
-                            <option value="part4">Part Four: The Response</option>
-                            <option value="part5">Part Five: Rebuilding</option>
-                            <option value="part6">Part Six: The Producers</option>
-                            <option value="epilogue">Epilogue</option>
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                        <select id="filter-part" onchange="jumpToPart(this.value)" style="padding: 0.5rem; border: 1px solid #ddd; font-size: 0.9rem;">
+                            <option value="">Jump to Part...</option>
+                            <option value="reader-prologue">Prologue</option>
+                            <option value="reader-part1">Part One: Before the Fire</option>
+                            <option value="reader-part2">Part Two: The Day the World Burned</option>
+                            <option value="reader-part3">Part Three: The Reckoning</option>
+                            <option value="reader-part4">Part Four: The Response</option>
+                            <option value="reader-part5">Part Five: Rebuilding</option>
+                            <option value="reader-part6">Part Six: The Producers</option>
+                            <option value="reader-epilogue">Epilogue</option>
                         </select>
-                        <button id="toggle-manuscript-btn" class="toggle-manuscript-btn" onclick="toggleFullManuscript()">View Full Manuscript</button>
-                    </div>
-                </div>
-
-                <!-- Chapter Cards View -->
-                <div id="chapters-grid" class="chapters-grid">
-                    <!-- Populated by JavaScript -->
-                </div>
-
-                <!-- Chapter List View -->
-                <div id="chapters-list" class="chapters-list">
-                    <table class="chapters-list-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 30%;">Chapter</th>
-                                <th style="width: 15%;">Part</th>
-                                <th style="width: 10%;">Status</th>
-                                <th style="width: 35%;">Notes / Feel</th>
-                                <th style="width: 10%;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="chapters-list-body">
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Export/Import Notes -->
-                <div class="export-section">
-                    <h4>Notes Management</h4>
-                    <p style="color: var(--color-smoke); margin-bottom: 1rem; font-size: 0.9rem;">
-                        Your chapter notes are saved locally in your browser. Export them to save a backup or import previously exported notes.
-                    </p>
-                    <div class="export-buttons">
-                        <button class="export-btn primary" onclick="exportNotes()">Export Notes (JSON)</button>
+                        <button class="export-btn primary" onclick="exportNotes()">Export Notes</button>
                         <button class="export-btn secondary" onclick="document.getElementById('import-notes-input').click()">Import Notes</button>
                         <input type="file" id="import-notes-input" accept=".json" style="display: none;" onchange="importNotes(event)">
                         <button class="export-btn secondary" onclick="clearAllNotes()">Clear All Notes</button>
                     </div>
+                    <button class="logout-btn" onclick="collapseAllNotes()">Collapse All Notes</button>
                 </div>
+
+                <!-- Manuscript Reader -->
+                <div id="manuscript-reader" class="manuscript-reader">
+                    <div class="loading">Loading manuscript...</div>
+                </div>
+
             </div>
         </div><!-- End Manuscript Section -->
     </div>
@@ -2570,65 +2751,31 @@
         }
 
         // ===========================================
-        // Manuscript Data
+        // Manuscript Reader with Inline Notes
         // ===========================================
-        const MANUSCRIPT_CHAPTERS = [
-            { id: 'prologue', title: 'Prologue: We Are Not the Same', part: 'prologue', status: 'drafted' },
-            // Part One
-            { id: 'ch1', title: 'Chapter 1: Small Town Morning', part: 'part1', status: 'drafted', meta: 'March 6, 2017 — 7:00 AM' },
-            { id: 'ch2', title: 'Chapter 2: Cole\'s Warning', part: 'part1', status: 'drafted', meta: '~8:30 AM' },
-            { id: 'ch3', title: 'Chapter 3: Fourth Generation', part: 'part1', status: 'drafted' },
-            { id: 'ch4', title: 'Chapter 4: Drought Country', part: 'part1', status: 'drafted' },
-            // Part Two
-            { id: 'ch6', title: 'Chapter 6: Spark', part: 'part2', status: 'drafted', meta: '11:30 AM' },
-            { id: 'ch7', title: 'Chapter 7: The Smell of Smoke', part: 'part2', status: 'drafted', meta: '~10:00-11:30 AM' },
-            { id: 'ch8', title: 'Chapter 8: Into the Fire', part: 'part2', status: 'drafted' },
-            { id: 'ch9', title: 'Chapter 9: The Firebreak', part: 'part2', status: 'drafted' },
-            { id: 'ch10', title: 'Chapter 10: Racing the Flames', part: 'part2', status: 'drafted' },
-            { id: 'ch11', title: 'Chapter 11: The Cattle', part: 'part2', status: 'drafted' },
-            { id: 'ch12', title: 'Chapter 12: The Houses', part: 'part2', status: 'drafted' },
-            { id: 'ch13', title: 'Chapter 13: The Long Night', part: 'part2', status: 'drafted' },
-            { id: 'ch14', title: 'Chapter 14: Day Two', part: 'part2', status: 'drafted', meta: 'March 7, 2017' },
-            // Part Three
-            { id: 'ch15', title: 'Chapter 15: Counting the Cost', part: 'part3', status: 'drafted' },
-            { id: 'ch16', title: 'Chapter 16: The Investigation', part: 'part3', status: 'drafted' },
-            { id: 'ch17', title: 'Chapter 17: Meanwhile, Across the Plains', part: 'part3', status: 'drafted' },
-            { id: 'ch18', title: 'Chapter 18: The Media Arrives', part: 'part3', status: 'drafted' },
-            { id: 'ch19', title: 'Chapter 19: What the Land Remembers', part: 'part3', status: 'drafted' },
-            { id: 'ch20', title: 'Chapter 20: Lifted', part: 'part3', status: 'drafted' },
-            // Part Four
-            { id: 'ch21', title: 'Chapter 21: The Phone Starts Ringing', part: 'part4', status: 'drafted' },
-            { id: 'ch22', title: 'Chapter 22: The Disaster Assistance Center', part: 'part4', status: 'drafted' },
-            { id: 'ch23', title: 'Chapter 23: The Haxtun Community Credit Union', part: 'part4', status: 'drafted' },
-            { id: 'ch24', title: 'Chapter 24: Volunteers', part: 'part4', status: 'drafted' },
-            { id: 'ch25', title: 'Chapter 25: The Six-Month Miracle', part: 'part4', status: 'drafted' },
-            { id: 'ch26', title: 'Chapter 26: Letters from Strangers', part: 'part4', status: 'drafted' },
-            // Part Five
-            { id: 'ch27', title: 'Chapter 27: The First Green', part: 'part5', status: 'drafted' },
-            { id: 'ch28', title: 'Chapter 28: Replacing the Irreplaceable', part: 'part5', status: 'drafted' },
-            { id: 'ch29', title: 'Chapter 29: The Kids\' Questions', part: 'part5', status: 'drafted' },
-            { id: 'ch30', title: 'Chapter 30: What We Carry', part: 'part5', status: 'drafted' },
-            // Part Six
-            { id: 'ch31', title: 'Chapter 31: The Producers', part: 'part6', status: 'drafted' },
-            { id: 'ch32', title: 'Chapter 32: The Ones Who Serve', part: 'part6', status: 'drafted' },
-            { id: 'ch33', title: 'Chapter 33: The Long View', part: 'part6', status: 'drafted' },
-            { id: 'epilogue', title: 'Epilogue: The Code We Live By', part: 'epilogue', status: 'drafted' }
+        let chapterNotes = {};
+        let manuscriptLoaded = false;
+
+        // Chapter ID mapping - maps manuscript.html class/structure to note IDs
+        const CHAPTER_ID_MAP = [
+            'prologue',
+            'ch1', 'ch2', 'ch3', 'ch4',
+            'ch6', 'ch7', 'ch8', 'ch9', 'ch10', 'ch11', 'ch12', 'ch13', 'ch14',
+            'ch15', 'ch16', 'ch17', 'ch18', 'ch19', 'ch20',
+            'ch21', 'ch22', 'ch23', 'ch24', 'ch25', 'ch26',
+            'ch27', 'ch28', 'ch29', 'ch30',
+            'ch31', 'ch32', 'ch33',
+            'epilogue'
         ];
 
-        const PART_NAMES = {
-            'prologue': 'Prologue',
-            'part1': 'Part One: Before the Fire',
-            'part2': 'Part Two: The Day the World Burned',
-            'part3': 'Part Three: The Reckoning',
-            'part4': 'Part Four: The Response',
-            'part5': 'Part Five: Rebuilding',
-            'part6': 'Part Six: The Producers',
-            'epilogue': 'Epilogue'
+        const PART_IDS = {
+            'Part One': 'part1',
+            'Part Two': 'part2',
+            'Part Three': 'part3',
+            'Part Four': 'part4',
+            'Part Five': 'part5',
+            'Part Six': 'part6'
         };
-
-        let chapterNotes = {};
-        let currentChapterView = 'card';
-        let filteredChapters = [...MANUSCRIPT_CHAPTERS];
 
         // ===========================================
         // Load/Save Notes from localStorage
@@ -2649,131 +2796,256 @@
             chapterNotes[chapterId] = note;
             localStorage.setItem('logan_fire_chapter_notes', JSON.stringify(chapterNotes));
             updateNotesStats();
+            // Update indicator dot
+            const indicator = document.getElementById('indicator-' + chapterId);
+            if (indicator) {
+                indicator.classList.toggle('has-notes', note && note.trim().length > 0);
+            }
         }
 
         function updateNotesStats() {
             const count = Object.values(chapterNotes).filter(n => n && n.trim()).length;
-            document.getElementById('chapters-with-notes').textContent = count;
+            const el = document.getElementById('chapters-with-notes');
+            if (el) el.textContent = count;
         }
 
         // ===========================================
-        // Chapter View Toggle
+        // Fetch and Render Manuscript
         // ===========================================
-        function setChapterView(view) {
-            currentChapterView = view;
-            document.getElementById('btn-chapter-card-view').classList.toggle('active', view === 'card');
-            document.getElementById('btn-chapter-list-view').classList.toggle('active', view === 'list');
-            document.getElementById('chapters-grid').classList.toggle('hidden', view !== 'card');
-            document.getElementById('chapters-list').classList.toggle('visible', view === 'list');
-        }
+        async function loadManuscriptReader() {
+            if (manuscriptLoaded) return;
+            const reader = document.getElementById('manuscript-reader');
+            if (!reader) return;
 
-        // ===========================================
-        // Filter Chapters
-        // ===========================================
-        function filterChapters() {
-            const partFilter = document.getElementById('filter-part').value;
+            try {
+                const response = await fetch('manuscript.html');
+                if (!response.ok) throw new Error('Failed to load manuscript');
+                const html = await response.text();
 
-            if (!partFilter) {
-                filteredChapters = [...MANUSCRIPT_CHAPTERS];
-            } else {
-                filteredChapters = MANUSCRIPT_CHAPTERS.filter(ch => ch.part === partFilter);
-            }
+                // Parse the manuscript HTML
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
 
-            renderChapters();
-        }
+                // Get the manuscript content div
+                const manuscriptDiv = doc.getElementById('manuscript-content');
+                if (!manuscriptDiv) throw new Error('Manuscript content not found');
 
-        // ===========================================
-        // Render Chapters
-        // ===========================================
-        function renderChapters() {
-            loadChapterNotes();
-            renderChapterCards();
-            renderChapterList();
-        }
+                loadChapterNotes();
 
-        function renderChapterCards() {
-            const grid = document.getElementById('chapters-grid');
-            let html = '';
-            let currentPart = '';
+                let output = '';
 
-            filteredChapters.forEach(chapter => {
-                // Add part header if we're in a new part
-                if (chapter.part !== currentPart) {
-                    currentPart = chapter.part;
-                    html += `<div class="part-header-card" style="grid-column: 1 / -1;">${PART_NAMES[chapter.part]}</div>`;
-                }
-
-                const note = chapterNotes[chapter.id] || '';
-                html += `
-                    <div class="chapter-card" data-chapter-id="${chapter.id}">
-                        <div class="chapter-card-header">
-                            <h4>${escapeHtml(chapter.title)}</h4>
-                            <span class="chapter-status-badge ${chapter.status}">${chapter.status}</span>
-                        </div>
-                        <div class="chapter-card-body">
-                            ${chapter.meta ? `<div class="chapter-meta">${escapeHtml(chapter.meta)}</div>` : ''}
-                            <div class="chapter-notes-label">Your Notes / Feel:</div>
-                            <textarea class="chapter-notes-input"
-                                      id="notes-${chapter.id}"
-                                      placeholder="Add your thoughts about this chapter... tone, changes needed, ideas..."
-                                      onchange="saveChapterNote('${chapter.id}', this.value)">${escapeHtml(note)}</textarea>
-                        </div>
-                        <div class="chapter-card-actions">
-                            <button class="save-notes-btn" onclick="saveAndConfirm('${chapter.id}')">Save Notes</button>
-                        </div>
+                // Add header
+                output += `
+                    <div class="manuscript-reader-header">
+                        <h1>THE LOGAN FIRE</h1>
+                        <div class="subtitle">When the Plains Burned</div>
+                        <div class="byline">By Kyle McConnell</div>
                     </div>
                 `;
-            });
 
-            grid.innerHTML = html || '<div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--color-smoke);">No chapters match your filter.</div>';
-        }
+                // Get all chapters and part headers
+                const children = manuscriptDiv.children;
+                let chapterIndex = 0;
+                let currentPartId = 'prologue';
 
-        function renderChapterList() {
-            const tbody = document.getElementById('chapters-list-body');
-            let html = '';
-            let currentPart = '';
+                for (let i = 0; i < children.length; i++) {
+                    const el = children[i];
 
-            filteredChapters.forEach(chapter => {
-                // Add part header row if we're in a new part
-                if (chapter.part !== currentPart) {
-                    currentPart = chapter.part;
-                    html += `<tr class="part-row"><td colspan="5">${PART_NAMES[chapter.part]}</td></tr>`;
+                    // Skip non-content elements (nav, header, status-box, closing-quote, reference sections)
+                    if (el.classList.contains('manuscript-nav') ||
+                        el.classList.contains('manuscript-header') ||
+                        el.classList.contains('status-box') ||
+                        el.classList.contains('closing-quote') ||
+                        el.tagName === 'HEADER') {
+                        continue;
+                    }
+
+                    // Part header
+                    if (el.classList.contains('part-header')) {
+                        const h2 = el.querySelector('h2');
+                        const subtitle = el.querySelector('p');
+                        const partText = h2 ? h2.textContent : '';
+
+                        // Determine part ID for jump-to navigation
+                        let partId = '';
+                        for (const [prefix, id] of Object.entries(PART_IDS)) {
+                            if (partText.includes(prefix)) {
+                                partId = id;
+                                currentPartId = id;
+                                break;
+                            }
+                        }
+
+                        output += `
+                            <div class="reader-part-header" id="reader-${partId}">
+                                <h2>${partText}</h2>
+                                ${subtitle ? `<p>${subtitle.textContent}</p>` : ''}
+                            </div>
+                        `;
+                        continue;
+                    }
+
+                    // Chapter content
+                    if (el.classList.contains('chapter')) {
+                        const chapterId = CHAPTER_ID_MAP[chapterIndex] || ('chapter-' + chapterIndex);
+                        chapterIndex++;
+
+                        // Determine anchor ID for prologue/epilogue
+                        let anchorId = '';
+                        if (el.classList.contains('prologue')) {
+                            anchorId = 'reader-prologue';
+                            currentPartId = 'prologue';
+                        } else if (el.classList.contains('epilogue')) {
+                            anchorId = 'reader-epilogue';
+                            currentPartId = 'epilogue';
+                        }
+
+                        // Get chapter title
+                        const h3 = el.querySelector('h3');
+                        const title = h3 ? h3.textContent : 'Untitled';
+
+                        // Get draft content
+                        const draftContent = el.querySelector('.draft-content');
+                        const contentHtml = draftContent ? draftContent.innerHTML : '';
+
+                        // Get existing note
+                        const note = chapterNotes[chapterId] || '';
+                        const hasNotes = note && note.trim().length > 0;
+
+                        output += `
+                            <div class="reader-chapter" id="${anchorId || ('reader-ch-' + chapterId)}" data-chapter-id="${chapterId}">
+                                <div class="reader-chapter-content">
+                                    <h3>${escapeHtml(title)}</h3>
+                                    <div class="draft-content">${contentHtml}</div>
+                                </div>
+                                <div class="reader-notes-panel">
+                                    <div class="reader-notes-toggle" onclick="toggleNotes('${chapterId}')">
+                                        <h4>
+                                            <span class="note-indicator ${hasNotes ? 'has-notes' : ''}" id="indicator-${chapterId}"></span>
+                                            Notes: ${escapeHtml(title)}
+                                        </h4>
+                                        <span class="toggle-arrow" id="arrow-${chapterId}">&#9660;</span>
+                                    </div>
+                                    <div class="reader-notes-body" id="notes-body-${chapterId}">
+                                        <textarea
+                                            id="reader-notes-${chapterId}"
+                                            placeholder="Add your notes, thoughts, corrections, ideas for this chapter..."
+                                            oninput="autoSaveNote('${chapterId}')">${escapeHtml(note)}</textarea>
+                                        <div class="reader-notes-actions">
+                                            <span class="save-status" id="save-status-${chapterId}"></span>
+                                            <button class="reader-save-btn" id="save-btn-${chapterId}" onclick="manualSaveNote('${chapterId}')">Save Note</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        // Stop before reference/appendix sections
+                        if (chapterId === 'epilogue') break;
+                        continue;
+                    }
                 }
 
-                const note = chapterNotes[chapter.id] || '';
-                html += `
-                    <tr data-chapter-id="${chapter.id}">
-                        <td><strong>${escapeHtml(chapter.title)}</strong>${chapter.meta ? `<br><small style="color: var(--color-smoke);">${escapeHtml(chapter.meta)}</small>` : ''}</td>
-                        <td>${PART_NAMES[chapter.part].split(':')[0]}</td>
-                        <td><span class="chapter-status-badge ${chapter.status}">${chapter.status}</span></td>
-                        <td class="notes-cell">
-                            <textarea id="list-notes-${chapter.id}"
-                                      placeholder="Notes..."
-                                      onchange="saveChapterNote('${chapter.id}', this.value)">${escapeHtml(note)}</textarea>
-                        </td>
-                        <td>
-                            <button class="save-notes-btn" onclick="saveAndConfirm('${chapter.id}')">Save</button>
-                        </td>
-                    </tr>
-                `;
-            });
+                reader.innerHTML = output;
+                manuscriptLoaded = true;
 
-            tbody.innerHTML = html || '<tr><td colspan="5" style="text-align: center; padding: 2rem; color: var(--color-smoke);">No chapters match your filter.</td></tr>';
+                // Open notes panels that already have content
+                for (const [id, note] of Object.entries(chapterNotes)) {
+                    if (note && note.trim()) {
+                        const body = document.getElementById('notes-body-' + id);
+                        const arrow = document.getElementById('arrow-' + id);
+                        if (body) {
+                            body.classList.add('open');
+                            if (arrow) arrow.classList.add('open');
+                        }
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error loading manuscript:', error);
+                reader.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: #e74c3c;">
+                        Failed to load manuscript. Make sure manuscript.html exists.<br>
+                        <small>${error.message}</small>
+                    </div>
+                `;
+            }
         }
 
-        function saveAndConfirm(chapterId) {
-            // Get value from whichever view is active
-            const cardInput = document.getElementById('notes-' + chapterId);
-            const listInput = document.getElementById('list-notes-' + chapterId);
-            const note = (cardInput && cardInput.value) || (listInput && listInput.value) || '';
+        // ===========================================
+        // Notes Interaction
+        // ===========================================
+        let autoSaveTimers = {};
 
-            saveChapterNote(chapterId, note);
+        function toggleNotes(chapterId) {
+            const body = document.getElementById('notes-body-' + chapterId);
+            const arrow = document.getElementById('arrow-' + chapterId);
+            if (body) {
+                body.classList.toggle('open');
+                if (arrow) arrow.classList.toggle('open');
+                // Focus textarea when opening
+                if (body.classList.contains('open')) {
+                    const textarea = document.getElementById('reader-notes-' + chapterId);
+                    if (textarea) textarea.focus();
+                }
+            }
+        }
 
-            // Sync both inputs
-            if (cardInput) cardInput.value = note;
-            if (listInput) listInput.value = note;
+        function autoSaveNote(chapterId) {
+            // Debounce auto-save to 1 second after typing stops
+            if (autoSaveTimers[chapterId]) clearTimeout(autoSaveTimers[chapterId]);
 
-            showToast('Notes saved!');
+            const status = document.getElementById('save-status-' + chapterId);
+            if (status) status.textContent = 'Typing...';
+
+            autoSaveTimers[chapterId] = setTimeout(() => {
+                const textarea = document.getElementById('reader-notes-' + chapterId);
+                if (textarea) {
+                    saveChapterNote(chapterId, textarea.value);
+                    if (status) {
+                        status.textContent = 'Auto-saved';
+                        setTimeout(() => { if (status) status.textContent = ''; }, 2000);
+                    }
+                }
+            }, 1000);
+        }
+
+        function manualSaveNote(chapterId) {
+            const textarea = document.getElementById('reader-notes-' + chapterId);
+            if (textarea) {
+                saveChapterNote(chapterId, textarea.value);
+                const btn = document.getElementById('save-btn-' + chapterId);
+                const status = document.getElementById('save-status-' + chapterId);
+                if (btn) {
+                    btn.classList.add('saved');
+                    btn.textContent = 'Saved!';
+                    setTimeout(() => {
+                        btn.classList.remove('saved');
+                        btn.textContent = 'Save Note';
+                    }, 2000);
+                }
+                if (status) status.textContent = '';
+                showToast('Note saved!');
+            }
+        }
+
+        function collapseAllNotes() {
+            document.querySelectorAll('.reader-notes-body.open').forEach(el => {
+                el.classList.remove('open');
+            });
+            document.querySelectorAll('.toggle-arrow.open').forEach(el => {
+                el.classList.remove('open');
+            });
+        }
+
+        function jumpToPart(partId) {
+            if (!partId) return;
+            const el = document.getElementById(partId);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            // Reset dropdown
+            document.getElementById('filter-part').value = '';
         }
 
         // ===========================================
@@ -2799,21 +3071,33 @@
             const file = event.target.files[0];
             if (!file) return;
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
+            const fileReader = new FileReader();
+            fileReader.onload = function(e) {
                 try {
                     const imported = JSON.parse(e.target.result);
                     chapterNotes = { ...chapterNotes, ...imported };
                     localStorage.setItem('logan_fire_chapter_notes', JSON.stringify(chapterNotes));
-                    renderChapters();
+                    // Refresh notes in textareas
+                    for (const [id, note] of Object.entries(chapterNotes)) {
+                        const textarea = document.getElementById('reader-notes-' + id);
+                        if (textarea) textarea.value = note;
+                        const indicator = document.getElementById('indicator-' + id);
+                        if (indicator) indicator.classList.toggle('has-notes', note && note.trim().length > 0);
+                        // Open panels with notes
+                        if (note && note.trim()) {
+                            const body = document.getElementById('notes-body-' + id);
+                            const arrow = document.getElementById('arrow-' + id);
+                            if (body) body.classList.add('open');
+                            if (arrow) arrow.classList.add('open');
+                        }
+                    }
+                    updateNotesStats();
                     showToast('Notes imported successfully!');
                 } catch (err) {
                     showToast('Failed to import notes. Invalid file format.', true);
                 }
             };
-            reader.readAsText(file);
-
-            // Reset input so same file can be imported again
+            fileReader.readAsText(file);
             event.target.value = '';
         }
 
@@ -2824,8 +3108,17 @@
 
             chapterNotes = {};
             localStorage.removeItem('logan_fire_chapter_notes');
-            renderChapters();
+            // Clear all textareas and indicators
+            document.querySelectorAll('[id^="reader-notes-"]').forEach(el => { el.value = ''; });
+            document.querySelectorAll('.note-indicator').forEach(el => { el.classList.remove('has-notes'); });
+            collapseAllNotes();
+            updateNotesStats();
             showToast('All notes cleared.');
+        }
+
+        // Render chapters is now loadManuscriptReader
+        function renderChapters() {
+            loadManuscriptReader();
         }
 
         // Initialize manuscript on load
