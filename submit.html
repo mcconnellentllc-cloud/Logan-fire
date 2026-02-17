@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Share Your Story — The Logan Fire</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- EmailJS SDK for sending confirmation emails -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         .submit-hero {
             background: linear-gradient(135deg, var(--color-earth) 0%, var(--color-dark) 100%);
@@ -363,7 +365,7 @@
         <div id="success-message" class="success-message">
             <h3>Thank You for Your Contribution!</h3>
             <p>Your submission has been received and added to the Logan Fire historical database.</p>
-            <p style="margin-top: 0.5rem;">If you provided an email address, you'll receive a confirmation shortly.</p>
+            <p style="margin-top: 0.5rem;">If you provided an email address, a confirmation with a copy of your submission details has been sent to your inbox. Please check your spam folder if you don't see it.</p>
             <p style="margin-top: 1rem;"><a href="index.html" style="color: white; text-decoration: underline;">Return to home page</a> · <a href="submit.html" style="color: white; text-decoration: underline;">Submit another story</a></p>
         </div>
 
@@ -556,6 +558,44 @@
         // Cloudinary
         const CLOUDINARY_CLOUD_NAME = 'dt4rk6rpg';
         const CLOUDINARY_UPLOAD_PRESET = 'logan_fire';
+
+        // EmailJS - confirmation emails
+        const EMAILJS_PUBLIC_KEY = 'YOUR_EMAILJS_PUBLIC_KEY';
+        const EMAILJS_SERVICE_ID = 'YOUR_EMAILJS_SERVICE_ID';
+        const EMAILJS_STORY_TEMPLATE_ID = 'YOUR_EMAILJS_STORY_TEMPLATE_ID';
+
+        // Initialize EmailJS
+        if (typeof emailjs !== 'undefined') {
+            emailjs.init(EMAILJS_PUBLIC_KEY);
+        }
+
+        // ===========================================
+        // Send Confirmation Email (best-effort, never blocks submission)
+        // ===========================================
+        async function sendStoryConfirmation(name, email, connection, storySnippet, includeInBook, displayPublicly) {
+            if (!email || typeof emailjs === 'undefined' || EMAILJS_PUBLIC_KEY === 'YOUR_EMAILJS_PUBLIC_KEY') {
+                console.log('Confirmation email skipped (no email provided or EmailJS not configured)');
+                return;
+            }
+
+            try {
+                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_STORY_TEMPLATE_ID, {
+                    to_name: name,
+                    to_email: email,
+                    from_name: 'The Logan Fire Project',
+                    reply_to: 'fire@flamesoffury.com',
+                    connection: connection || 'Not specified',
+                    story_snippet: storySnippet ? storySnippet.substring(0, 500) + (storySnippet.length > 500 ? '...' : '') : '(Voice recording / photos only)',
+                    include_in_book: includeInBook ? 'Yes' : 'No',
+                    display_publicly: displayPublicly ? 'Yes' : 'No',
+                    submission_date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+                });
+                console.log('Confirmation email sent to', email);
+            } catch (emailErr) {
+                // Never let email failure affect the submission
+                console.warn('Confirmation email failed (submission still saved):', emailErr);
+            }
+        }
 
         // ===========================================
         // Voice Recorder
@@ -1155,6 +1195,37 @@
                 }
 
                 if (response.ok) {
+                    // Capture values for confirmation email before resetting the form
+                    const submitterName = document.getElementById('name').value;
+                    const submitterEmail = document.getElementById('email').value;
+                    const submitterConnection = document.getElementById('connection').value;
+                    const submitterStory = document.getElementById('story').value;
+
+                    // Send confirmation email (fire-and-forget, never blocks)
+                    sendStoryConfirmation(
+                        submitterName,
+                        submitterEmail,
+                        submitterConnection,
+                        submitterStory,
+                        includeInBook,
+                        displayPublicly
+                    );
+
+                    // Also send a copy to the project inbox so you have a backup
+                    if (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'YOUR_EMAILJS_PUBLIC_KEY') {
+                        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_STORY_TEMPLATE_ID, {
+                            to_name: 'Logan Fire Project',
+                            to_email: 'fire@flamesoffury.com',
+                            from_name: submitterName || 'Anonymous',
+                            reply_to: submitterEmail || 'fire@flamesoffury.com',
+                            connection: submitterConnection || 'Not specified',
+                            story_snippet: submitterStory ? submitterStory.substring(0, 2000) : '(Voice recording / photos only)',
+                            include_in_book: includeInBook ? 'Yes' : 'No',
+                            display_publicly: displayPublicly ? 'Yes' : 'No',
+                            submission_date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+                        }).catch(err => console.warn('Admin notification email failed:', err));
+                    }
+
                     // Success! Reset everything
                     form.reset();
                     recordingBlob = null;
