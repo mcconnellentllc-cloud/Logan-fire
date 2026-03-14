@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reserve Your Copy — The Logan Fire</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- EmailJS SDK for sending confirmation emails -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         .preorder-hero {
             background: linear-gradient(135deg, var(--color-earth) 0%, var(--color-dark) 100%);
@@ -272,7 +274,8 @@
 
             <div id="success-message" class="success-message">
                 <h3>You're on the List!</h3>
-                <p>We'll email you when the book is ready with instructions to get your copy.</p>
+                <p>A confirmation has been sent to your email. We'll notify you when the book is ready with instructions to get your copy.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.9;">Check your spam folder if you don't see the confirmation.</p>
                 <p style="margin-top: 1rem;"><a href="index.html" style="color: white; text-decoration: underline;">Return to home page</a></p>
             </div>
 
@@ -330,6 +333,39 @@
         const AIRTABLE_BASE_ID = 'appN4OIz2fbVguxSV';
         const AIRTABLE_TABLE_NAME = 'Preorders';
 
+        // EmailJS - confirmation emails
+        const EMAILJS_PUBLIC_KEY = 'YOUR_EMAILJS_PUBLIC_KEY';
+        const EMAILJS_SERVICE_ID = 'YOUR_EMAILJS_SERVICE_ID';
+        const EMAILJS_PREORDER_TEMPLATE_ID = 'YOUR_EMAILJS_PREORDER_TEMPLATE_ID';
+
+        // Initialize EmailJS
+        if (typeof emailjs !== 'undefined') {
+            emailjs.init(EMAILJS_PUBLIC_KEY);
+        }
+
+        // ===========================================
+        // Send Preorder Confirmation Email (best-effort, never blocks)
+        // ===========================================
+        async function sendPreorderConfirmation(name, email) {
+            if (!email || typeof emailjs === 'undefined' || EMAILJS_PUBLIC_KEY === 'YOUR_EMAILJS_PUBLIC_KEY') {
+                console.log('Confirmation email skipped (EmailJS not configured)');
+                return;
+            }
+
+            try {
+                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_PREORDER_TEMPLATE_ID, {
+                    to_name: name,
+                    to_email: email,
+                    from_name: 'The Logan Fire Project',
+                    reply_to: 'fire@flamesoffury.com',
+                    signup_date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+                });
+                console.log('Preorder confirmation email sent to', email);
+            } catch (emailErr) {
+                console.warn('Confirmation email failed (preorder still saved):', emailErr);
+            }
+        }
+
         // ===========================================
         // Form Submission
         // ===========================================
@@ -373,6 +409,22 @@
                 const responseData = await response.json();
 
                 if (response.ok) {
+                    // Send confirmation email (fire-and-forget, never blocks)
+                    const preorderName = document.getElementById('name').value;
+                    const preorderEmail = document.getElementById('email').value;
+                    sendPreorderConfirmation(preorderName, preorderEmail);
+
+                    // Also notify the project inbox
+                    if (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'YOUR_EMAILJS_PUBLIC_KEY') {
+                        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_PREORDER_TEMPLATE_ID, {
+                            to_name: 'Logan Fire Project',
+                            to_email: 'fire@flamesoffury.com',
+                            from_name: preorderName,
+                            reply_to: preorderEmail,
+                            signup_date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+                        }).catch(err => console.warn('Admin preorder notification failed:', err));
+                    }
+
                     form.style.display = 'none';
                     successMsg.style.display = 'block';
                     window.scrollTo({ top: successMsg.offsetTop - 100, behavior: 'smooth' });
@@ -389,5 +441,7 @@
             }
         });
     </script>
+    <!-- Analytics -->
+    <script src="js/analytics.js"></script>
 </body>
 </html>

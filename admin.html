@@ -99,6 +99,48 @@
             color: var(--color-smoke);
         }
 
+        /* Site Analytics Bar */
+        .site-analytics-bar {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
+            color: white;
+            margin-bottom: 1.5rem;
+            border-radius: 6px;
+        }
+        .analytics-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .analytics-icon {
+            opacity: 0.8;
+        }
+        .analytics-icon svg {
+            display: block;
+        }
+        .analytics-data {
+            text-align: left;
+        }
+        .analytics-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+        .analytics-label {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .analytics-meta {
+            margin-left: auto;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
         /* Controls */
         .admin-controls {
             display: flex;
@@ -1616,6 +1658,38 @@
 
     <!-- Admin Content (hidden until authenticated) -->
     <div id="admin-content" class="admin-content">
+        <!-- Site Analytics Bar -->
+        <div class="site-analytics-bar">
+            <div class="analytics-item">
+                <div class="analytics-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </div>
+                <div class="analytics-data">
+                    <div class="analytics-number" id="analytics-visitors">-</div>
+                    <div class="analytics-label">Site Visitors</div>
+                </div>
+            </div>
+            <div class="analytics-item">
+                <div class="analytics-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                    </svg>
+                </div>
+                <div class="analytics-data">
+                    <div class="analytics-number" id="analytics-interactions">-</div>
+                    <div class="analytics-label">Interactions</div>
+                </div>
+            </div>
+            <div class="analytics-meta">
+                <span id="analytics-status">Loading...</span>
+            </div>
+        </div>
+
         <!-- Section Tabs -->
         <div class="section-tabs">
             <button class="section-tab active" onclick="switchSection('submissions')">Submissions</button>
@@ -1884,6 +1958,9 @@
         <p style="font-size: 0.9rem; opacity: 0.7;">&copy; 2025 The Logan Fire — Admin Dashboard</p>
     </footer>
 
+    <!-- Analytics -->
+    <script src="js/analytics.js"></script>
+
     <script>
         // ===========================================
         // CONFIGURATION
@@ -1935,6 +2012,25 @@
             document.getElementById('password-gate').style.display = 'none';
             document.getElementById('admin-content').classList.add('visible');
             loadSubmissions();
+            loadSiteAnalytics();
+        }
+
+        // Load site analytics
+        async function loadSiteAnalytics() {
+            const visitorsEl = document.getElementById('analytics-visitors');
+            const interactionsEl = document.getElementById('analytics-interactions');
+            const statusEl = document.getElementById('analytics-status');
+
+            try {
+                const data = await getAnalytics();
+                visitorsEl.textContent = data.visitors.toLocaleString();
+                interactionsEl.textContent = data.interactions.toLocaleString();
+                statusEl.textContent = 'Live tracking';
+            } catch (e) {
+                visitorsEl.textContent = '-';
+                interactionsEl.textContent = '-';
+                statusEl.textContent = 'Could not load';
+            }
         }
 
         function logout() {
