@@ -1226,11 +1226,29 @@
         }
 
         // ============================================
+        // STATIC PHOTOS (Local contributors)
+        // ============================================
+        const staticPhotos = [
+            // Alan Michael photos
+            { url: 'photos/alan-michaels/blown sand.jfif', caption: 'Alan and Kimmy Michael' },
+            { url: 'photos/alan-michaels/calf.jfif', caption: 'Alan and Kimmy Michael' },
+            { url: 'photos/alan-michaels/cows.jfif', caption: 'Alan and Kimmy Michael' },
+            { url: 'photos/alan-michaels/damage building.jfif', caption: 'Alan and Kimmy Michael' },
+            { url: 'photos/alan-michaels/ditch sand.jfif', caption: 'Alan and Kimmy Michael' },
+            { url: 'photos/alan-michaels/downed cows.jfif', caption: 'Alan and Kimmy Michael' },
+            { url: 'photos/alan-michaels/drilling.jfif', caption: 'Alan and Kimmy Michael' },
+            { url: 'photos/alan-michaels/strip burn.jfif', caption: 'Alan and Kimmy Michael' },
+            { url: 'photos/alan-michaels/sunset.jfif', caption: 'Alan and Kimmy Michael' },
+            { url: 'photos/alan-michaels/windshield.jfif', caption: 'Alan and Kimmy Michael' }
+        ];
+
+        // ============================================
         // INITIALIZE
         // ============================================
         document.addEventListener('DOMContentLoaded', async () => {
-            // Load photos from Airtable
-            const photos = await loadPhotosFromAirtable();
+            // Load photos from Airtable and combine with static photos
+            const airtablePhotos = await loadPhotosFromAirtable();
+            const photos = shuffleArray([...airtablePhotos, ...staticPhotos]);
             buildCarouselSlides(photos);
 
             // Initialize carousel, music, and slideshow controller
